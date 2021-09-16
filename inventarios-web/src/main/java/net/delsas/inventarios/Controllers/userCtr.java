@@ -24,6 +24,8 @@ import net.delsas.inventarios.beans.UsuarioFacadeLocal;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.TipoUsuario;
 import net.delsas.inventarios.entities.Usuario;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -39,6 +41,8 @@ public class userCtr implements Serializable {
     private List<TipoUsuario> tiposU;
     private List<Misc> matrices;
     private List<Misc> sucursales;
+    private boolean editable;
+    private boolean editId;
 
     @EJB
     private UsuarioFacadeLocal ufl;
@@ -135,6 +139,47 @@ public class userCtr implements Serializable {
 
     public void setSucursales(List<Misc> sucursales) {
         this.sucursales = sucursales;
+    }
+
+    public void Selecion(SelectEvent e) {
+        System.out.println(e.getObject());
+    }
+
+    public List<Misc> getEmpresas() {
+        List<Misc> v = new ArrayList<>();
+        v.addAll(matrices);
+        v.addAll(sucursales);
+        return v;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public void persist() {
+        FacesMessage ms;
+        if (isEditable()) {
+            ufl.edit(nus);
+            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Editado", "Los datos han sido aguardados");
+        } else {
+            ufl.create(nus);
+            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "El nuevo usuario ha sido agregado al sistema");
+        }
+        FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
+        PrimeFaces.current().ajax().update("form0:msgs");
+    }
+
+    public boolean isEditId() {
+        return editId;
+    }
+
+    public void setEditId(boolean editId) {
+        this.editId = editId;
+        nus = editId ? new Usuario("", "", "", "") : nus;
     }
 
 }
