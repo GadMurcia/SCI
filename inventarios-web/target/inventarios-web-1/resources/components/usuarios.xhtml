@@ -19,12 +19,12 @@
     <cc:implementation>
         <h:panelGrid columns="2">
             <h:outputLabel value="DUI:" for="idUsuario" />
-            <p:inputText id="idUsuario" value="#{cc.attrs.us.idUsuario}" 
+            <p:inputMask id="idUsuario" value="#{cc.attrs.us.idUsuario}" 
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
                          requiredMessage="The IdUsuario field is required."
-                         >
+                         mask="99999999-9">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-            </p:inputText>
+            </p:inputMask>
             
             <h:outputLabel value="Nombres:" for="nombres" />
             <p:inputText id="nombres" value="#{cc.attrs.us.nombres}" 

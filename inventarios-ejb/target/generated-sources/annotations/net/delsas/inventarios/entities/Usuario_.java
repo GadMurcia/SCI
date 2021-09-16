@@ -9,7 +9,7 @@ import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.TipoUsuario;
 import net.delsas.inventarios.entities.Ventas;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-15T22:58:26")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-16T16:39:45")
 @StaticMetamodel(Usuario.class)
 public class Usuario_ { 
 
@@ -22,5 +22,6 @@ public class Usuario_ {
     public static volatile SingularAttribute<Usuario, TipoUsuario> tipoUsuario;
     public static volatile SingularAttribute<Usuario, Misc> empresa;
     public static volatile SingularAttribute<Usuario, String> nombres;
+    public static volatile SingularAttribute<Usuario, Boolean> activo;
 
 }

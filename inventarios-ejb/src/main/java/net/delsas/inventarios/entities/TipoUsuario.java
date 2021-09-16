@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoUsuario.findByTpComentario", query = "SELECT t FROM TipoUsuario t WHERE t.tpComentario = :tpComentario")})
 public class TipoUsuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -47,6 +46,8 @@ public class TipoUsuario implements Serializable {
     private String nombre;
     @Size(max = 100)
     private String tpComentario;
+
+    private static final long serialVersionUID = 1L;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUsuario")
     private List<Usuario> usuarioList;
 

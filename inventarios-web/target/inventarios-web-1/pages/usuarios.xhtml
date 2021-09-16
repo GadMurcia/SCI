@@ -45,8 +45,8 @@
                 </p:dataTable>
                 <h:panelGrid style="margin:  0 auto">
                     <p:commandButton value="+" label="Agregar un usuario nueo" update="form h0"
-                                     oncomplete="PF('userDialog').show()"
-                                     onclick="nuevoU();"/>
+                                    
+                                    oncomplete="PF('userDialog').show()"/>
                 </h:panelGrid>
             </h:panelGrid>
             <p:remoteCommand name="activar" actionListener="#{userCtr.setEditable(true)}"

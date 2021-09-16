@@ -179,7 +179,12 @@ public class userCtr implements Serializable {
 
     public void setEditId(boolean editId) {
         this.editId = editId;
-        nus = editId ? new Usuario("", "", "", "") : nus;
+    }
+
+    public void nuevo() {
+        nus = new Usuario("", "", "", "");
+        setEditable(true);
+        setEditId(true);
     }
 
 }

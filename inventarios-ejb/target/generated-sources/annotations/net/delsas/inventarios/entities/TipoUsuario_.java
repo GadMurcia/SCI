@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import net.delsas.inventarios.entities.Usuario;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-15T22:58:26")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-16T16:39:45")
 @StaticMetamodel(TipoUsuario.class)
 public class TipoUsuario_ { 
 

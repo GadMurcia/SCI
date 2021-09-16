@@ -203,6 +203,7 @@ CREATE TABLE `Usuario` (
   `passwd` varchar(50) NOT NULL,
   `tipoUsuario` int(11) NOT NULL,
   `empresa` int(11) DEFAULT NULL,
+  `activo` bit(1) NOT NULL,
   PRIMARY KEY (`idUsuario`),
   KEY `fk_Usuario_2_idx` (`empresa`),
   KEY `fk_Usuario_1_idx` (`tipoUsuario`),
@@ -217,7 +218,7 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` VALUES ('04536707-3','Guillermo A.','Delsas M.','02951a6cb9595ef475fed783e59c687e',1,NULL);
+INSERT INTO `Usuario` VALUES ('04536707-3','Guillermo Aldolfo','Delsas Murci','02951a6cb9595ef475fed783e59c687e',1,NULL,'\0');
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,4 +258,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-15 14:42:23
+-- Dump completed on 2021-09-16 16:47:13

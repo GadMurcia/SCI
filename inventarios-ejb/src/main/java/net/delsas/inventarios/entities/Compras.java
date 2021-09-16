@@ -39,15 +39,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Compras.findByComentario", query = "SELECT c FROM Compras c WHERE c.comentario = :comentario")})
 public class Compras implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ComprasPK comprasPK;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     private BigDecimal valor;
     @Size(max = 250)
     private String comentario;
+
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected ComprasPK comprasPK;
     @JoinColumn(name = "usuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario1;

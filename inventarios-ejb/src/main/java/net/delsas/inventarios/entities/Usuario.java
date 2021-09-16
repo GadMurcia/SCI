@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByPasswd", query = "SELECT u FROM Usuario u WHERE u.passwd = :passwd")})
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -55,6 +54,9 @@ public class Usuario implements Serializable {
     @NotNull
     @Size(min = 1, max = 50)
     private String passwd;
+    @Basic(optional = false)
+    @NotNull
+    private boolean activo;
     @JoinColumn(name = "tipoUsuario", referencedColumnName = "idTipoUsuario")
     @ManyToOne(optional = false)
     private TipoUsuario tipoUsuario;
@@ -180,6 +182,22 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "net.delsas.inventarios.entities.Usuario[ idUsuario=" + idUsuario + " ]";
+    }
+
+    public Usuario(String idUsuario, String nombres, String apellidos, String passwd, boolean activo) {
+        this.idUsuario = idUsuario;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.passwd = passwd;
+        this.activo = activo;
+    }
+
+    public boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
     
 }

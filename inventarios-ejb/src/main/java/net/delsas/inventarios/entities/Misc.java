@@ -39,7 +39,6 @@ import javax.xml.bind.annotation.XmlTransient;
 })
 public class Misc implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -54,6 +53,8 @@ public class Misc implements Serializable {
     private byte[] logo;
     @Size(max = 88)
     private String telefonos;
+
+    private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarioList;
     @JoinColumn(name = "propietario", referencedColumnName = "idUsuario")

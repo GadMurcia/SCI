@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Inventario.findByDescripcion", query = "SELECT i FROM Inventario i WHERE i.descripcion = :descripcion")})
 public class Inventario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -51,6 +50,8 @@ public class Inventario implements Serializable {
     private BigDecimal precioUnitario;
     @Size(max = 250)
     private String descripcion;
+
+    private static final long serialVersionUID = 1L;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventario")
     private List<DetalleVentas> detalleVentasList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inventario")

@@ -80,7 +80,13 @@ public class loginCtr implements Serializable {
 
     public void login() {
         user = Optional.ofNullable(ufl.find(us));
-        if (user.isPresent() && DigestUtils.md5Hex(pas).equals(user.get().getPasswd())) {
+        if (!user.isPresent()) {
+            FacesContext.getCurrentInstance().addMessage("form:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+                            "Las credenciales no son correctas. Intente de nuevo"));
+        }else if(user.get().getPasswd().isEmpty()){
+            
+        } else if (DigestUtils.md5Hex(pas).equals(user.get().getPasswd())) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", user.get());
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
@@ -90,10 +96,6 @@ public class loginCtr implements Serializable {
             } catch (IOException ex) {
                 Logger.getLogger(loginCtr.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            FacesContext.getCurrentInstance().addMessage("form:msgs",
-                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
-                            "Las credenciales no son correctas. Intente de nuevo"));
         }
     }
 

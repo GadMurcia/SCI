@@ -8,14 +8,14 @@ import net.delsas.inventarios.entities.Compras;
 import net.delsas.inventarios.entities.DetalleCompraPK;
 import net.delsas.inventarios.entities.Inventario;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-15T22:58:26")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-16T16:39:45")
 @StaticMetamodel(DetalleCompra.class)
 public class DetalleCompra_ { 
 
     public static volatile SingularAttribute<DetalleCompra, Compras> compras;
     public static volatile SingularAttribute<DetalleCompra, Integer> cantidad;
-    public static volatile SingularAttribute<DetalleCompra, DetalleCompraPK> detalleCompraPK;
     public static volatile SingularAttribute<DetalleCompra, BigDecimal> costoUnitario;
+    public static volatile SingularAttribute<DetalleCompra, DetalleCompraPK> detalleCompraPK;
     public static volatile SingularAttribute<DetalleCompra, Inventario> inventario;
 
 }

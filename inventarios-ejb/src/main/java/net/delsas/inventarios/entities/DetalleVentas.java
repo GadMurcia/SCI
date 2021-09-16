@@ -36,9 +36,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "DetalleVentas.findByPrecioUnitario", query = "SELECT d FROM DetalleVentas d WHERE d.precioUnitario = :precioUnitario")})
 public class DetalleVentas implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected DetalleVentasPK detalleVentasPK;
     @Basic(optional = false)
     @NotNull
     private int cantidad;
@@ -46,6 +43,10 @@ public class DetalleVentas implements Serializable {
     @Basic(optional = false)
     @NotNull
     private BigDecimal precioUnitario;
+
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected DetalleVentasPK detalleVentasPK;
     @JoinColumn(name = "producto", referencedColumnName = "idInventario", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Inventario inventario;

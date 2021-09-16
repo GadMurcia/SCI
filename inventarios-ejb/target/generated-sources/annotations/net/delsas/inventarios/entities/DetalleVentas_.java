@@ -8,7 +8,7 @@ import net.delsas.inventarios.entities.DetalleVentasPK;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Ventas;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-15T22:58:26")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-16T16:39:45")
 @StaticMetamodel(DetalleVentas.class)
 public class DetalleVentas_ { 
 
