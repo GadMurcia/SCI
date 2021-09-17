@@ -4,9 +4,12 @@ net/delsas/inventarios/beans/DetalleVentasFacade.class
 net/delsas/inventarios/entities/Compras.class
 net/delsas/inventarios/entities/TipoUsuario_.class
 net/delsas/inventarios/beans/DetalleCompraFacade.class
+net/delsas/inventarios/beans/GiroDeCajaFacadeLocal.class
 net/delsas/inventarios/entities/DetalleCompraPK.class
 net/delsas/inventarios/entities/DetalleVentas_.class
 net/delsas/inventarios/entities/TipoUsuario.class
+net/delsas/inventarios/entities/GiroDeCaja_.class
+net/delsas/inventarios/beans/GiroDeCajaFacade.class
 net/delsas/inventarios/beans/VentasFacade.class
 net/delsas/inventarios/beans/VentasFacadeLocal.class
 net/delsas/inventarios/entities/Inventario.class

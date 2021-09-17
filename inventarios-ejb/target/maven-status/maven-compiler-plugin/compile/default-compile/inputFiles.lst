@@ -2,6 +2,7 @@
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/DetalleVentasFacadeLocal.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/DetalleCompraPK.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/TipoUsuarioFacade.java
+/home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/GiroDeCajaFacadeLocal.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/DetalleVentasFacade.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/TipoUsuario.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/DetalleCompra.java
@@ -11,6 +12,7 @@
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/DetalleVentas.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/GiroDeCaja.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/Compras.java
+/home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/GiroDeCajaFacade.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/Inventario.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/MiscFacade.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/UsuarioFacade.java

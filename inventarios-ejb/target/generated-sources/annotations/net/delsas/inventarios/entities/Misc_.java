@@ -7,7 +7,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-17T12:18:49")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-17T12:54:31")
 @StaticMetamodel(Misc.class)
 public class Misc_ { 
 
