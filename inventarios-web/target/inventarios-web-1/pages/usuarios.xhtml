@@ -10,6 +10,27 @@
     <ui:define name="content">
         <h:form id="form">
             <h:panelGrid columns="1">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Matriz" for="mats" />
+                    <p:selectOneMenu id="mats" value="#{userCtr.matSel}"
+                                     converter="omnifaces.SelectItemsConverter">
+                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                update="emps usuarios"/>
+                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                        <f:selectItems value="#{userCtr.matrices}" var="m" 
+                                       itemValue="#{m}" itemLabel="#{m.nombre}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Sucursal" for="emps" />
+                    <p:selectOneMenu id="emps" value="#{userCtr.sucSel}"
+                                     converter="omnifaces.SelectItemsConverter">
+                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                update="usuarios"/>
+                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                        <f:selectItems value="#{userCtr.sucursales}" var="s" 
+                                       itemValue="#{s}" itemLabel="#{s.nombre}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
                 <p:dataTable id="usuarios" var="item" 
                              value="#{userCtr.usuarios}" 
                              rowKey="#{item.idUsuario}"
@@ -36,35 +57,29 @@
                         </f:facet>
                         <h:outputText value="#{item.tipoUsuario.nombre}"/>
                     </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Empresa"/>
-                        </f:facet>
-                        <h:outputText value="#{item.empresa.direccion}"/>
-                    </p:column>
                 </p:dataTable>
                 <h:panelGrid style="margin:  0 auto">
                     <p:commandButton value="+" label="Agregar un usuario nueo" update="form h0"
-                                    
-                                    oncomplete="PF('userDialog').show()"/>
+                                     actionListener="#{userCtr.nuevo()}"
+                                     oncomplete="PF('userDialog').show()"/>
                 </h:panelGrid>
             </h:panelGrid>
             <p:remoteCommand name="activar" actionListener="#{userCtr.setEditable(true)}"
                              update="h0" action="#{userCtr.setEditId(false)}"/>
             <p:remoteCommand name="desactivar" actionListener="#{userCtr.setEditable(false)}"
                              update="h0" action="#{userCtr.setEditId(false)}"/>
-            <p:remoteCommand name="nuevoU" actionListener="#{userCtr.setEditable(true)}"
-                             update="h0" action="#{userCtr.setEditId(true)}"/>
             <p:contextMenu for="usuarios">
-                <p:menuitem value="Nuevo" update="usuarios h0" icon="pi pi-times"
+                <p:menuitem value="Nuevo" update="usuarios h0" icon="pi pi-user-plus"
                             oncomplete="PF('userDialog').show()"
-                            onclick="nuevoU();"/>
-                <p:menuitem value="ver" update="h0" icon="pi pi-search"
+                            actionListener="#{userCtr.nuevo()}"/>
+                <p:menuitem value="ver" update="h0" icon="pi pi-tablet"
                             oncomplete="PF('userDialog').show()"
                             onclick="desactivar();"/>
-                <p:menuitem value="Edit" update="usuarios h0" icon="pi pi-times"
+                <p:menuitem value="Edit" update="usuarios h0" icon="pi pi-user-edit"
                             oncomplete="PF('userDialog').show()"
                             onclick="activar();"/>
+                <p:menuitem value="Resetear Contraseña" icon="pi pi-refresh"
+                            actionListener="#{userCtr.resetPass()}"/>
             </p:contextMenu>            
         </h:form>
 

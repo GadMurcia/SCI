@@ -24,6 +24,7 @@ import net.delsas.inventarios.beans.UsuarioFacadeLocal;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.TipoUsuario;
 import net.delsas.inventarios.entities.Usuario;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 
@@ -40,7 +41,9 @@ public class userCtr implements Serializable {
     private List<Usuario> usuarios;
     private List<TipoUsuario> tiposU;
     private List<Misc> matrices;
+    private Misc matSel;
     private List<Misc> sucursales;
+    private Misc sucSel;
     private boolean editable;
     private boolean editId;
 
@@ -73,26 +76,13 @@ public class userCtr implements Serializable {
                 switch (u.getTipoUsuario().getIdTipoUsuario()) {
                     case 1:
                         tiposU = tufl.findAll();
-                        mfl.findAll().stream().filter(m -> m.getMatriz() == null).forEachOrdered(matrices::add);
-                        usuarios = ufl.findAll();
                         break;
                     case 2:
                         tufl.findAll().stream().filter(t -> !t.getIdTipoUsuario().equals(1)).forEachOrdered(tiposU::add);
-                        mfl.findAll().stream().filter(m -> m.getMatriz() == null
-                                && m.getPropietario().getIdUsuario().equals(u.getIdUsuario())).forEachOrdered(matrices::add);
-                        matrices.forEach(m -> {
-                            usuarios.addAll(m.getUsuarioList());
-                            m.getSucursales().forEach(s -> usuarios.addAll(s.getUsuarioList()));
-                        });
                         break;
                     case 3:
                         tufl.findAll().stream().filter(t -> !t.getIdTipoUsuario().equals(1)
                                 && !t.getIdTipoUsuario().equals(2)).forEachOrdered(tiposU::add);
-                        matrices.add(u.getEmpresa().getMatriz() == null ? u.getEmpresa() : u.getEmpresa().getMatriz());
-                        if (u.getEmpresa().getMatriz() != null) {
-                            sucursales.add(u.getEmpresa());
-                        }
-                        usuarios.addAll(u.getEmpresa().getUsuarioList());
                         break;
                     default:
                         break;
@@ -110,11 +100,14 @@ public class userCtr implements Serializable {
     }
 
     public List<Usuario> getUsuarios() {
+        usuarios.clear();
+        us.ifPresent(u -> {
+            if (u.getTipoUsuario().getIdTipoUsuario().equals(1)) {
+                ufl.findAll().stream().filter(p -> p.getEmpresa() == null).forEachOrdered(usuarios::add);
+            }
+        });
+        Optional.ofNullable(sucSel).ifPresent(s -> usuarios.addAll(s.getUsuarioList()));
         return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
     }
 
     public List<TipoUsuario> getTiposU() {
@@ -126,19 +119,39 @@ public class userCtr implements Serializable {
     }
 
     public List<Misc> getMatrices() {
+        matrices.clear();
+        us.ifPresent(u -> {
+            switch (u.getTipoUsuario().getIdTipoUsuario()) {
+                case 1:
+                    mfl.findAll().stream().filter(m -> m.getMatriz() == null).forEachOrdered(matrices::add);
+                    break;
+                case 2:
+                    matrices.addAll(us.get().getMiscList());
+                    break;
+                case 3:
+                    Misc mat = us.get().getEmpresa().getMatriz() == null
+                            ? us.get().getEmpresa()
+                            : us.get().getEmpresa().getMatriz();
+                    matrices.add(mat);
+            }
+        });
         return matrices;
     }
 
-    public void setMatrices(List<Misc> matrices) {
-        this.matrices = matrices;
-    }
-
     public List<Misc> getSucursales() {
+        sucursales.clear();
+        Optional.ofNullable(matSel).ifPresent(m -> {
+            switch (us.get().getTipoUsuario().getIdTipoUsuario()) {
+                case 1:
+                case 2:
+                    sucursales.add(m);
+                    sucursales.addAll(m.getSucursales());
+                    break;
+                case 3:
+                    sucursales.add(m);
+            }
+        });
         return sucursales;
-    }
-
-    public void setSucursales(List<Misc> sucursales) {
-        this.sucursales = sucursales;
     }
 
     public void Selecion(SelectEvent e) {
@@ -162,13 +175,26 @@ public class userCtr implements Serializable {
 
     public void persist() {
         FacesMessage ms;
-        if (isEditable()) {
+        if (!isEditId()) {
             ufl.edit(nus);
             ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Editado", "Los datos han sido aguardados");
         } else {
+            nus.setActivo(true);
+            nus.setPasswd(DigestUtils.md5Hex(nus.getIdUsuario()));
+            nus.setEmpresa(sucSel);
             ufl.create(nus);
             ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "El nuevo usuario ha sido agregado al sistema");
         }
+        FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
+        PrimeFaces.current().ajax().update("form0:msgs");
+    }
+
+    public void resetPass() {
+        FacesMessage ms;
+        nus.setPasswd(DigestUtils.md5Hex(nus.getIdUsuario()));
+        ufl.edit(nus);
+        ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Editado",
+                "La contraseña del usuario ha sido reestablecida con éxito");
         FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
         PrimeFaces.current().ajax().update("form0:msgs");
     }
@@ -185,6 +211,22 @@ public class userCtr implements Serializable {
         nus = new Usuario("", "", "", "");
         setEditable(true);
         setEditId(true);
+    }
+
+    public Misc getMatSel() {
+        return matSel;
+    }
+
+    public void setMatSel(Misc matSel) {
+        this.matSel = matSel;
+    }
+
+    public Misc getSucSel() {
+        return sucSel;
+    }
+
+    public void setSucSel(Misc sucSel) {
+        this.sucSel = sucSel;
     }
 
 }

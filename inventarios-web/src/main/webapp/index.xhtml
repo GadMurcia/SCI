@@ -10,22 +10,21 @@
     <h:body>
         <h:form id="form">
             <p:growl id="msgs" showDetail="true" sticky="true"/>
-            <div class="p-grid" align="center" style="width: 20%; margin: auto">
-                <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
-                    <div class="ui-fluid">
-                        <div class="p-field">
-                            <p:outputLabel value="Usuario" for="username" />
-                            <p:inputText id="username" type="text" value="#{loginCtr.us}" required="true"/>
-                        </div>
-                        <div class="p-field">
-                            <p:outputLabel value="Contraseña" for="password" />
-                            <p:inputText id="password" type="password" value="#{loginCtr.pas}" required="true"/>
-                        </div>
-                        <p:commandButton value="Login" actionListener="#{loginCtr.login()}"
-                                         update="form"/>
-                    </div>
-                </div>
-            </div>
+            <h:panelGrid columns="1" style="width: 30%; margin: 5% auto">
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="Usuario" for="username" />
+                    <p:inputText id="username" type="text" value="#{loginCtr.us}" 
+                                 required="true"/>
+
+                    <p:outputLabel value="Contraseña" for="password" />
+                    <p:inputText id="password" type="password" value="#{loginCtr.pas}" 
+                                 required="true"/>
+                </h:panelGrid>
+                <h:panelGrid columns="1" style="margin: auto">
+                    <p:commandButton value="Login" actionListener="#{loginCtr.login()}"
+                                     update="form"/>
+                </h:panelGrid>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </html>

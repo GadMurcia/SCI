@@ -83,9 +83,11 @@ public class loginCtr implements Serializable {
         if (!user.isPresent()) {
             FacesContext.getCurrentInstance().addMessage("form:msgs",
                     new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
-                            "Las credenciales no son correctas. Intente de nuevo"));
-        }else if(user.get().getPasswd().isEmpty()){
-            
+                            "Este usuario no existe. Intente de nuevo"));
+        }else if(!user.get().getActivo()){
+            FacesContext.getCurrentInstance().addMessage("form:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                            "Usted no está habilitado para entrar al sistema. Consulte con el representante."));
         } else if (DigestUtils.md5Hex(pas).equals(user.get().getPasswd())) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", user.get());
@@ -96,6 +98,10 @@ public class loginCtr implements Serializable {
             } catch (IOException ex) {
                 Logger.getLogger(loginCtr.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            FacesContext.getCurrentInstance().addMessage("form:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
+                            "Las credenciales no son correctas. Intente de nuevo"));
         }
     }
 
