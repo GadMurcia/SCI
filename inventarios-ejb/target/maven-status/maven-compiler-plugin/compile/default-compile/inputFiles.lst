@@ -9,6 +9,7 @@
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/DetalleVentasPK.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/UsuarioFacadeLocal.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/DetalleVentas.java
+/home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/GiroDeCaja.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/Compras.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/entities/Inventario.java
 /home/delsas/NetBeansProjects/intentarios/inventarios-ejb/src/main/java/net/delsas/inventarios/beans/MiscFacade.java

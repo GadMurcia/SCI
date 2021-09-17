@@ -45,6 +45,9 @@ public class Ventas implements Serializable {
     private BigDecimal valor;
     @Size(max = 250)
     private String comentario;
+    @JoinColumn(name = "giroCaja", referencedColumnName = "idGiroDeCaja", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private GiroDeCaja giroDeCaja;
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -135,6 +138,14 @@ public class Ventas implements Serializable {
     @Override
     public String toString() {
         return "net.delsas.inventarios.entities.Ventas[ ventasPK=" + ventasPK + " ]";
+    }
+
+    public GiroDeCaja getGiroDeCaja() {
+        return giroDeCaja;
+    }
+
+    public void setGiroDeCaja(GiroDeCaja giroDeCaja) {
+        this.giroDeCaja = giroDeCaja;
     }
     
 }

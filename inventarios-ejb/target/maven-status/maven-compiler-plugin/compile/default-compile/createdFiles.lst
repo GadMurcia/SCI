@@ -34,6 +34,7 @@ net/delsas/inventarios/entities/Inventario_.class
 net/delsas/inventarios/entities/Ventas.class
 net/delsas/inventarios/beans/MiscFacade.class
 net/delsas/inventarios/entities/DetalleCompra.class
+net/delsas/inventarios/entities/GiroDeCaja.class
 net/delsas/inventarios/beans/UsuarioFacade.class
 net/delsas/inventarios/entities/DetalleVentas.class
 net/delsas/inventarios/entities/VentasPK_.class

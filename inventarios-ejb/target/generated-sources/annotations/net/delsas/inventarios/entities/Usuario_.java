@@ -5,11 +5,12 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import net.delsas.inventarios.entities.Compras;
+import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.TipoUsuario;
 import net.delsas.inventarios.entities.Ventas;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-17T00:05:07")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-17T12:18:49")
 @StaticMetamodel(Usuario.class)
 public class Usuario_ { 
 
@@ -20,6 +21,7 @@ public class Usuario_ {
     public static volatile ListAttribute<Usuario, Misc> miscList;
     public static volatile ListAttribute<Usuario, Ventas> ventasList;
     public static volatile SingularAttribute<Usuario, TipoUsuario> tipoUsuario;
+    public static volatile ListAttribute<Usuario, GiroDeCaja> giroDeCajaList;
     public static volatile SingularAttribute<Usuario, Misc> empresa;
     public static volatile SingularAttribute<Usuario, String> nombres;
     public static volatile SingularAttribute<Usuario, Boolean> activo;

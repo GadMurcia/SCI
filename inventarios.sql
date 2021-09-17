@@ -84,16 +84,16 @@ DROP TABLE IF EXISTS `DetalleVentas`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `DetalleVentas` (
   `idVentas` datetime NOT NULL,
-  `usuario` varchar(10) NOT NULL,
+  `giroCaja` int(11) NOT NULL,
   `producto` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
+  `cantidad` double NOT NULL,
   `precioUnitario` decimal(11,2) NOT NULL,
-  PRIMARY KEY (`idVentas`,`usuario`,`producto`),
+  PRIMARY KEY (`idVentas`,`producto`,`giroCaja`),
   KEY `fk_DetalleVentas_1_idx` (`producto`),
-  KEY `fk_DetalleVentas_2_idx` (`usuario`),
-  KEY `fk_DetalleVentas_2` (`usuario`,`idVentas`),
+  KEY `fk_DetalleVentas_2_idx` (`giroCaja`),
+  KEY `fk_DetalleVentas_2` (`giroCaja`,`idVentas`),
   CONSTRAINT `fk_DetalleVentas_1` FOREIGN KEY (`producto`) REFERENCES `Inventario` (`idInventario`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_DetalleVentas_2` FOREIGN KEY (`usuario`, `idVentas`) REFERENCES `Ventas` (`usuario`, `idVentas`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_DetalleVentas_2` FOREIGN KEY (`giroCaja`, `idVentas`) REFERENCES `Ventas` (`giroCaja`, `idVentas`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -104,6 +104,39 @@ CREATE TABLE `DetalleVentas` (
 LOCK TABLES `DetalleVentas` WRITE;
 /*!40000 ALTER TABLE `DetalleVentas` DISABLE KEYS */;
 /*!40000 ALTER TABLE `DetalleVentas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `GiroDeCaja`
+--
+
+DROP TABLE IF EXISTS `GiroDeCaja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `GiroDeCaja` (
+  `idGiroDeCaja` int(11) NOT NULL,
+  `inicio` datetime NOT NULL,
+  `fin` datetime NOT NULL,
+  `responsable` varchar(10) NOT NULL,
+  `cajaInicial` double NOT NULL DEFAULT 0,
+  `faltantes` double NOT NULL DEFAULT 0,
+  `excedentes` double NOT NULL DEFAULT 0,
+  `cierre` double NOT NULL DEFAULT 0,
+  `retiros` double NOT NULL DEFAULT 0,
+  `detalleRetiros` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`idGiroDeCaja`),
+  KEY `fk_GiroDeCaja_1_idx` (`responsable`),
+  CONSTRAINT `fk_GiroDeCaja_1` FOREIGN KEY (`responsable`) REFERENCES `Usuario` (`idUsuario`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `GiroDeCaja`
+--
+
+LOCK TABLES `GiroDeCaja` WRITE;
+/*!40000 ALTER TABLE `GiroDeCaja` DISABLE KEYS */;
+/*!40000 ALTER TABLE `GiroDeCaja` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -218,7 +251,7 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` VALUES ('04536707-3','Guillermo Aldolfo','Delsas Murci','02951a6cb9595ef475fed783e59c687e',1,NULL,'\0');
+INSERT INTO `Usuario` VALUES ('00000000-0','Andrés','Andrea','ff34dd4411a7d929576c5828f01cb5e9',2,NULL,''),('04536707-3','Guillermo Aldolfo','Delsas Murcia','02951a6cb9595ef475fed783e59c687e',1,NULL,'');
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,12 +264,12 @@ DROP TABLE IF EXISTS `Ventas`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Ventas` (
   `idVentas` datetime NOT NULL,
-  `usuario` varchar(10) NOT NULL,
+  `giroCaja` int(11) NOT NULL,
   `valor` decimal(11,2) NOT NULL,
   `comentario` varchar(250) DEFAULT NULL,
-  PRIMARY KEY (`idVentas`,`usuario`),
-  KEY `fk_Ventas_1_idx` (`usuario`),
-  CONSTRAINT `fk_Ventas_1` FOREIGN KEY (`usuario`) REFERENCES `Usuario` (`idUsuario`) ON UPDATE CASCADE
+  PRIMARY KEY (`idVentas`,`giroCaja`),
+  KEY `fk_Ventas_1_idx` (`giroCaja`),
+  CONSTRAINT `fk_Ventas_1` FOREIGN KEY (`giroCaja`) REFERENCES `GiroDeCaja` (`idGiroDeCaja`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -258,4 +291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-16 16:47:13
+-- Dump completed on 2021-09-17 11:51:09

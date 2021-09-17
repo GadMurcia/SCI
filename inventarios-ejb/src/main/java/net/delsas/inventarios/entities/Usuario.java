@@ -57,6 +57,9 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @NotNull
     private boolean activo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "responsable")
+    private List<GiroDeCaja> giroDeCajaList;
+
     @JoinColumn(name = "tipoUsuario", referencedColumnName = "idTipoUsuario")
     @ManyToOne(optional = false)
     private TipoUsuario tipoUsuario;
@@ -198,6 +201,15 @@ public class Usuario implements Serializable {
 
     public void setActivo(boolean activo) {
         this.activo = activo;
+    }
+
+    @XmlTransient
+    public List<GiroDeCaja> getGiroDeCajaList() {
+        return giroDeCajaList;
+    }
+
+    public void setGiroDeCajaList(List<GiroDeCaja> giroDeCajaList) {
+        this.giroDeCajaList = giroDeCajaList;
     }
     
 }

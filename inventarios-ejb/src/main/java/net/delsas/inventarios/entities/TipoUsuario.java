@@ -120,5 +120,4 @@ public class TipoUsuario implements Serializable {
     public String toString() {
         return "net.delsas.inventarios.entities.TipoUsuario[ idTipoUsuario=" + idTipoUsuario + " ]";
     }
-    
 }
