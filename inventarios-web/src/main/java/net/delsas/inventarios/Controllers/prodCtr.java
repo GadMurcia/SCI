@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -111,6 +113,7 @@ public class prodCtr implements Serializable {
 
     public List<Inventario> getInventario() {
         inventarios = ifl.findByTienda(Optional.ofNullable(sucSel).orElseGet(() -> new Misc(0)).getIdMisc());
+        Collections.sort(inventarios, (Inventario uno, Inventario dos) -> dos.getProducto().compareTo(uno.getProducto()));
         return inventarios;
     }
 
