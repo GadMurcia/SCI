@@ -32,11 +32,12 @@
 
 
                 <p:dataTable id="products" var="product" value="#{prodCtr.inventario}" 
-                             editable="true" editMode="cell"
-                             widgetVar="cellprod" editInitEvent="dblclick"
-                             rows="5" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
-                    <p:ajax event="cellEdit" listener="#{prodCtr.onCellEdit}" 
-                            update=":form0:msgs"/>
+                             widgetVar="cellprod" rows="10" selectionMode="single"
+                             selection="#{prodCtr.sel}" rowKey="#{product.idInventario}"
+                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+
+                    <p:ajax event="rowSelect"/>
+
                     <p:column headerText="Nombre de prodicto" filterable="true"
                               filterBy="#{product.producto}">
                         <p:cellEditor>
@@ -74,6 +75,11 @@
                         </p:cellEditor>
                     </p:column>
                 </p:dataTable>
+
+                <p:contextMenu for="products" widgetVar="cMenu">
+                    <p:menuitem value="Editar producto" icon="pi pi-search"
+                                onclick="PF('prodDialog').show();" update="h0"/>
+                </p:contextMenu>
 
                 <h:panelGrid style="margin: 0 auto" width="10%">
                     <p:commandButton value="+" title="Agregar un nuevo producto al catálogo" 

@@ -121,6 +121,7 @@ public class cajaCtr implements Serializable {
     }
 
     public double getVentas() {
+        giro.setExcedentes(0);
         gdcfl.findVentas(giro.getIdGiroDeCaja()).forEach(v -> giro.setExcedentes(giro.getExcedentes() + v.getValor().doubleValue()));
         return giro.getExcedentes();
     }

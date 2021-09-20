@@ -26,6 +26,7 @@ import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -94,12 +95,11 @@ public class prodCtr implements Serializable {
     public List<Misc> getSucursales() {
         sucursales.clear();
         Optional.ofNullable(matSel).ifPresent(m -> {
-            matSel = m = mfl.find(m.getIdMisc());
             switch (us.get().getTipoUsuario().getIdTipoUsuario()) {
                 case 1:
                 case 2:
                     sucursales.add(m);
-                    sucursales.addAll(m.getMiscList());
+                    sucursales.addAll(mfl.find(m.getIdMisc()).getMiscList());
                     break;
                 case 3:
                     sucursales.add(m);
@@ -110,10 +110,7 @@ public class prodCtr implements Serializable {
     }
 
     public List<Inventario> getInventario() {
-        inventarios.clear();
-        Optional.ofNullable(sucSel).ifPresent(s -> {
-            inventarios = ifl.findByTienda(s.getIdMisc());
-        });
+        inventarios = ifl.findByTienda(Optional.ofNullable(sucSel).orElseGet(() -> new Misc(0)).getIdMisc());
         return inventarios;
     }
 
@@ -141,16 +138,6 @@ public class prodCtr implements Serializable {
         this.sucSel = sucSel;
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        if (event.getNewValue() != null && !event.getNewValue().equals(event.getOldValue())) {
-            Inventario p = inventarios.get(event.getRowIndex());
-            ifl.edit(p);
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificación",
-                            "Los nuevos datos han sido guardados para " + p.getProducto()));
-        }
-    }
-
     public void nuevo() {
         sel = new Inventario(null, "", BigDecimal.ZERO);
         sel.setDescripcion("");
@@ -159,16 +146,26 @@ public class prodCtr implements Serializable {
     public void persist() {
         if (Optional.ofNullable(sucSel).isPresent()) {
             FacesMessage ms;
-            sel.setTienda(sucSel);
-            sel.setActivo(true);
-            if (!Optional.ofNullable(ifl.find(sel.getProducto())).isPresent()) {
-                ifl.create(sel);
-                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Agregación",
-                        "El nuevo producto se ha agregado al catálogo. Nombre: " + sel.getProducto());
-                PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
+            if (sel.getIdInventario() == null) {
+                sel.setTienda(sucSel);
+                sel.setActivo(true);
+                if (!Optional.ofNullable(ifl.find(sel.getProducto())).isPresent()) {
+                    ifl.create(sel);
+                    ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Agregación",
+                            "El catálogo de productos se ha modificado. "
+                            + "Nombre de producto agregado: " + sel.getProducto());
+
+                    PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
+                } else {
+                    ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Imposible continuar",
+                            "Ya hay un producto agregado al catálogo con el nombre: " + sel.getProducto());
+                }
             } else {
-                ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Imposible continuar",
-                        "Ya hay un producto agregado al catálogo con el nombre: " + sel.getProducto());
+                ifl.edit(sel);
+                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificación",
+                        "El catálogo de productos se ha modificado. "
+                        + "Nombre de producto Modificado: " + sel.getProducto());
+                PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
             }
             Optional.ofNullable(ms).ifPresent(m -> FacesContext.getCurrentInstance().addMessage("form0:msgs", m));
         } else {

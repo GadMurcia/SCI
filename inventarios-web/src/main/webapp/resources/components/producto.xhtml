@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:cc="http://xmlns.jcp.org/jsf/composite"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <!-- INTERFACE -->
     <cc:interface>
@@ -13,7 +14,7 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        <p:panelGrid columns="2">
+        <h:panelGrid columns="2">
             <p:outputLabel value="Nombre de producto:" for="producto" />
             <p:inputText id="producto" value="#{cc.attrs.producto.producto}" 
                          title="Nombre" required="true" disabled="#{!cc.attrs.edit}"
@@ -24,9 +25,9 @@
 
             <p:outputLabel value="Precio Unitario:" for="precioUnitario" />
             <p:inputNumber id="precioUnitario" value="#{cc.attrs.producto.precioUnitario}" 
-                         title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
-                         requiredMessage="El precio unitario no debe quedar vacío." 
-                         symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                           title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
+                           requiredMessage="El precio unitario no debe quedar vacío." 
+                           symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                 <f:validateDoubleRange minimum="0"/>
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputNumber>
@@ -37,6 +38,12 @@
                              title="Descripcion" placeholder="Ingrese una descripcion del producto">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputTextarea>
-        </p:panelGrid>
+
+            <p:outputLabel value="Permitir venta:" for="activo" />
+            <p:selectBooleanButton id="activo" value="#{cc.attrs.producto.activo}" 
+                                   disabled="#{!cc.attrs.edit}" offLabel="No" onLabel="Sí">
+                <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+            </p:selectBooleanButton>
+        </h:panelGrid>
     </cc:implementation>
 </html>
