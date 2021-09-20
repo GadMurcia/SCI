@@ -10,7 +10,8 @@
     <h:body>
         <h:form id="form">
             <p:growl id="msgs" showDetail="true" sticky="true"/>
-            <h:panelGrid columns="1" style="width: 30%; margin: 5% auto">
+            <p:focus context="pan"/>
+            <h:panelGrid id="pan" columns="1" style="width: 30%; margin: 5% auto">
                 <h:panelGrid columns="2">
                     <p:outputLabel value="Usuario" for="username" />
                     <p:inputText id="username" type="text" value="#{loginCtr.us}" 

@@ -8,11 +8,11 @@ package net.delsas.inventarios.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -23,22 +23,24 @@ public class DetalleVentasPK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date idVentas;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 10)
-    private String usuario;
+    @Column(nullable = false)
+    private int giroCaja;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private int producto;
 
     public DetalleVentasPK() {
     }
 
-    public DetalleVentasPK(Date idVentas, String usuario, int producto) {
+    public DetalleVentasPK(Date idVentas, int giroCaja, int producto) {
         this.idVentas = idVentas;
-        this.usuario = usuario;
+        this.giroCaja = giroCaja;
         this.producto = producto;
     }
 
@@ -50,12 +52,12 @@ public class DetalleVentasPK implements Serializable {
         this.idVentas = idVentas;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public int getGiroCaja() {
+        return giroCaja;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setGiroCaja(int giroCaja) {
+        this.giroCaja = giroCaja;
     }
 
     public int getProducto() {
@@ -70,7 +72,7 @@ public class DetalleVentasPK implements Serializable {
     public int hashCode() {
         int hash = 0;
         hash += (idVentas != null ? idVentas.hashCode() : 0);
-        hash += (usuario != null ? usuario.hashCode() : 0);
+        hash += (int) giroCaja;
         hash += (int) producto;
         return hash;
     }
@@ -85,7 +87,7 @@ public class DetalleVentasPK implements Serializable {
         if ((this.idVentas == null && other.idVentas != null) || (this.idVentas != null && !this.idVentas.equals(other.idVentas))) {
             return false;
         }
-        if ((this.usuario == null && other.usuario != null) || (this.usuario != null && !this.usuario.equals(other.usuario))) {
+        if (this.giroCaja != other.giroCaja) {
             return false;
         }
         if (this.producto != other.producto) {
@@ -96,7 +98,7 @@ public class DetalleVentasPK implements Serializable {
 
     @Override
     public String toString() {
-        return "net.delsas.inventarios.entities.DetalleVentasPK[ idVentas=" + idVentas + ", usuario=" + usuario + ", producto=" + producto + " ]";
+        return "net.delsas.inventarios.entities.DetalleVentasPK[ idVentas=" + idVentas + ", giroCaja=" + giroCaja + ", producto=" + producto + " ]";
     }
     
 }

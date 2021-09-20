@@ -30,4 +30,5 @@ public interface MiscFacadeLocal {
 
     int count();
     
+    List<Misc> findAll(String idUsuario);
 }

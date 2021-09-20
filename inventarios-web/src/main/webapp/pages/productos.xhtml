@@ -1,10 +1,101 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../WEB-INF/plantillas/pl1.xhtml">
+                template="./../WEB-INF/plantillas/pl1.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:t="http://xmlns.jcp.org/jsf/composite/components">
 
     <ui:define name="content">
-        content
+        <h:form id="form">
+            <h:panelGrid columns="1">
+                <h:panelGrid columns="4">
+                    <p:outputLabel for="matrices" value="Matriz:"/>
+                    <p:selectOneMenu id="matrices" value="#{prodCtr.matSel}" 
+                                     converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                        <f:selectItems value="#{prodCtr.matrices}" var="m"
+                                       itemValue="#{m}" itemLabel="#{m.nombre}"/>
+                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}" update="sucursales products"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="sucursales" value="Sucursal:"/>
+                    <p:selectOneMenu id="sucursales" value="#{prodCtr.sucSel}" 
+                                     converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                        <f:selectItems value="#{prodCtr.sucursales}" var="s"
+                                       itemValue="#{s}" itemLabel="#{s.nombre}"/>
+                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}" update="products"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+
+                <p:dataTable id="products" var="product" value="#{prodCtr.inventario}" 
+                             editable="true" editMode="cell"
+                             widgetVar="cellprod" editInitEvent="dblclick"
+                             rows="5" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                    <p:ajax event="cellEdit" listener="#{prodCtr.onCellEdit}" 
+                            update=":form0:msgs"/>
+                    <p:column headerText="Nombre de prodicto" filterable="true"
+                              filterBy="#{product.producto}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{product.producto}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{product.producto}" style="width:100%" label="Name"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Precio Uitario">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{product.precioUnitario}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputNumber value="#{product.precioUnitario}" 
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." 
+                                               thousandSeparator="," />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Descripción">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{product.descripcion}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputTextarea value="#{product.descripcion}" 
+                                                 style="width:100%" label="Price"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                </p:dataTable>
+
+                <h:panelGrid style="margin: 0 auto" width="10%">
+                    <p:commandButton value="+" title="Agregar un nuevo producto al catálogo" 
+                                     actionListener="#{prodCtr.nuevo()}" update="h0"
+                                     onsuccess="PF('prodDialog').show()"/>
+                </h:panelGrid>
+            </h:panelGrid>
+        </h:form>
+
+        <p:dialog header="Agregación de productos" widgetVar="prodDialog" modal="true" showEffect="fade"
+                  hideEffect="fade" resizable="false" closeOnEscape="true" responsive="true">
+            <h:form id="h0" style="text-align:center;">
+                <h:panelGrid columns="1">
+                    <t:producto producto="#{prodCtr.sel}"/>
+                    <h:panelGrid style="margin: 0 auto">
+                        <p:commandButton value="guardar" update="form:products form0:msgs"
+                                         actionListener="#{prodCtr.persist()}"
+                                         type="summit"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>

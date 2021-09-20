@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,29 +31,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "DetalleVentas.findAll", query = "SELECT d FROM DetalleVentas d"),
     @NamedQuery(name = "DetalleVentas.findByIdVentas", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.idVentas = :idVentas"),
-    @NamedQuery(name = "DetalleVentas.findByUsuario", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.usuario = :usuario"),
+    @NamedQuery(name = "DetalleVentas.findByGiroCaja", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.giroCaja = :giroCaja"),
     @NamedQuery(name = "DetalleVentas.findByProducto", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.producto = :producto"),
     @NamedQuery(name = "DetalleVentas.findByCantidad", query = "SELECT d FROM DetalleVentas d WHERE d.cantidad = :cantidad"),
     @NamedQuery(name = "DetalleVentas.findByPrecioUnitario", query = "SELECT d FROM DetalleVentas d WHERE d.precioUnitario = :precioUnitario")})
 public class DetalleVentas implements Serializable {
 
-    @Basic(optional = false)
-    @NotNull
-    private int cantidad;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    private BigDecimal precioUnitario;
-
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected DetalleVentasPK detalleVentasPK;
-    @JoinColumn(name = "producto", referencedColumnName = "idInventario", insertable = false, updatable = false)
+    @Basic(optional = false)
+    @NotNull
+    @Column(nullable = false)
+    private double cantidad;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(nullable = false, precision = 11, scale = 2)
+    private BigDecimal precioUnitario;
+    @JoinColumn(name = "producto", referencedColumnName = "idInventario", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Inventario inventario;
     @JoinColumns({
-        @JoinColumn(name = "usuario", referencedColumnName = "usuario", insertable = false, updatable = false),
-        @JoinColumn(name = "idVentas", referencedColumnName = "idVentas", insertable = false, updatable = false)})
+        @JoinColumn(name = "giroCaja", referencedColumnName = "giroCaja", nullable = false, insertable = false, updatable = false),
+        @JoinColumn(name = "idVentas", referencedColumnName = "idVentas", nullable = false, insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Ventas ventas;
 
@@ -63,14 +65,14 @@ public class DetalleVentas implements Serializable {
         this.detalleVentasPK = detalleVentasPK;
     }
 
-    public DetalleVentas(DetalleVentasPK detalleVentasPK, int cantidad, BigDecimal precioUnitario) {
+    public DetalleVentas(DetalleVentasPK detalleVentasPK, double cantidad, BigDecimal precioUnitario) {
         this.detalleVentasPK = detalleVentasPK;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
     }
 
-    public DetalleVentas(Date idVentas, String usuario, int producto) {
-        this.detalleVentasPK = new DetalleVentasPK(idVentas, usuario, producto);
+    public DetalleVentas(Date idVentas, int giroCaja, int producto) {
+        this.detalleVentasPK = new DetalleVentasPK(idVentas, giroCaja, producto);
     }
 
     public DetalleVentasPK getDetalleVentasPK() {
@@ -81,11 +83,11 @@ public class DetalleVentas implements Serializable {
         this.detalleVentasPK = detalleVentasPK;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

@@ -10,7 +10,10 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,41 +45,52 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GiroDeCaja.findByExcedentes", query = "SELECT g FROM GiroDeCaja g WHERE g.excedentes = :excedentes"),
     @NamedQuery(name = "GiroDeCaja.findByCierre", query = "SELECT g FROM GiroDeCaja g WHERE g.cierre = :cierre"),
     @NamedQuery(name = "GiroDeCaja.findByRetiros", query = "SELECT g FROM GiroDeCaja g WHERE g.retiros = :retiros"),
-    @NamedQuery(name = "GiroDeCaja.findByDetalleRetiros", query = "SELECT g FROM GiroDeCaja g WHERE g.detalleRetiros = :detalleRetiros")})
+    @NamedQuery(name = "GiroDeCaja.findByDetalleRetiros", query = "SELECT g FROM GiroDeCaja g WHERE g.detalleRetiros = :detalleRetiros"),
+    @NamedQuery(name = "GiroDeCaja.findNoTerminadas", query = "SELECT g FROM GiroDeCaja g WHERE g.fin = NULL AND g.responsable.idUsuario = :idUsuario")
+
+})
 public class GiroDeCaja implements Serializable {
 
+    
+    private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+    @Column(nullable = false)
     private Integer idGiroDeCaja;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date inicio;
-    @Basic(optional = false)
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date fin;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private double cajaInicial;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private double faltantes;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private double excedentes;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private double cierre;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private double retiros;
     @Size(max = 300)
+    @Column(length = 300)
     private String detalleRetiros;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "giroDeCaja")
     private List<Ventas> ventasList;
-    @JoinColumn(name = "responsable", referencedColumnName = "idUsuario")
+    @JoinColumn(name = "responsable", referencedColumnName = "idUsuario", nullable = false)
     @ManyToOne(optional = false)
     private Usuario responsable;
 
@@ -170,6 +184,15 @@ public class GiroDeCaja implements Serializable {
         this.detalleRetiros = detalleRetiros;
     }
 
+    @XmlTransient
+    public List<Ventas> getVentasList() {
+        return ventasList;
+    }
+
+    public void setVentasList(List<Ventas> ventasList) {
+        this.ventasList = ventasList;
+    }
+
     public Usuario getResponsable() {
         return responsable;
     }
@@ -203,13 +226,4 @@ public class GiroDeCaja implements Serializable {
         return "net.delsas.inventarios.entities.GiroDeCaja[ idGiroDeCaja=" + idGiroDeCaja + " ]";
     }
 
-    @XmlTransient
-    public List<Ventas> getVentasList() {
-        return ventasList;
-    }
-
-    public void setVentasList(List<Ventas> ventasList) {
-        this.ventasList = ventasList;
-    }
-    
 }

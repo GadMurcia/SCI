@@ -30,4 +30,7 @@ public interface InventarioFacadeLocal {
 
     int count();
     
+    Inventario find(String nombre);
+    
+    List<Inventario> findByTienda(int idTienda);
 }

@@ -25,7 +25,7 @@
                                 <p:menuitem value="Compra" icon="pi pi-fw pi-shopping-cart" url="compras.app"/>
                                 <p:menuitem value="Venta" icon="pi pi-fw pi-money-bill" url="home.app"/>
                             </p:submenu>
-                            <p:menuitem value="Productos" icon="pi pi-fw pi-folder" url="productos.app"/>
+                            <p:menuitem value="Catálogo de productos" icon="pi pi-fw pi-folder" url="productos.app"/>
                             <p:divider />
                             <p:menuitem value="Reportes" icon="pi pi-fw pi-print" url="reportes.app"/>
                         </p:submenu>
@@ -43,12 +43,14 @@
                                     <p:menuitem value="Cambiar Contraseña" update="h"
                                                 icon="pi pi-angle-double-right"
                                                 onclick="PF('contraDialog').show();"/>
+                                    <p:menuitem value="Caja" update="h1"
+                                                icon="pi pi-angle-double-right"
+                                                oncomplete="PF('cajaDialog').show();"/>
                                 </p:submenu>
                                 <p:submenu label="Opciones">
                                     <p:menuitem value="Cerrar sesión" 
                                                 icon="pi pi-sign-out"
                                                 actionListener="#{homeCtr.CerrarSesion()}"/>
-
                                 </p:submenu>
                             </p:menu>
                         </f:facet>
@@ -87,6 +89,143 @@
                                         skipDetailIfEqualsSummary="true">
                                 <p:autoUpdate/>
                             </p:messages>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Opciones de caja" widgetVar="cajaDialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="false"
+                          width="600px">
+                    <h:form id="h1" style="text-align:center;">
+                        <h:panelGrid columns="1">
+                            <div class="card">
+                                <h5>Detalle de la caja</h5>
+                                <div class="p-grid">
+                                    <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
+                                        <div class="ui-fluid">
+                                            <div class="p-field">
+                                                <p:outputLabel value="Ticket de caja:"/>
+                                                <p:outputLabel value="#{cajaCtr.giro.idGiroDeCaja}" title="IdGiroDeCaja"/>
+                                            </div>
+
+                                            <div class="p-field">
+                                                <p:outputLabel value="Saldo inicial:"/>
+                                                <p:outputLabel value="#{cajaCtr.giro.cajaInicial}" title="CajaInicial"/>
+                                            </div>
+
+                                            <div class="p-field">
+                                                <p:outputLabel value="Ventas:"/>
+                                                <p:outputLabel value="#{cajaCtr.ventas}" title="Excedentes"/>
+                                            </div>
+
+                                            <div class="p-field">
+                                                <p:outputLabel value="Sumatoria de Retiros:"/>
+                                                <p:outputLabel value="#{cajaCtr.giro.retiros}" title="Retiros"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-col-2">
+                                        <p:divider align="center" type="dashed">
+                                            <b>/==/</b>
+                                        </p:divider>
+                                    </div>
+                                    <div class="p-col-5 p-d-flex p-ai-center p-jc-center">
+                                        <p:card style="width: 25em">
+                                            <f:facet name="title">
+                                                Detalle de Retiros
+                                            </f:facet>
+                                            <f:facet name="subtitle">
+                                                Retiros en la caja con ticket #{cajaCtr.giro.idGiroDeCaja}
+                                            </f:facet>
+                                            <p>#{cajaCtr.giro.detalleRetiros}</p>
+                                            <f:facet name="footer">
+                                                <p:commandButton value="Registro de retiro" update="h1 h4"
+                                                                 onclick="PF('retiroDialog').show();"/>  
+                                            </f:facet>
+                                        </p:card>
+                                    </div>
+                                </div>
+                            </div>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton value="Abrir Caja" update="h1 h2" 
+                                                 rendered="#{!cajaCtr.iniciada}"
+                                                 onclick="PF('caja2Dialog').show();"/>
+                                <p:commandButton value="Cerrar Caja" update="h1 h3"
+                                                 rendered="#{cajaCtr.iniciada}"
+                                                 onclick="PF('caja3Dialog').show();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Abrir caja" widgetVar="caja2Dialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h2" style="text-align:center;">
+                        <h:panelGrid columns="1">
+                            <h1>Apertura de caja</h1>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Inicio de caja:"/>
+                                <p:inputNumber value="#{cajaCtr.giro.cajaInicial}" 
+                                               title="Dinero inicial en caja" 
+                                               required="true"
+                                               requiredMessage="Debe ingresar con cuanto dinero inicia sus labores." 
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton value="Abrir Caja" update="h1" 
+                                                 actionListener="#{cajaCtr.abrirGiro()}"
+                                                 oncomplete="PF('caja2Dialog').hide();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Cerrar caja" widgetVar="caja3Dialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h3" style="text-align:center;">
+                        <h:panelGrid columns="1">
+                            <h1>Cierre de caja</h1>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Dinero en caja:"/>
+                                <p:inputNumber value="#{cajaCtr.giro.cierre}" 
+                                               title="Dinero final en caja" 
+                                               required="true"
+                                               requiredMessage="Debe ingresar con cuanto dinero termina sus labores." 
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton value="Cerrar Caja" update="h1"
+                                                 actionListener="#{cajaCtr.cerrarCaja()}"
+                                                 oncomplete="PF('caja3Dialog').hide();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Retiro de efectivo" widgetVar="retiroDialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h4" style="text-align:center;">
+                        <h:panelGrid columns="1">
+                            <h1>Registro de retiro de efectivo de caja</h1>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Cantidad a retirar:"/>
+                                <p:inputNumber value="#{cajaCtr.valor}"
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+
+                                <p:outputLabel value="Detalle:"/>
+                                <p:inputTextarea value="#{cajaCtr.descr}" required="true"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton value="Guardar" update="h1"
+                                                 actionListener="#{cajaCtr.registrarRetiro()}"
+                                                 oncomplete="PF('retiroDialog').hide();"/>
+                            </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>

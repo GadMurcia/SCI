@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +29,11 @@ public class MiscFacade extends AbstractFacade<Misc> implements MiscFacadeLocal 
     public MiscFacade() {
         super(Misc.class);
     }
-    
+
+    @Override
+    public List<Misc> findAll(String idUsuario) {
+        return em.createNamedQuery("Misc.findByPropietario")
+                .setParameter("idUsuario", idUsuario)
+                .getResultList();
+    }
 }
