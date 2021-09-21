@@ -8,6 +8,7 @@ package net.delsas.inventarios.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -152,31 +153,6 @@ public class Inventario implements Serializable {
         this.tienda = tienda;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idInventario != null ? idInventario.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Inventario)) {
-            return false;
-        }
-        Inventario other = (Inventario) object;
-        if ((this.idInventario == null && other.idInventario != null) || (this.idInventario != null && !this.idInventario.equals(other.idInventario))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "net.delsas.inventarios.entities.Inventario[ idInventario=" + idInventario + " ]";
-    }
-
     public boolean isActivo() {
         return activo;
     }
@@ -200,5 +176,62 @@ public class Inventario implements Serializable {
     public void setLibroCompras(Librocompras libroCompras) {
         this.libroCompras = libroCompras;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.producto);
+        hash = 23 * hash + Objects.hashCode(this.idInventario);
+        hash = 23 * hash + Objects.hashCode(this.precioUnitario);
+        hash = 23 * hash + Objects.hashCode(this.descripcion);
+        hash = 23 * hash + Objects.hashCode(this.tienda);
+        hash = 23 * hash + (this.activo ? 1 : 0);
+        hash = 23 * hash + Objects.hashCode(this.libroVentas);
+        hash = 23 * hash + Objects.hashCode(this.libroCompras);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Inventario other = (Inventario) obj;
+        if (this.activo != other.activo) {
+            return false;
+        }
+        if (!Objects.equals(this.producto, other.producto)) {
+            return false;
+        }
+        if (!Objects.equals(this.descripcion, other.descripcion)) {
+            return false;
+        }
+        if (!Objects.equals(this.idInventario, other.idInventario)) {
+            return false;
+        }
+        if (!Objects.equals(this.precioUnitario, other.precioUnitario)) {
+            return false;
+        }
+        if (!Objects.equals(this.tienda, other.tienda)) {
+            return false;
+        }
+        if (!Objects.equals(this.libroVentas, other.libroVentas)) {
+            return false;
+        }
+        return Objects.equals(this.libroCompras, other.libroCompras);
+    }
+
+    @Override
+    public String toString() {
+        return "Inventario{" + "producto=" + producto + ", idInventario=" + idInventario + ", precioUnitario=" + precioUnitario + ", descripcion=" + descripcion + ", tienda=" + tienda + ", activo=" + activo + ", libroVentas=" + libroVentas + ", libroCompras=" + libroCompras + '}';
+    }
+    
+    
 
 }

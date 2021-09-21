@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +26,6 @@ import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -113,7 +110,7 @@ public class prodCtr implements Serializable {
 
     public List<Inventario> getInventario() {
         inventarios = ifl.findByTienda(Optional.ofNullable(sucSel).orElseGet(() -> new Misc(0)).getIdMisc());
-        Collections.sort(inventarios, (Inventario uno, Inventario dos) -> dos.getProducto().compareTo(uno.getProducto()));
+        Collections.sort(inventarios, (Inventario uno, Inventario dos) -> uno.getProducto().toLowerCase().compareTo(dos.getProducto().toLowerCase()));
         return inventarios;
     }
 

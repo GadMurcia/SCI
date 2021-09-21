@@ -11,7 +11,7 @@ import net.delsas.inventarios.entities.Librocompras;
 import net.delsas.inventarios.entities.Libroventas;
 import net.delsas.inventarios.entities.Misc;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-19T22:29:10")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-09-21T01:22:25")
 @StaticMetamodel(Inventario.class)
 public class Inventario_ { 
 
