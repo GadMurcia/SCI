@@ -10,14 +10,14 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="default.css" library="css"/>
         <h:outputStylesheet name="cssLayout.css" library="css"/>
-        <title>SCI - #{homeCtr.nombreUs}</title>
+        <title>#{homeCtr.nombreEmpresa} - #{homeCtr.nombreUs}</title>
     </h:head>
 
     <h:body>
 
         <div id="top">
             <ui:insert name="top">
-                <h:form id="form0">
+                <h:form id="form0"  style="margin: auto">
                     <p:growl id="msgs" showDetail="true" life="15000"/>
                     <p:menubar>
                         <p:submenu label="Operaciones" icon="pi pi-fw pi-th-large">
@@ -60,7 +60,7 @@
                 <p:dialog header="Cambio de Contraseña" widgetVar="contraDialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
-                    <h:form id="h" style="text-align:center;">
+                    <h:form id="h"  style="margin: auto">
                         <h:panelGrid columns="1">
                             <h:panelGrid columns="2" style="margin: 0 auto">
                                 <p:outputLabel for="toggle" styleClass="p-col-fixed" 
@@ -95,7 +95,7 @@
                 <p:dialog header="Opciones de caja" widgetVar="cajaDialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="false">
-                    <h:form id="h1" style="text-align:center;">
+                    <h:form id="h1"  style="margin: auto">
                         <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}">
                             <p:card>
                                 <f:facet name="title">
@@ -147,7 +147,7 @@
                 <p:dialog header="Abrir caja" widgetVar="caja2Dialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
-                    <h:form id="h2" style="text-align:center;">
+                    <h:form id="h2"  style="margin: auto">
                         <h:panelGrid columns="1">
                             <h1>Apertura de caja</h1>
                             <h:panelGrid columns="2">
@@ -171,7 +171,7 @@
                 <p:dialog header="Cerrar caja" widgetVar="caja3Dialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
-                    <h:form id="h3" style="text-align:center;">
+                    <h:form id="h3"  style="margin: auto">
                         <h:panelGrid columns="1">
                             <h1>Cierre de caja</h1>
                             <h:panelGrid columns="2">
@@ -195,7 +195,7 @@
                 <p:dialog header="Retiro de efectivo" widgetVar="retiroDialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
-                    <h:form id="h4" style="text-align:center;">
+                    <h:form id="h4"  style="margin: auto">
                         <h:panelGrid columns="1">
                             <h1>Registro de retiro de efectivo de caja</h1>
                             <h:panelGrid columns="2">
@@ -219,14 +219,8 @@
             </ui:insert>
         </div>
         <div>
-            <div id="left">
-                <ui:insert name="left">Left</ui:insert>
-            </div>
             <div>
-                <div id="right">
-                    <ui:insert name="right">Right</ui:insert>
-                </div>
-                <div id="content" class="right_content">
+                <div id="content" class="center_content">
                     <ui:insert name="content">Content</ui:insert>
                 </div>
             </div>

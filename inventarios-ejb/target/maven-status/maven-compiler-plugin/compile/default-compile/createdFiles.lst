@@ -19,8 +19,8 @@ net/delsas/inventarios/beans/LibrocomprasFacade.class
 net/delsas/inventarios/entities/Inventario_.class
 net/delsas/inventarios/entities/Ventas.class
 net/delsas/inventarios/entities/GiroDeCaja.class
-net/delsas/inventarios/entities/DetalleVentas.class
 net/delsas/inventarios/entities/VentasPK_.class
+net/delsas/inventarios/entities/DetalleVentas.class
 net/delsas/inventarios/entities/Misc_.class
 net/delsas/inventarios/beans/UsuarioFacadeLocal.class
 net/delsas/inventarios/entities/Ventas_.class

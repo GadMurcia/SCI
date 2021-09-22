@@ -7,7 +7,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        <h:form id="form">
+        <h:form id="form"  style="width: 80%; margin: auto">
             <p:card>
                 <f:facet name="header">
                 </f:facet>
@@ -19,19 +19,21 @@
                         <p:outputLabel for="matrices" value="Matriz:"/>
                         <p:selectOneMenu id="matrices" value="#{compraCtr.matSel}" 
                                          converter="omnifaces.SelectItemsConverter">
-                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione" noSelectionOption="true"/>
                             <f:selectItems value="#{compraCtr.matrices}" var="m"
                                            itemValue="#{m}" itemLabel="#{m.nombre}"/>
-                            <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}" update="sucursales"/>
+                            <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}" 
+                                    update="sucursales inic save clean end add"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel for="sucursales" value="Sucursal:"/>
                         <p:selectOneMenu id="sucursales" value="#{compraCtr.sucSel}" 
                                          converter="omnifaces.SelectItemsConverter">
-                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione" noSelectionOption="true"/>
                             <f:selectItems value="#{compraCtr.sucursales}" var="s"
                                            itemValue="#{s}" itemLabel="#{s.nombre}"/>
-                            <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
+                            <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                    update="inic save clean end add"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
                 </f:facet>
@@ -84,65 +86,107 @@
                                                decimalSeparator="." thousandSeparator="," />
                             </h:panelGrid>
                             <h:panelGrid columns="1" style="margin: 0 auto">
-                                <p:commandButton icon="pi pi-check" value="Agregar" 
+                                <p:commandButton id="add" icon="pi pi-check" value="Agregar" 
                                                  title="Agregar producto a la factura"
                                                  disabled="#{!compraCtr.comprando}"
                                                  actionListener="#{compraCtr.agregarDetalleCompra()}"
                                                  update="form"/>
                             </h:panelGrid>
                         </h:panelGrid>
-                        <p:dataTable value="#{compraCtr.nueCompra.detalleCompraList}" var="item"
-                                     rows="5" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Cantidad"/>
-                                </f:facet>
-                                <h:outputText value="#{item.cantidad}"/>
+                        <p:dataTable id="products" var="product" value="#{compraCtr.detalles}" editable="true"
+                                     editMode="cell" widgetVar="cellProducts" selection="#{compraCtr.ndCompra}"
+                                     selectionMode="single" rowKey="#{product.detalleCompraPK.producto}">
+
+                            <p:ajax event="cellEdit" listener="#{compraCtr.onCellEdit}" update="form"/>
+
+                            <p:column headerText="Code">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{product.cantidad}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber value="#{product.cantidad}" 
+                                                       title="Cantidad del producto a comprar" 
+                                                       decimalSeparator="." thousandSeparator=","/>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Producto"/>
-                                </f:facet>
-                                <h:outputText value="#{item.inventario.producto}"/>
+
+                            <p:column headerText="Name">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{product.inventario.producto}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:autoComplete value="#{product.inventario}"
+                                                        completeMethod="#{compraCtr.completeInventario}"
+                                                        var="pro" itemLabel="#{pro.producto}" itemValue="#{pro}"
+                                                        converter="InventarioConverter" scrollHeight="250"
+                                                        maxResults="5">
+                                            <p:ajax event="itemSelect" listener="#{compraCtr.onItemSelect}"/>
+                                            <f:facet name="itemtip">
+                                                <h:panelGrid columns="2" cellpadding="5">
+                                                    <f:facet name="header">
+                                                        <p:outputLabel value="#{pro.idInventario}"/>
+                                                    </f:facet>
+
+                                                    <h:outputText value="Nombre"/>
+                                                    <h:outputText value="#{pro.producto}"/>
+
+                                                    <h:outputText value="Precio de venta"/>
+                                                    <h:outputText value="#{pro.precioUnitario}"/>
+                                                </h:panelGrid>
+                                            </f:facet>
+                                        </p:autoComplete>
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="CostoUnitario"/>
-                                </f:facet>
-                                <h:outputText value="#{item.costoUnitario}"/>
+
+                            <p:column headerText="Status">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{product.costoUnitario}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputNumber value="#{product.costoUnitario}" 
+                                                       title="Valor unitario del producto." 
+                                                       decimalSeparator="." thousandSeparator="," />
+                                    </f:facet>
+                                </p:cellEditor>
                             </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Sub Total"/>
-                                </f:facet>
-                                <h:outputText value="#{item.cantidad*item.costoUnitario}"/>
+
+                            <p:column id="sub" headerText="Price">
+                                <h:outputText value="$#{product.cantidad*product.costoUnitario}"/>
                             </p:column>
                         </p:dataTable>
-
                     </h:panelGrid>
                 </h:panelGrid>
 
                 <f:facet name="footer">
-                    <p:commandButton icon="pi pi-check" value="Guardar" 
+                    <p:commandButton id="save" icon="pi pi-check" value="Guardar" 
                                      actionListener="#{compraCtr.guardarCompra()}"
                                      rendered="#{compraCtr.comprando}"
+                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton icon="pi pi-times" value="Limpiar" 
+                    <p:commandButton id="clean" icon="pi pi-times" value="Limpiar" 
                                      styleClass="ui-button-secondary" 
                                      rendered="#{compraCtr.comprando}"
                                      actionListener="#{compraCtr.nuevaCompra()}"
+                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton icon="pi pi-check" value="Iniciar" 
+                    <p:commandButton id="inic" icon="pi pi-check" value="Iniciar" 
                                      title="Iniciar la sesión de compras."
                                      actionListener="#{compraCtr.setComprando(true)}"
                                      action="#{compraCtr.nuevaCompra()}"
                                      rendered="#{!compraCtr.comprando}"
+                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton icon="pi pi-check" value="Finalizar"
+                    <p:commandButton id="end" icon="pi pi-check" value="Finalizar"
                                      title="Finalizar la sesión de compras."
                                      actionListener="#{compraCtr.setComprando(false)}"
                                      action="#{compraCtr.nuevaCompra()}"
                                      rendered="#{compraCtr.comprando}"
+                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
                 </f:facet>
             </p:card>

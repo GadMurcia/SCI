@@ -6,7 +6,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        <h:form id="formVenta" style="margin: 0 auto; width: auto;">
+        <h:form id="formVenta" style="width: 80%; margin: auto">
             <p:outputLabel value="La caja está CERRADA." rendered="#{!cajaCtr.iniciada}"/>
             <p:outputLabel value="La caja está ABIERTA." rendered="#{cajaCtr.iniciada}"/>
         </h:form>

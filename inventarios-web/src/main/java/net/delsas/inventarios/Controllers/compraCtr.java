@@ -32,6 +32,8 @@ import net.delsas.inventarios.entities.DetalleCompraPK;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -44,6 +46,7 @@ public class compraCtr implements Serializable {
 
     private Compras nCompra;
     private DetalleCompra ndCompra;
+    private List<DetalleCompra> detalles;
     private Optional<Usuario> user;
     private Inventario invSel;
     private boolean comprando;
@@ -68,6 +71,7 @@ public class compraCtr implements Serializable {
         inventarios = new ArrayList<>();
         matrices = new ArrayList<>();
         sucursales = new ArrayList<>();
+        detalles = new ArrayList<>();
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!user.isPresent()) {
             try {
@@ -87,6 +91,7 @@ public class compraCtr implements Serializable {
         nCompra = new Compras(new ComprasPK(new Date(), user.get().getIdUsuario()), BigDecimal.ZERO);
         nCompra.setDetalleCompraList(new ArrayList<>());
         nCompra.setUsuario1(user.get());
+        detalles.clear();
         nuevoDetalleCompras();
     }
 
@@ -96,25 +101,48 @@ public class compraCtr implements Serializable {
     }
 
     public void agregarDetalleCompra() {
+        FacesMessage ms;
         if (ndCompra.getDetalleCompraPK().getProducto() == 0) {
             //no ha seleccionado producto
+            ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "No hay producto seleccionado",
+                    "Antes de continuar debe seleccionar un producto del catálogo.");
         } else if (ndCompra.getCantidad() == 0) {
             //no ha establecido la cantidad
+            ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "No ha ingresado una cantidad válida",
+                    "Antes de continuar debe indicar una cantidad de producto que se agregarán al inventario.");
         } else if (ndCompra.getCostoUnitario().doubleValue() <= 0) {
             //no ha establecido bien le costo unitario
+            ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Costo unitario del producto no es válido",
+                    "El costo por unidad del producto seleccionado no puede ser cero (0) o un número negativo.");
+        } else if (!detalles.stream().filter(dc -> dc.getInventario().equals(ndCompra.getInventario()))
+                .collect(Collectors.toList()).isEmpty()) {
+            //el producto ya se ha agregado a la compra
+            ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "El producto duplicado",
+                    "El producto \"" + ndCompra.getInventario().getProducto() + "\" ya está en la lista de compras. "
+                    + "Sólo se puede agregar una vez en cada factura. ");
         } else {
             nCompra.setValor(nCompra.getValor().add(ndCompra.getCostoUnitario().multiply(new BigDecimal(ndCompra.getCantidad()))));
             ndCompra.setCompras(nCompra);
-            nCompra.getDetalleCompraList().add(ndCompra);
+            detalles.add(ndCompra);
+            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Producto agregado",
+                    ndCompra.getCantidad() + " unidades del producto "
+                    + ndCompra.getInventario().getProducto() + " se han agregado a la lista de compras.");
             nuevoDetalleCompras();
         }
+        FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
+        PrimeFaces.current().ajax().update("form0:msgs");
     }
 
     public void quitarDetalleCompra() {
-        if (nCompra.getDetalleCompraList().contains(ndCompra)) {
+        if (detalles.contains(ndCompra)) {
             nCompra.setValor(nCompra.getValor().add(ndCompra.getCostoUnitario().multiply(new BigDecimal(ndCompra.getCantidad())).negate()));
-            nCompra.getDetalleCompraList().remove(ndCompra);
+            detalles.remove(ndCompra);
             nuevoDetalleCompras();
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Eliminación",
+                            "El producto \"" + ndCompra.getInventario().getProducto()
+                            + "\" ha sido quitado de la lista de compras."));
+            PrimeFaces.current().ajax().update("form0:msgs");
         }
     }
 
@@ -131,6 +159,7 @@ public class compraCtr implements Serializable {
     }
 
     public void guardarCompra() {
+        nCompra.setDetalleCompraList(detalles);
         cfl.create(nCompra);
         comprando = false;
         nuevaCompra();
@@ -161,7 +190,7 @@ public class compraCtr implements Serializable {
     }
 
     public boolean isComprando() {
-        return comprando;
+        return comprando && sucSel != null;
     }
 
     public void setComprando(boolean comprando) {
@@ -186,6 +215,7 @@ public class compraCtr implements Serializable {
             }
         });
         matSel = matrices.isEmpty() ? null : matrices.get(0);
+        sucSel = null;
         return matrices;
     }
 
@@ -226,6 +256,16 @@ public class compraCtr implements Serializable {
 
     public void setSucSel(Misc sucSel) {
         this.sucSel = sucSel;
+    }
+
+    public List<DetalleCompra> getDetalles() {
+        return detalles;
+    }
+
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+        System.out.println(oldValue + " ## " + newValue);
     }
 
 }

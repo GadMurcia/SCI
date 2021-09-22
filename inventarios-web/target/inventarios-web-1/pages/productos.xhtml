@@ -8,7 +8,7 @@
                 xmlns:t="http://xmlns.jcp.org/jsf/composite/components">
 
     <ui:define name="content">
-        <h:form id="form">
+        <h:form id="form" style="width: 80%; margin: auto">
             <h:panelGrid columns="1">
                 <h:panelGrid columns="4">
                     <p:outputLabel for="matrices" value="Matriz:"/>
@@ -34,7 +34,8 @@
                 <p:dataTable id="products" var="product" value="#{prodCtr.inventario}" 
                              widgetVar="cellprod" rows="10" selectionMode="single" reflow="true"
                              selection="#{prodCtr.sel}" rowKey="#{product.idInventario}" size="small"
-                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                             >
 
                     <p:ajax event="rowSelect"/>
 
@@ -91,7 +92,7 @@
 
         <p:dialog header="Agregación de productos" widgetVar="prodDialog" modal="true" showEffect="fade"
                   hideEffect="fade" resizable="false" closeOnEscape="true" responsive="true">
-            <h:form id="h0" style="text-align:center;">
+            <h:form id="h0"  style="width: 80%; margin: auto">
                 <h:panelGrid columns="1">
                     <t:producto producto="#{prodCtr.sel}"/>
                     <h:panelGrid style="margin: 0 auto">
