@@ -35,6 +35,7 @@ import net.delsas.inventarios.entities.Usuario;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 /**
  *
@@ -47,6 +48,7 @@ public class compraCtr implements Serializable {
     private Compras nCompra;
     private DetalleCompra ndCompra;
     private List<DetalleCompra> detalles;
+    private List<DetalleCompra> selected;
     private Optional<Usuario> user;
     private Inventario invSel;
     private boolean comprando;
@@ -134,16 +136,17 @@ public class compraCtr implements Serializable {
     }
 
     public void quitarDetalleCompra() {
-        if (detalles.contains(ndCompra)) {
-            nCompra.setValor(nCompra.getValor().add(ndCompra.getCostoUnitario().multiply(new BigDecimal(ndCompra.getCantidad())).negate()));
-            detalles.remove(ndCompra);
+        selected.forEach(s -> {
+            nCompra.setValor(nCompra.getValor().add(s.getCostoUnitario().multiply(new BigDecimal(s.getCantidad())).negate()));
+            detalles.remove(s);
             nuevoDetalleCompras();
             FacesContext.getCurrentInstance().addMessage("form0:msgs",
-                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Eliminación",
-                            "El producto \"" + ndCompra.getInventario().getProducto()
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Eliminación",
+                            "El producto \"" + s.getInventario().getProducto()
                             + "\" ha sido quitado de la lista de compras."));
             PrimeFaces.current().ajax().update("form0:msgs");
-        }
+        });
+        selected.clear();
     }
 
     public List<Inventario> completeInventario(String query) {
@@ -159,10 +162,21 @@ public class compraCtr implements Serializable {
     }
 
     public void guardarCompra() {
-        nCompra.setDetalleCompraList(detalles);
-        cfl.create(nCompra);
-        comprando = false;
-        nuevaCompra();
+        FacesMessage ms;
+        if (detalles.size() > 0) {
+            nCompra.setDetalleCompraList(detalles);
+            cfl.create(nCompra);
+            comprando = false;
+            nuevaCompra();
+            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Compra guardada",
+                    "Los datos de esta compra han sido guardados con éxito.");
+        } else {
+            ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Error",
+                    "Para poder registrar una compra se debe detallar "
+                    + "al menos un producto comprado en la factura.");
+        }
+        FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
+        PrimeFaces.current().ajax().update("form0:msgs");
     }
 
     public Compras getNueCompra() {
@@ -195,6 +209,10 @@ public class compraCtr implements Serializable {
 
     public void setComprando(boolean comprando) {
         this.comprando = comprando;
+        FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Session de compras",
+                        "Se ha "+(this.comprando?"iniciado una nueva ":"finalizado la ")+"sesión de compras."));
+        PrimeFaces.current().ajax().update("form0:msgs");
     }
 
     public List<Misc> getMatrices() {
@@ -266,6 +284,30 @@ public class compraCtr implements Serializable {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
         System.out.println(oldValue + " ## " + newValue);
+    }
+
+    public List<DetalleCompra> getSelected() {
+        return selected;
+    }
+
+    public void setSelected(List<DetalleCompra> selected) {
+        this.selected = this.selected == null ? new ArrayList<>() : this.selected;
+    }
+
+    public void onRowSelect(SelectEvent<DetalleCompra> event) {
+        DetalleCompra o = event.getObject();
+        if (!selected.contains(o)) {
+            selected.add(o);
+        } else {
+            selected.remove(o);
+        }
+    }
+
+    public void onRowUnselect(UnselectEvent<DetalleCompra> event) {
+        DetalleCompra o = event.getObject();
+        if (o != null && selected.contains(o)) {
+            selected.remove(o);
+        }
     }
 
 }
