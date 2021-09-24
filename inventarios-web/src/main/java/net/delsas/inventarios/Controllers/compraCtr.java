@@ -280,12 +280,6 @@ public class compraCtr implements Serializable {
         return detalles;
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-        System.out.println(oldValue + " ## " + newValue);
-    }
-
     public List<DetalleCompra> getSelected() {
         return selected;
     }

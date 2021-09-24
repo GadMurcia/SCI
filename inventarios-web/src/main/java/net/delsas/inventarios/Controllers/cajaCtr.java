@@ -128,7 +128,7 @@ public class cajaCtr implements Serializable {
     public void registrarRetiro() {
         giro.setRetiros(giro.getRetiros() + this.valor.doubleValue());
         String t = Optional.ofNullable(giro.getDetalleRetiros()).orElseGet(() -> "");
-        giro.setDetalleRetiros((t.isEmpty() ? "" : t+"\n") + (valor.doubleValue() + " => " + Descr));
+        giro.setDetalleRetiros((t.isEmpty() ? "" : t+"\n") + (valor.doubleValue() + "   ><  " + Descr+""));
         gdcfl.edit(giro);
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage("Retiro",
