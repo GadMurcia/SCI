@@ -72,6 +72,7 @@ public class ventaCtr implements Serializable {
         inventarios = new ArrayList<>();
         matrices = new ArrayList<>();
         sucursales = new ArrayList<>();
+        nuevaVenta = new Ventas();
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!user.isPresent()) {
             try {
@@ -152,6 +153,7 @@ public class ventaCtr implements Serializable {
         invSel = event.getObject();//agrgar la validación para las existencias
         nuevoDetalleV.setInventario(invSel);
         nuevoDetalleV.getDetalleVentasPK().setProducto(invSel.getIdInventario());
+        nuevoDetalleV.setPrecioUnitario(invSel.getPrecioUnitario());
     }
 
     public Inventario getInvSel() {
@@ -187,7 +189,9 @@ public class ventaCtr implements Serializable {
     }
 
     public String getNombreVendedor() {
-        return nuevaVenta.getGiroDeCaja().getResponsable().getNombres() + " " + nuevaVenta.getGiroDeCaja().getResponsable().getApellidos();
+        return nuevaVenta.getGiroDeCaja() == null ? ""
+                : nuevaVenta.getGiroDeCaja().getResponsable().getNombres() + " "
+                + nuevaVenta.getGiroDeCaja().getResponsable().getApellidos();
     }
 
     public boolean isVendiendo() {
@@ -266,7 +270,7 @@ public class ventaCtr implements Serializable {
         });
         selected.clear();
     }
-    
+
     public void onRowSelect(SelectEvent<DetalleVentas> event) {
         DetalleVentas o = event.getObject();
         if (!selected.contains(o)) {
@@ -282,7 +286,7 @@ public class ventaCtr implements Serializable {
             selected.remove(o);
         }
     }
-    
+
     public void guardarVenta() {
         FacesMessage ms;//agregar ultima validación para las existencias en las ventas
         if (nuevaVenta.getDetalleVentasList().size() > 0) {

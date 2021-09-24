@@ -13,6 +13,7 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
 import net.delsas.inventarios.Controllers.compraCtr;
+import net.delsas.inventarios.Controllers.ventaCtr;
 import net.delsas.inventarios.entities.Inventario;
 
 /**
@@ -23,13 +24,13 @@ import net.delsas.inventarios.entities.Inventario;
 @FacesConverter(value = "InventarioConverter", managed = true)
 public class InventarioConverter implements Converter<Inventario> {
 
-    
     @Override
     public Inventario getAsObject(FacesContext context, UIComponent component, String value) {
         if (value != null && value.trim().length() > 0) {
             try {
-                Inventario inv = compraCtr.inventarios.stream()
-                        .filter(i -> i.getIdInventario().toString().equals(value))
+                Inventario inv = (context.getExternalContext().getRequestServletPath().contains("home")
+                        ? ventaCtr.inventarios : compraCtr.inventarios)
+                        .stream().filter(i -> i.getIdInventario().toString().equals(value))
                         .findFirst().orElseGet(() -> null);
                 return inv;
             } catch (NumberFormatException e) {

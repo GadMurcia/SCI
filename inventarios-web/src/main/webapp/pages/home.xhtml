@@ -9,7 +9,7 @@
     <ui:define name="content">
         <h:form id="formVenta" style="width: 80%; margin: auto">
             <p:outputLabel value="La caja está CERRADA." rendered="#{!cajaCtr.iniciada}"/>
-            <p:card rendered="#{cajaCtr.iniciada}" rendered="#{cajaCtr.iniciada}">
+            <p:card rendered="#{cajaCtr.iniciada}">
                 <f:facet name="header">
                 </f:facet>
                 <f:facet name="title">
@@ -24,7 +24,7 @@
                             <f:selectItems value="#{ventaCtr.matrices}" var="m"
                                            itemValue="#{m}" itemLabel="#{m.nombre}"/>
                             <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}" 
-                                    update="form"/>
+                                    update="formVenta"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel for="sucursales" value="Sucursal:"/>
@@ -34,7 +34,7 @@
                             <f:selectItems value="#{ventaCtr.sucursales}" var="s"
                                            itemValue="#{s}" itemLabel="#{s.nombre}"/>
                             <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                    update="form"/>
+                                    update="formVenta"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
                 </f:facet>
@@ -67,7 +67,7 @@
                                                 var="inv" itemLabel="#{inv.producto}" itemValue="#{inv}"
                                                 converter="InventarioConverter" scrollHeight="250"
                                                 maxResults="5" disabled="#{!ventaCtr.vendiendo}">
-                                    <p:ajax event="itemSelect" listener="#{ventaCtr.onItemSelect}"/>
+                                    <p:ajax event="itemSelect" listener="#{ventaCtr.onItemSelect}" update="precio"/>
                                     <f:facet name="itemtip">
                                         <h:panelGrid columns="2" cellpadding="5">
                                             <f:facet name="header">
@@ -82,7 +82,7 @@
                                         </h:panelGrid>
                                     </f:facet>
                                 </p:autoComplete>
-                                <p:inputNumber value="#{ventaCtr.nuevoDetalleV.precioUnitario}" 
+                                <p:inputNumber id="precio" value="#{ventaCtr.nuevoDetalleV.precioUnitario}" 
                                                title="Valor unitario del producto." 
                                                disabled="true"
                                                decimalSeparator="." thousandSeparator="," />
@@ -92,14 +92,14 @@
                                                  title="Agregar producto a la factura"
                                                  disabled="#{!ventaCtr.vendiendo}"
                                                  actionListener="#{ventaCtr.agregarDetalleVenta()}"
-                                                 update="form"/>
+                                                 update="formVenta"/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <p:dataTable id="productos" var="p" value="#{ventaCtr.nuevaVenta.detalleVentasList}" 
                                      selectionMode="multiple" selection="#{ventaCtr.selected}" 
                                      rowKey="#{p.detalleVentasPK}" emptyMessage="No hay productos agregados a la factura">
-                            <p:ajax event="rowSelect" listener="#{ventaCtr.onRowSelect}" update="form:context"/>
-                            <p:ajax event="rowUnselect" listener="#{ventaCtr.onRowUnselect}" update="form:context"/>
+                            <p:ajax event="rowSelect" listener="#{ventaCtr.onRowSelect}" update="formVenta:context"/>
+                            <p:ajax event="rowUnselect" listener="#{ventaCtr.onRowUnselect}" update="formVenta:context"/>
 
                             <p:column headerText="Cantidad">
                                 <h:outputText value="#{p.cantidad}" />
@@ -120,7 +120,7 @@
                         <p:contextMenu id="context" for="productos">
                             <p:menuitem value="Quitar de la lista de compras" 
                                         disabled="#{ventaCtr.selected.size()==0}"
-                                        update="form" icon="pi pi-times"
+                                        update="formVenta" icon="pi pi-times"
                                         actionListener="#{ventaCtr.quitarDetalleVenta()}"/>
                         </p:contextMenu>
                     </h:panelGrid>
@@ -128,32 +128,32 @@
 
                 <f:facet name="footer">
                     <p:commandButton id="save" icon="pi pi-check" value="Guardar" 
-                                     title="Guardar los datos de la compra actual."
+                                     title="Guardar los datos de la venta actual."
                                      actionListener="#{ventaCtr.guardarVenta()}"
                                      rendered="#{ventaCtr.vendiendo}"
                                      disabled="#{ventaCtr.sucSel==null}"
-                                     update="form"/>
+                                     update="formVenta"/>
                     <p:commandButton id="clean" icon="pi pi-times" value="Limpiar" 
                                      title="Limpiar todos los campos"
                                      styleClass="ui-button-secondary" 
                                      rendered="#{ventaCtr.vendiendo}"
                                      actionListener="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
                                      disabled="#{ventaCtr.sucSel==null}"
-                                     update="form"/>
+                                     update="formVenta"/>
                     <p:commandButton id="inic" icon="pi pi-check" value="Iniciar" 
-                                     title="Iniciar la sesión de compras."
+                                     title="Iniciar la sesión de ventas."
                                      actionListener="#{ventaCtr.setVendiendo(true)}"
                                      action="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
                                      rendered="#{!ventaCtr.vendiendo}"
                                      disabled="#{ventaCtr.sucSel==null}"
-                                     update="form"/>
+                                     update="formVenta"/>
                     <p:commandButton id="end" icon="pi pi-check" value="Finalizar"
-                                     title="Finalizar la sesión de compras."
+                                     title="Finalizar la sesión de ventas."
                                      actionListener="#{ventaCtr.setVendiendo(false)}"
                                      action="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
                                      rendered="#{ventaCtr.vendiendo}"
                                      disabled="#{ventaCtr.sucSel==null}"
-                                     update="form"/>
+                                     update="formVenta"/>
                 </f:facet>
             </p:card>
         </h:form>
