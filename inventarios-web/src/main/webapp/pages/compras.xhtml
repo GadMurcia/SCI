@@ -1,12 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-<<<<<<< HEAD
-                template="./../WEB-INF/plantillas/pl1.xhtml">
-
-    <ui:define name="content">
-        content
-=======
                 template="./../WEB-INF/plantillas/pl1.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -105,7 +99,7 @@
                                      rowKey="#{p.detalleCompraPK}" emptyMessage="No hay productos agregados a la factura">
                             <p:ajax event="rowSelect" listener="#{compraCtr.onRowSelect}" update="form:context"/>
                             <p:ajax event="rowUnselect" listener="#{compraCtr.onRowUnselect}" update="form:context"/>
-                             
+
                             <p:column headerText="Cantidad">
                                 <h:outputText value="#{p.cantidad}" />
                             </p:column>
@@ -123,11 +117,11 @@
                             </p:column>
                         </p:dataTable>
                         <p:contextMenu id="context" for="productos">
-                                <p:menuitem value="Quitar de la lista de compras" 
-                                            disabled="#{compraCtr.selected.size()==0}"
-                                            update="form" icon="pi pi-times"
-                                            actionListener="#{compraCtr.quitarDetalleCompra()}"/>
-                            </p:contextMenu>
+                            <p:menuitem value="Quitar de la lista de compras" 
+                                        disabled="#{compraCtr.selected.size()==0}"
+                                        update="form" icon="pi pi-times"
+                                        actionListener="#{compraCtr.quitarDetalleCompra()}"/>
+                        </p:contextMenu>
                     </h:panelGrid>
                 </h:panelGrid>
 
@@ -162,7 +156,6 @@
                 </f:facet>
             </p:card>
         </h:form>
->>>>>>> origin/master
     </ui:define>
 
 </ui:composition>
