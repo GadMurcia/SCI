@@ -8,6 +8,7 @@ package net.delsas.inventarios.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,14 +24,17 @@ public class DetalleCompraPK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date idCompras;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 10)
+    @Column(nullable = false, length = 10)
     private String usuario;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private int producto;
 
     public DetalleCompraPK() {

@@ -8,6 +8,7 @@ package net.delsas.inventarios.beans;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.GiroDeCaja;
+import net.delsas.inventarios.entities.Ventas;
 
 /**
  *
@@ -29,5 +30,9 @@ public interface GiroDeCajaFacadeLocal {
     List<GiroDeCaja> findRange(int[] range);
 
     int count();
+    
+    GiroDeCaja findNoTerminadas(String idUsusrio);
+    
+    List<Ventas> findVentas(Integer id);
     
 }

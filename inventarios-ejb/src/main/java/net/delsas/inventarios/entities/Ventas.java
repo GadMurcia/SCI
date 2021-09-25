@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -34,29 +35,27 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Ventas.findAll", query = "SELECT v FROM Ventas v"),
     @NamedQuery(name = "Ventas.findByIdVentas", query = "SELECT v FROM Ventas v WHERE v.ventasPK.idVentas = :idVentas"),
-    @NamedQuery(name = "Ventas.findByUsuario", query = "SELECT v FROM Ventas v WHERE v.ventasPK.usuario = :usuario"),
+    @NamedQuery(name = "Ventas.findByGiroCaja", query = "SELECT v FROM Ventas v WHERE v.ventasPK.giroCaja = :giroCaja"),
     @NamedQuery(name = "Ventas.findByValor", query = "SELECT v FROM Ventas v WHERE v.valor = :valor"),
     @NamedQuery(name = "Ventas.findByComentario", query = "SELECT v FROM Ventas v WHERE v.comentario = :comentario")})
 public class Ventas implements Serializable {
 
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    private BigDecimal valor;
-    @Size(max = 250)
-    private String comentario;
-    @JoinColumn(name = "giroCaja", referencedColumnName = "idGiroDeCaja", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private GiroDeCaja giroDeCaja;
-
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected VentasPK ventasPK;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(nullable = false, precision = 11, scale = 2)
+    private BigDecimal valor;
+    @Size(max = 250)
+    @Column(length = 250)
+    private String comentario;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ventas")
     private List<DetalleVentas> detalleVentasList;
-    @JoinColumn(name = "usuario", referencedColumnName = "idUsuario", insertable = false, updatable = false)
+    @JoinColumn(name = "giroCaja", referencedColumnName = "idGiroDeCaja", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Usuario usuario1;
+    private GiroDeCaja giroDeCaja;
 
     public Ventas() {
     }
@@ -70,8 +69,8 @@ public class Ventas implements Serializable {
         this.valor = valor;
     }
 
-    public Ventas(Date idVentas, String usuario) {
-        this.ventasPK = new VentasPK(idVentas, usuario);
+    public Ventas(Date idVentas, int giroCaja) {
+        this.ventasPK = new VentasPK(idVentas, giroCaja);
     }
 
     public VentasPK getVentasPK() {
@@ -107,12 +106,12 @@ public class Ventas implements Serializable {
         this.detalleVentasList = detalleVentasList;
     }
 
-    public Usuario getUsuario1() {
-        return usuario1;
+    public GiroDeCaja getGiroDeCaja() {
+        return giroDeCaja;
     }
 
-    public void setUsuario1(Usuario usuario1) {
-        this.usuario1 = usuario1;
+    public void setGiroDeCaja(GiroDeCaja giroDeCaja) {
+        this.giroDeCaja = giroDeCaja;
     }
 
     @Override
@@ -138,14 +137,6 @@ public class Ventas implements Serializable {
     @Override
     public String toString() {
         return "net.delsas.inventarios.entities.Ventas[ ventasPK=" + ventasPK + " ]";
-    }
-
-    public GiroDeCaja getGiroDeCaja() {
-        return giroDeCaja;
-    }
-
-    public void setGiroDeCaja(GiroDeCaja giroDeCaja) {
-        this.giroDeCaja = giroDeCaja;
     }
     
 }

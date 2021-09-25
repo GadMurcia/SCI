@@ -110,4 +110,15 @@ public class homeCtr implements Serializable {
     public void setP1(String p1) {
         this.p1 = p1;
     }
+
+    public String getNombreEmpresa() {
+        return !user.isPresent()
+                ? ""
+                : (!user.get().getMiscList().isEmpty()
+                ? "PROPIETARIO"
+                : (user.get().getEmpresa() != null
+                ? user.get().getEmpresa().getNombre()
+                : "SISTEMA"));
+    }
+
 }

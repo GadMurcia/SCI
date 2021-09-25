@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -36,23 +37,24 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "DetalleCompra.findByCostoUnitario", query = "SELECT d FROM DetalleCompra d WHERE d.costoUnitario = :costoUnitario")})
 public class DetalleCompra implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected DetalleCompraPK detalleCompraPK;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private int cantidad;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false, precision = 11, scale = 2)
     private BigDecimal costoUnitario;
-
-    private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected DetalleCompraPK detalleCompraPK;
     @JoinColumns({
-        @JoinColumn(name = "usuario", referencedColumnName = "usuario", insertable = false, updatable = false),
-        @JoinColumn(name = "idCompras", referencedColumnName = "idCompras", insertable = false, updatable = false)})
+        @JoinColumn(name = "usuario", referencedColumnName = "usuario", nullable = false, insertable = false, updatable = false),
+        @JoinColumn(name = "idCompras", referencedColumnName = "idCompras", nullable = false, insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Compras compras;
-    @JoinColumn(name = "producto", referencedColumnName = "idInventario", insertable = false, updatable = false)
+    @JoinColumn(name = "producto", referencedColumnName = "idInventario", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Inventario inventario;
 

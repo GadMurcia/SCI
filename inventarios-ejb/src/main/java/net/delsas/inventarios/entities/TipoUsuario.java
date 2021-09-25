@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,18 +37,20 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "TipoUsuario.findByTpComentario", query = "SELECT t FROM TipoUsuario t WHERE t.tpComentario = :tpComentario")})
 public class TipoUsuario implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @Column(nullable = false)
     private Integer idTipoUsuario;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
+    @Column(nullable = false, length = 50)
     private String nombre;
     @Size(max = 100)
+    @Column(length = 100)
     private String tpComentario;
-
-    private static final long serialVersionUID = 1L;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoUsuario")
     private List<Usuario> usuarioList;
 
@@ -120,4 +123,5 @@ public class TipoUsuario implements Serializable {
     public String toString() {
         return "net.delsas.inventarios.entities.TipoUsuario[ idTipoUsuario=" + idTipoUsuario + " ]";
     }
+    
 }

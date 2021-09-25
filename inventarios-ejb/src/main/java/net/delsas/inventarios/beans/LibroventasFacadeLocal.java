@@ -7,28 +7,27 @@ package net.delsas.inventarios.beans;
 
 import java.util.List;
 import javax.ejb.Local;
-import net.delsas.inventarios.entities.Misc;
+import net.delsas.inventarios.entities.Libroventas;
 
 /**
  *
  * @author delsas
  */
 @Local
-public interface MiscFacadeLocal {
+public interface LibroventasFacadeLocal {
 
-    void create(Misc misc);
+    void create(Libroventas libroventas);
 
-    void edit(Misc misc);
+    void edit(Libroventas libroventas);
 
-    void remove(Misc misc);
+    void remove(Libroventas libroventas);
 
-    Misc find(Object id);
+    Libroventas find(Object id);
 
-    List<Misc> findAll();
+    List<Libroventas> findAll();
 
-    List<Misc> findRange(int[] range);
+    List<Libroventas> findRange(int[] range);
 
     int count();
     
-    List<Misc> findAll(String idUsuario);
 }

@@ -5,18 +5,17 @@
  */
 package net.delsas.inventarios.beans;
 
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import net.delsas.inventarios.entities.Misc;
+import net.delsas.inventarios.entities.Libroventas;
 
 /**
  *
  * @author delsas
  */
 @Stateless
-public class MiscFacade extends AbstractFacade<Misc> implements MiscFacadeLocal {
+public class LibroventasFacade extends AbstractFacade<Libroventas> implements LibroventasFacadeLocal {
 
     @PersistenceContext(unitName = "net.delsas_inventarios-ejb_ejb_1PU")
     private EntityManager em;
@@ -26,14 +25,8 @@ public class MiscFacade extends AbstractFacade<Misc> implements MiscFacadeLocal 
         return em;
     }
 
-    public MiscFacade() {
-        super(Misc.class);
+    public LibroventasFacade() {
+        super(Libroventas.class);
     }
-
-    @Override
-    public List<Misc> findAll(String idUsuario) {
-        return em.createNamedQuery("Misc.findByPropietario")
-                .setParameter("idUsuario", idUsuario)
-                .getResultList();
-    }
+    
 }

@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +29,20 @@ public class InventarioFacade extends AbstractFacade<Inventario> implements Inve
     public InventarioFacade() {
         super(Inventario.class);
     }
-    
+
+    @Override
+    public Inventario find(String nombre) {
+        List<Inventario> r = em.createNamedQuery("Inventario.findByProducto")
+                .setParameter("producto", nombre)
+                .getResultList();
+        return r.isEmpty() ? null : r.get(0);
+    }
+
+    @Override
+    public List<Inventario> findByTienda(int idTienda) {
+        return em.createNamedQuery("Inventario.findByTienda")
+                .setParameter("idTienda", idTienda)
+                .getResultList();
+    }
+
 }

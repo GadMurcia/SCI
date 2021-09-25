@@ -8,7 +8,11 @@ package net.delsas.inventarios.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -35,36 +39,41 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Misc.findByNombre", query = "SELECT m FROM Misc m WHERE m.nombre = :nombre"),
     @NamedQuery(name = "Misc.findByDireccion", query = "SELECT m FROM Misc m WHERE m.direccion = :direccion"),
     @NamedQuery(name = "Misc.findByTelefonos", query = "SELECT m FROM Misc m WHERE m.telefonos = :telefonos"),
-    @NamedQuery(name = "Misc.findByMatriz", query = "SELECT m FROM Misc m WHERE m.matriz = :matriz")
+    @NamedQuery(name = "Misc.findByPropietario", query = "SELECT m FROM Misc m WHERE m.propietario.idUsuario = :idUsuario")
 })
 public class Misc implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+    @Column(nullable = false)
     private Integer idMisc;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 150)
+    @Column(nullable = false, length = 150)
     private String nombre;
     @Size(max = 255)
+    @Column(length = 255)
     private String direccion;
     @Lob
     private byte[] logo;
     @Size(max = 88)
+    @Column(length = 88)
     private String telefonos;
-
-    private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarioList;
-    @JoinColumn(name = "propietario", referencedColumnName = "idUsuario")
+    @JoinColumn(name = "propietario", referencedColumnName = "idUsuario", nullable = false)
     @ManyToOne(optional = false)
     private Usuario propietario;
+    @OneToMany(mappedBy = "matriz")
+    private List<Misc> miscList;
     @JoinColumn(name = "matriz", referencedColumnName = "idMisc")
     @ManyToOne
     private Misc matriz;
-    @OneToMany(mappedBy = "matriz")
-    private List<Misc> sucursales;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tienda")
+    private List<Inventario> inventarioList;
 
     public Misc() {
     }
@@ -135,6 +144,32 @@ public class Misc implements Serializable {
         this.propietario = propietario;
     }
 
+    @XmlTransient
+    public List<Misc> getMiscList() {
+        return miscList;
+    }
+
+    public void setMiscList(List<Misc> miscList) {
+        this.miscList = miscList;
+    }
+
+    public Misc getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(Misc matriz) {
+        this.matriz = matriz;
+    }
+
+    @XmlTransient
+    public List<Inventario> getInventarioList() {
+        return inventarioList;
+    }
+
+    public void setInventarioList(List<Inventario> inventarioList) {
+        this.inventarioList = inventarioList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -158,22 +193,6 @@ public class Misc implements Serializable {
     @Override
     public String toString() {
         return "net.delsas.inventarios.entities.Misc[ idMisc=" + idMisc + " ]";
-    }
-
-    public Misc getMatriz() {
-        return matriz;
-    }
-
-    public void setMatriz(Misc matriz) {
-        this.matriz = matriz;
-    }
-
-    public List<Misc> getSucursales() {
-        return sucursales;
-    }
-
-    public void setSucursales(List<Misc> sucursales) {
-        this.sucursales = sucursales;
     }
 
 }

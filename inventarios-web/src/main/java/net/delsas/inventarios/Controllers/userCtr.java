@@ -145,7 +145,7 @@ public class userCtr implements Serializable {
                 case 1:
                 case 2:
                     sucursales.add(m);
-                    sucursales.addAll(m.getSucursales());
+                    sucursales.addAll(m.getMiscList());
                     break;
                 case 3:
                     sucursales.add(m);
@@ -208,7 +208,7 @@ public class userCtr implements Serializable {
     }
 
     public void nuevo() {
-        nus = new Usuario("", "", "", "");
+        nus = new Usuario("", "", "", "", true);
         setEditable(true);
         setEditId(true);
     }
