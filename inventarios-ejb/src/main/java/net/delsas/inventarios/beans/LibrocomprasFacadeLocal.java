@@ -29,5 +29,7 @@ public interface LibrocomprasFacadeLocal {
     List<Librocompras> findRange(int[] range);
 
     int count();
+
+    public Librocompras findByIdProducto(Integer idProducto);
     
 }

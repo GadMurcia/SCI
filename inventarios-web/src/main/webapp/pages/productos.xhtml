@@ -39,8 +39,7 @@
 
                     <p:ajax event="rowSelect"/>
 
-                    <p:column headerText="Nombre de prodicto" filterable="true"
-                              filterBy="#{product.producto}">
+                    <p:column headerText="Nombre de prodicto" filterBy="#{product.producto}">
                         <p:cellEditor>
                             <f:facet name="output">
                                 <h:outputText value="#{product.producto}"/>

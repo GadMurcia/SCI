@@ -25,6 +25,7 @@ import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
+import net.delsas.inventarios.optional.auxiliarCtr;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -33,7 +34,7 @@ import org.primefaces.PrimeFaces;
  */
 @ViewScoped
 @Named
-public class prodCtr implements Serializable {
+public class prodCtr extends auxiliarCtr implements Serializable{
 
     private Optional<Usuario> us;
     private Inventario sel;

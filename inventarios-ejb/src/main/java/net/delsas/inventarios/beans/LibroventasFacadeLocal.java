@@ -30,4 +30,5 @@ public interface LibroventasFacadeLocal {
 
     int count();
     
+    Libroventas findByIdProducto(Integer idProducto);
 }
