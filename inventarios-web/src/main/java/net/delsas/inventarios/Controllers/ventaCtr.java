@@ -24,10 +24,6 @@ import javax.inject.Named;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.beans.VentasFacadeLocal;
-import net.delsas.inventarios.entities.Compras;
-import net.delsas.inventarios.entities.ComprasPK;
-import net.delsas.inventarios.entities.DetalleCompra;
-import net.delsas.inventarios.entities.DetalleCompraPK;
 import net.delsas.inventarios.entities.DetalleVentas;
 import net.delsas.inventarios.entities.DetalleVentasPK;
 import net.delsas.inventarios.entities.GiroDeCaja;
@@ -150,10 +146,20 @@ public class ventaCtr implements Serializable {
     }
 
     public void onItemSelect(SelectEvent<Inventario> event) {
-        invSel = event.getObject();//agrgar la validación para las existencias
-        nuevoDetalleV.setInventario(invSel);
-        nuevoDetalleV.getDetalleVentasPK().setProducto(invSel.getIdInventario());
-        nuevoDetalleV.setPrecioUnitario(invSel.getPrecioUnitario());
+        if (event.getObject().getLibroCompras().getCompras().doubleValue()
+                - event.getObject().getLibroVentas().getVentas() <= nuevoDetalleV.getCantidad()) {
+            invSel = event.getObject();//agrgar la validación para las existencias
+            nuevoDetalleV.setInventario(invSel);
+            nuevoDetalleV.getDetalleVentasPK().setProducto(invSel.getIdInventario());
+            nuevoDetalleV.setPrecioUnitario(invSel.getPrecioUnitario());
+        } else {
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "La venta no puede continuar",
+                            "Usted intenta vender " + nuevoDetalleV.getCantidad() + " del producto \"" + event.getObject().getProducto()
+                            + "\"; pero esa cantidad excede el inventario actual que es de " + (event.getObject().getLibroCompras().getCompras().doubleValue()
+                            - event.getObject().getLibroVentas().getVentas()) + " unidades."));
+            PrimeFaces.current().ajax().update("form0:msgs");
+        }
     }
 
     public Inventario getInvSel() {
@@ -288,8 +294,21 @@ public class ventaCtr implements Serializable {
     }
 
     public void guardarVenta() {
-        FacesMessage ms;//agregar ultima validación para las existencias en las ventas
-        if (nuevaVenta.getDetalleVentasList().size() > 0) {
+        FacesMessage ms;
+        List<Inventario> noHayExistencias = new ArrayList<>();//agregar ultima validación para las existencias en las ventas
+        nuevaVenta.getDetalleVentasList().stream().filter(d -> {
+            Inventario i = d.getInventario();
+            return (i.getLibroCompras().getCompras().doubleValue() - i.getLibroVentas().getVentas()) < d.getCantidad();
+        })
+                .forEach(d -> noHayExistencias.add(d.getInventario()));
+        if (!noHayExistencias.isEmpty()) {
+            String nhe = "";
+            for (Inventario i : noHayExistencias) {
+                nhe = (nhe.isEmpty() ? "" : "\n ") + i.getProducto();
+            }
+            ms = new FacesMessage(FacesMessage.SEVERITY_FATAL, "El inventario no puede suplir la venta actual",
+                    "Los Siguientes productos no tienen suficientes existencias:    \n" + nhe + ".    \nNo se continúa.");
+        } else if (nuevaVenta.getDetalleVentasList().size() > 0) {
             vfl.create(nuevaVenta);
             vendiendo = false;
             nuevaVentas(nuevaVenta.getGiroDeCaja());
