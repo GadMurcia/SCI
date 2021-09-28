@@ -6,21 +6,35 @@ package net.delsas.inventarios.Controllers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
+import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
+import net.delsas.inventarios.beans.GiroDeCajaFacadeLocal;
+import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
+import net.delsas.inventarios.entities.DetalleVentas;
+import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
+import net.delsas.inventarios.entities.Ventas;
+import net.delsas.inventarios.optional.Existencias;
 import net.delsas.inventarios.optional.auxiliarCtr;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -35,14 +49,27 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     private Misc matSel;
     private List<Misc> sucursales;
     private Misc sucSel;
+    private List<Existencias> existencias;
+    private Date inicio;
+    private Date fin;
+    private GiroDeCaja giro;
 
     @EJB
     private MiscFacadeLocal mfl;
+    @EJB
+    private InventarioFacadeLocal ifl;
+    @EJB
+    private DetalleCompraFacadeLocal dcfl;
+    @EJB
+    private DetalleVentasFacadeLocal dvfl;
+    @EJB
+    private GiroDeCajaFacadeLocal gdcfl;
 
     @PostConstruct
     public void init() {
         matrices = new ArrayList<>();
         sucursales = new ArrayList<>();
+        existencias = new ArrayList<>();
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!user.isPresent()) {
             try {
@@ -112,5 +139,104 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
         sucSel = matSel == null || sucursales.isEmpty() ? null : sucursales.get(0);
         return sucursales;
     }
+
+    public void onTabChange(TabChangeEvent event) {
+        System.out.println(event.getTab().getTitle());
+        switch (event.getTab().getTitle()) {
+            case "Existencias":
+                generarExistencias(null);
+                break;
+            default:
+        }
+    }
+
+    public List<Existencias> getExistencias() {
+        return existencias;
+    }
+
+    public double costoTotal() {
+        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getCostoTotal).sum());
+    }
+
+    public double valorTotal() {
+        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getValorTotal).sum());
+    }
+
+    public double utilidadTotal() {
+        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getUtilidad).sum());
+    }
+
+    public void generarExistencias(AjaxBehaviorEvent e) {
+        existencias.clear();
+        if (sucSel != null) {
+            ifl.findByTienda(sucSel.getIdMisc()).stream().forEachOrdered(p -> {
+                existencias.add(new Existencias(p, dcfl, dvfl));
+            });
+            Collections.sort(existencias, (Existencias u, Existencias d) -> u.getNombre().compareToIgnoreCase(d.getNombre()));
+        }
+    }
+
+    public void generarRepVentas() {
+        if (inicio != null && fin != null) {
+            List<GiroDeCaja> giros = gdcfl.findByPeriodoYSucursal(inicio, fin, sucSel.getIdMisc());
+            giro = new GiroDeCaja();
+            if (!giros.isEmpty()) {
+                giro.setFin(fin);
+                giro.setInicio(inicio);
+                giro.setCajaInicial(0);
+                giro.setCierre(0);
+                giro.setRetiros(giros.stream().mapToDouble(GiroDeCaja::getRetiros).sum());
+                giro.setExcedentes(giros.stream().mapToDouble(GiroDeCaja::getExcedentes).sum());//ventas
+                giro.setFaltantes(giros.stream().mapToDouble(GiroDeCaja::getFaltantes).sum());//faltantes de caja
+                giro.setDetalleRetiros("");
+                giros.forEach(g -> giro.setDetalleRetiros(giro.getDetalleRetiros()
+                        + (g.getDetalleRetiros().isEmpty() ? "" : "\n")
+                        + g.getDetalleRetiros()));
+                List<DetalleVentas> dv = new ArrayList<>();
+                giros.forEach(g -> g.getVentasList().forEach(v0 -> v0.getDetalleVentasList().forEach(dv1 -> {
+                    List<DetalleVentas> col = dv.stream().filter(dv0 -> dv0.getInventario().getIdInventario().equals(dv1.getInventario().getIdInventario())).collect(Collectors.toList());
+                    if (!col.isEmpty()) {
+                        int idx = dv.indexOf(col.get(0));
+                        DetalleVentas dv2 = dv.get(idx);
+                        dv2.setCantidad(dv2.getCantidad() + dv1.getCantidad());
+                        dv2.setPrecioUnitario((dv2.getPrecioUnitario().add(dv1.getPrecioUnitario()).divide(new BigDecimal(2.0))));
+                        dv.remove(idx);
+                        dv.add(idx, dv2);
+                    } else {
+                        dv.add(dv1);
+                    }
+                })));
+                giro.setVentasList(new ArrayList<>());
+                Ventas v = new Ventas();
+                v.setDetalleVentasList(dv);
+                giro.getVentasList().add(v);
+            }
+
+        } else {
+
+        }
+    }
+
+    public Date getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(Date inicio) {
+        this.inicio = inicio;
+    }
+
+    public Date getFin() {
+        return fin;
+    }
+
+    public void setFin(Date fin) {
+        this.fin = fin;
+    }
+
+    public GiroDeCaja getGiro() {
+        return giro;
+    }
+    
+    
 
 }

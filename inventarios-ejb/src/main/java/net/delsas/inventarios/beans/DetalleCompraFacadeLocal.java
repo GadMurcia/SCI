@@ -30,4 +30,6 @@ public interface DetalleCompraFacadeLocal {
 
     int count();
     
+    public List<DetalleCompra> findByProducto(Integer odProducto);
+    
 }

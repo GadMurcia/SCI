@@ -46,7 +46,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "GiroDeCaja.findByCierre", query = "SELECT g FROM GiroDeCaja g WHERE g.cierre = :cierre"),
     @NamedQuery(name = "GiroDeCaja.findByRetiros", query = "SELECT g FROM GiroDeCaja g WHERE g.retiros = :retiros"),
     @NamedQuery(name = "GiroDeCaja.findByDetalleRetiros", query = "SELECT g FROM GiroDeCaja g WHERE g.detalleRetiros = :detalleRetiros"),
-    @NamedQuery(name = "GiroDeCaja.findNoTerminadas", query = "SELECT g FROM GiroDeCaja g WHERE g.fin = NULL AND g.responsable.idUsuario = :idUsuario")
+    @NamedQuery(name = "GiroDeCaja.findNoTerminadas", query = "SELECT g FROM GiroDeCaja g WHERE g.fin = NULL AND g.responsable.idUsuario = :idUsuario"),
+    @NamedQuery(name = "GiroDeCaja.findByPeriodoYSucursal", query = "SELECT g FROM GiroDeCaja g WHERE g.inicio >= :inicio AND g.fin <= :fin"),
+    
 
 })
 public class GiroDeCaja implements Serializable {

@@ -10,8 +10,131 @@
 
         <ui:composition template="./../WEB-INF/plantillas/pl1.xhtml">
 
-            <ui:define name="content">
-                
+            <ui:define name="content">                
+                <h:form id="form">
+                    <h:outputScript library="js" name="local-es.js"/>
+                    <h:panelGrid columns="4">
+                        <p:outputLabel for="matrices" value="Matriz:"/>
+                        <p:selectOneMenu id="matrices" value="#{reportes1Ctr.matSel}" 
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                            <f:selectItems value="#{reportes1Ctr.matrices}" var="m"
+                                           itemValue="#{m}" itemLabel="#{m.nombre}"/>
+                            <p:ajax event="itemSelect" listener="#{reportes1Ctr.onBlour}" 
+                                    update="form"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="sucursales" value="Sucursal:"/>
+                        <p:selectOneMenu id="sucursales" value="#{reportes1Ctr.sucSel}" 
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                            <f:selectItems value="#{reportes1Ctr.sucursales}" var="s"
+                                           itemValue="#{s}" itemLabel="#{s.nombre}"/>
+                            <p:ajax event="itemSelect" listener="#{reportes1Ctr.generarExistencias}"
+                                    update="form"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
+                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
+                        <p:tab title="Ventas">
+                            <h:panelGrid columns="1">
+                                <h:panelGrid columns="3">
+                                    <p:outputLabel value="Fecha de inicio del reporte" for="ini"/>
+                                    <p:outputLabel value="Fecha de finalización del reporte" for="fin"/>
+                                    <p:column />
+
+                                    <p:datePicker id="ini" value="#{reportes1Ctr.inicio}">
+                                        <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:datePicker id="fin" value="#{reportes1Ctr.fin}">
+                                        <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
+                                                     styleClass="rounded-button ui-button-outlined" update="@form"
+                                                     actionListener="#{reportes1Ctr.generarRepVentas()}"
+                                                     />
+                                </h:panelGrid>
+                                <p:scrollPanel style="margin: 0 auto;">
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Total de ventas: "/>
+                                        <p:outputLabel value="#{reportes1Ctr.giro.excedentes}"/>
+
+                                        <p:outputLabel value="Total de retiros de efectivo: "/>
+                                        <p:outputLabel value="#{reportes1Ctr.giro.retiros}"/>
+
+                                        <p:outputLabel value="Total de faltantes de caja: "/>
+                                        <p:outputLabel value="#{reportes1Ctr.giro.faltantes}"/>
+                                        
+                                        <p:outputLabel value="Detalle de retiros: "/>
+                                        <p:inputTextarea disabled="true" value="#{reportes1Ctr.giro.detalleRetiros}"/>
+                                    </h:panelGrid>                                    
+                                </p:scrollPanel>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Compras"></p:tab>
+                        <p:tab id="ex" title="Existencias">
+                            <h:panelGrid columns="1">
+                                <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="item"
+                                             rows="8" reflow="true" disabledTextSelection="true"  size="small"
+                                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                                    <f:facet name="header">
+                                        Reporte de Existencias de  productos
+                                    </f:facet>
+                                    <f:facet name="footer">
+                                        <h:panelGrid columns="1" dir="RTL">
+                                            <p:outputLabel value="Costo Global: $#{reportes1Ctr.costoTotal()}"/>
+                                            <p:outputLabel value="Valor Global: $#{reportes1Ctr.valorTotal()}"/>
+                                            <p:outputLabel value="Utilidad Global: $#{reportes1Ctr.utilidadTotal()}"/>
+                                        </h:panelGrid>
+                                    </f:facet>
+                                    <p:column filterBy="#{item.nombre}" width="20%">
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombre"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.nombre}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Existencias"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.existencias}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Costo Unitario"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.costoAVG}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Precio Unitario"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.precioAVG}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Subtotal de Costo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.costoTotal}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Valor Subtotal"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.valorTotal}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Utilidad Esperada"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.utilidad}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Tab 4"></p:tab>
+                    </p:tabView>
+                </h:form>
             </ui:define>
 
         </ui:composition>

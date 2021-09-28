@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.GiroDeCaja;
@@ -34,5 +35,7 @@ public interface GiroDeCajaFacadeLocal {
     GiroDeCaja findNoTerminadas(String idUsusrio);
     
     List<Ventas> findVentas(Integer id);
+    
+    public List<GiroDeCaja> findByPeriodoYSucursal(Date inicio, Date fin, Integer idSucursal);
     
 }

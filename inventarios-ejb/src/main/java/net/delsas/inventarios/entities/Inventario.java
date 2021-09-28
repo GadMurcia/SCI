@@ -77,10 +77,6 @@ public class Inventario implements Serializable {
     @NotNull
     @Column(nullable = false)
     private boolean activo;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "inventario")
-    private Libroventas libroVentas;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "inventario")
-    private Librocompras libroCompras;
 
     public Inventario() {
     }
@@ -161,22 +157,6 @@ public class Inventario implements Serializable {
         this.activo = activo;
     }
 
-    public Libroventas getLibroVentas() {
-        return libroVentas;
-    }
-
-    public void setLibroVentas(Libroventas libroVentas) {
-        this.libroVentas = libroVentas;
-    }
-
-    public Librocompras getLibroCompras() {
-        return libroCompras;
-    }
-
-    public void setLibroCompras(Librocompras libroCompras) {
-        this.libroCompras = libroCompras;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
@@ -186,8 +166,6 @@ public class Inventario implements Serializable {
         hash = 23 * hash + Objects.hashCode(this.descripcion);
         hash = 23 * hash + Objects.hashCode(this.tienda);
         hash = 23 * hash + (this.activo ? 1 : 0);
-        hash = 23 * hash + Objects.hashCode(this.libroVentas);
-        hash = 23 * hash + Objects.hashCode(this.libroCompras);
         return hash;
     }
 
@@ -218,18 +196,12 @@ public class Inventario implements Serializable {
         if (!Objects.equals(this.precioUnitario, other.precioUnitario)) {
             return false;
         }
-        if (!Objects.equals(this.tienda, other.tienda)) {
-            return false;
-        }
-        if (!Objects.equals(this.libroVentas, other.libroVentas)) {
-            return false;
-        }
-        return Objects.equals(this.libroCompras, other.libroCompras);
+        return (!Objects.equals(this.tienda, other.tienda));
     }
 
     @Override
     public String toString() {
-        return "Inventario{" + "producto=" + producto + ", idInventario=" + idInventario + ", precioUnitario=" + precioUnitario + ", descripcion=" + descripcion + ", tienda=" + tienda + ", activo=" + activo + ", libroVentas=" + libroVentas + ", libroCompras=" + libroCompras + '}';
+        return "Inventario{" + "producto=" + producto + ", idInventario=" + idInventario + ", precioUnitario=" + precioUnitario + ", descripcion=" + descripcion + ", tienda=" + tienda + ", activo=" + activo + '}';
     }
     
     

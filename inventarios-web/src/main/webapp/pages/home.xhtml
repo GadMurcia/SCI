@@ -96,7 +96,7 @@
                             </h:panelGrid>
                         </h:panelGrid>
                         <p:dataTable id="productos" var="p" value="#{ventaCtr.nuevaVenta.detalleVentasList}" 
-                                     selectionMode="multiple" selection="#{ventaCtr.selected}" 
+                                     selectionMode="multiple" selection="#{ventaCtr.selected}"  size="small"
                                      rowKey="#{p.detalleVentasPK}" emptyMessage="No hay productos agregados a la factura">
                             <p:ajax event="rowSelect" listener="#{ventaCtr.onRowSelect}" update="formVenta:context"/>
                             <p:ajax event="rowUnselect" listener="#{ventaCtr.onRowUnselect}" update="formVenta:context"/>

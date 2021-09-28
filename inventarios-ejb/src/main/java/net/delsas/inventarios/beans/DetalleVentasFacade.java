@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +29,12 @@ public class DetalleVentasFacade extends AbstractFacade<DetalleVentas> implement
     public DetalleVentasFacade() {
         super(DetalleVentas.class);
     }
-    
+
+    @Override
+    public List<DetalleVentas> findByProducto(Integer idProducto) {
+        return em.createNamedQuery("DetalleVentas.findByProducto")
+                .setParameter("producto", idProducto)
+                .getResultList();
+    }
+
 }

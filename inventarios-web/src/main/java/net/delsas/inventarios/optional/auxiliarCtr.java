@@ -10,8 +10,9 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
-import net.delsas.inventarios.beans.LibrocomprasFacadeLocal;
-import net.delsas.inventarios.beans.LibroventasFacadeLocal;
+import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
+import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
+import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
 import org.primefaces.event.CellEditEvent;
 
@@ -24,9 +25,12 @@ import org.primefaces.event.CellEditEvent;
 public class auxiliarCtr implements Serializable {
 
     @EJB
-    private LibrocomprasFacadeLocal lcfl;
+    private DetalleCompraFacadeLocal dcfl;
     @EJB
-    private LibroventasFacadeLocal lvfl;
+    private DetalleVentasFacadeLocal dvfl;
+
+    @EJB
+    private InventarioFacadeLocal ifl;
 
     public void onBlour(AjaxBehaviorEvent e) {
     }
@@ -39,19 +43,16 @@ public class auxiliarCtr implements Serializable {
 
     public double disponibilidad(Inventario i) {
         if (i != null) {
-            //getLibrosActualizados(i);
-            double compra = i.getLibroCompras() == null ? 0
-                    : i.getLibroCompras().getCompras().doubleValue();
-            double ventas = i.getLibroVentas() == null ? 0
-                    : i.getLibroVentas().getVentas();
-            return compra - ventas;
+            Existencias e = new Existencias(i, dcfl, dvfl);
+            return e.getExistencias();
         }
         return 0;
     }
-
-    public void getLibrosActualizados(Inventario i) {
-        System.out.println("Controladores:\n"+lcfl+"\n"+lvfl);
-        i.setLibroCompras(lcfl.find(i.getIdInventario()));
-        i.setLibroVentas(lvfl.find(i.getIdInventario()));
+    
+    public double redondeo2decimales(double o) {
+        o = o * 100;
+        o = Math.round(o);
+        o = o / 100;
+        return o;
     }
 }
