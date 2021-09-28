@@ -7,6 +7,7 @@ package net.delsas.inventarios.Controllers;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +35,7 @@ import net.delsas.inventarios.entities.Usuario;
 import net.delsas.inventarios.entities.Ventas;
 import net.delsas.inventarios.optional.Existencias;
 import net.delsas.inventarios.optional.auxiliarCtr;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.TabChangeEvent;
 
 /**
@@ -53,6 +55,8 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     private Date inicio;
     private Date fin;
     private GiroDeCaja giro;
+    private List<GiroDeCaja> girosUndía;
+    private boolean periodo;
 
     @EJB
     private MiscFacadeLocal mfl;
@@ -176,45 +180,63 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
         }
     }
 
+    public void limpiarFechas() {
+        inicio = null;
+        fin = null;
+        generarRepVentas();
+    }
+
     public void generarRepVentas() {
-        if (inicio != null && fin != null) {
-            List<GiroDeCaja> giros = gdcfl.findByPeriodoYSucursal(inicio, fin, sucSel.getIdMisc());
+        if (inicio != null) {
+            periodo = !(fin == null || fin.equals(inicio));
+            fin = fin == null || fin.before(inicio) ? new Date(inicio.getTime()) : fin;
+            fin.setHours(23);
+            fin.setMinutes(59);
+            fin.setSeconds(59);
+            girosUndía = gdcfl.findByPeriodoYSucursal(inicio, fin, sucSel.getIdMisc());
             giro = new GiroDeCaja();
-            if (!giros.isEmpty()) {
+            if (!girosUndía.isEmpty()) {
                 giro.setFin(fin);
                 giro.setInicio(inicio);
                 giro.setCajaInicial(0);
                 giro.setCierre(0);
-                giro.setRetiros(giros.stream().mapToDouble(GiroDeCaja::getRetiros).sum());
-                giro.setExcedentes(giros.stream().mapToDouble(GiroDeCaja::getExcedentes).sum());//ventas
-                giro.setFaltantes(giros.stream().mapToDouble(GiroDeCaja::getFaltantes).sum());//faltantes de caja
+                giro.setRetiros(redondeo2decimales(girosUndía.stream().mapToDouble(GiroDeCaja::getRetiros).sum()));
+                giro.setExcedentes(redondeo2decimales(girosUndía.stream().mapToDouble(GiroDeCaja::getExcedentes).sum()));//ventas
+                giro.setFaltantes(redondeo2decimales(girosUndía.stream().mapToDouble(GiroDeCaja::getFaltantes).sum()));//faltantes de caja
                 giro.setDetalleRetiros("");
-                giros.forEach(g -> giro.setDetalleRetiros(giro.getDetalleRetiros()
-                        + (g.getDetalleRetiros().isEmpty() ? "" : "\n")
-                        + g.getDetalleRetiros()));
+                girosUndía.forEach(g -> giro.setDetalleRetiros(giro.getDetalleRetiros()
+                        + (g.getDetalleRetiros() == null || g.getDetalleRetiros().isEmpty() ? "" : "\n")
+                        + g.getDetalleRetiros() != null ? g.getDetalleRetiros() : ""));
                 List<DetalleVentas> dv = new ArrayList<>();
-                giros.forEach(g -> g.getVentasList().forEach(v0 -> v0.getDetalleVentasList().forEach(dv1 -> {
-                    List<DetalleVentas> col = dv.stream().filter(dv0 -> dv0.getInventario().getIdInventario().equals(dv1.getInventario().getIdInventario())).collect(Collectors.toList());
-                    if (!col.isEmpty()) {
-                        int idx = dv.indexOf(col.get(0));
-                        DetalleVentas dv2 = dv.get(idx);
-                        dv2.setCantidad(dv2.getCantidad() + dv1.getCantidad());
-                        dv2.setPrecioUnitario((dv2.getPrecioUnitario().add(dv1.getPrecioUnitario()).divide(new BigDecimal(2.0))));
-                        dv.remove(idx);
-                        dv.add(idx, dv2);
-                    } else {
-                        dv.add(dv1);
-                    }
-                })));
-                giro.setVentasList(new ArrayList<>());
-                Ventas v = new Ventas();
-                v.setDetalleVentasList(dv);
-                giro.getVentasList().add(v);
+                girosUndía.forEach(g -> sumarizarDetalleGiro(g, giro, dv));
+                if (!periodo) {
+                    girosUndía.forEach(g -> sumarizarDetalleGiro(g, girosUndía.get(girosUndía.indexOf(g)), new ArrayList<>()));
+                }
             }
 
         } else {
-
+            giro = null;
         }
+    }
+
+    public void sumarizarDetalleGiro(GiroDeCaja g, GiroDeCaja g2, List<DetalleVentas> dv) {
+        g.getVentasList().forEach(v0 -> v0.getDetalleVentasList().forEach(dv1 -> {
+            List<DetalleVentas> col = dv.stream().filter(dv0 -> dv0.getInventario().getIdInventario().equals(dv1.getInventario().getIdInventario())).collect(Collectors.toList());
+            if (!col.isEmpty()) {
+                int idx = dv.indexOf(col.get(0));
+                DetalleVentas dv2 = dv.get(idx);
+                dv2.setCantidad(dv2.getCantidad() + dv1.getCantidad());
+                dv2.setPrecioUnitario((dv2.getPrecioUnitario().add(dv1.getPrecioUnitario()).divide(new BigDecimal(2.0))));
+                dv.remove(idx);
+                dv.add(idx, dv2);
+            } else {
+                dv.add(dv1);
+            }
+        }));
+        g2.setVentasList(new ArrayList<>());
+        Ventas v = new Ventas();
+        v.setDetalleVentasList(dv);
+        g2.getVentasList().add(v);
     }
 
     public Date getInicio() {
@@ -236,7 +258,45 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     public GiroDeCaja getGiro() {
         return giro;
     }
-    
-    
+
+    public List<DetalleVentas> getDetalleReporte() {
+        return getDetalleReporte(giro);
+    }
+
+    public List<DetalleVentas> getDetalleReporte(GiroDeCaja g) {
+        return g == null || g.getVentasList() == null
+                || g.getVentasList().isEmpty()
+                || g.getVentasList().get(0).getDetalleVentasList() == null
+                ? new ArrayList<>()
+                : g.getVentasList().get(0).getDetalleVentasList();
+    }
+
+    public double getTotalVendidoPeriodo() {
+        return getTotalVendido(getDetalleReporte());
+    }
+
+    public double getTotalVendido(List<DetalleVentas> dv) {
+        return redondeo2decimales(dv.stream()
+                .mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario()
+                .doubleValue()).sum());
+    }
+
+    public void ValidaFechaFinal() {
+        if (inicio != null && fin != null && fin.before(inicio)) {
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Verifique la fecha",
+                            "La fecha de fin del periodo no puede ser anterior a la fecha de inicio."));
+            fin = null;
+            PrimeFaces.current().ajax().update(new String[]{"form0:msgs", "form:tw:fin"});
+        }
+    }
+
+    public List<GiroDeCaja> getGirosUndía() {
+        return girosUndía;
+    }
+
+    public boolean isPeriodo() {
+        return periodo;
+    }
 
 }

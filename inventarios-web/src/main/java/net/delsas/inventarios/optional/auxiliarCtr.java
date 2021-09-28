@@ -6,6 +6,8 @@
 package net.delsas.inventarios.optional;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -48,11 +50,15 @@ public class auxiliarCtr implements Serializable {
         }
         return 0;
     }
-    
+
     public double redondeo2decimales(double o) {
         o = o * 100;
         o = Math.round(o);
         o = o / 100;
         return o;
+    }
+
+    public String getDateToString(Date d) {
+        return d != null ? new SimpleDateFormat("dd/MM/yyyy").format(d) : "";
     }
 }
