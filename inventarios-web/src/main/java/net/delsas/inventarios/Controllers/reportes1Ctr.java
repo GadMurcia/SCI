@@ -7,7 +7,6 @@ package net.delsas.inventarios.Controllers;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -23,11 +22,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import net.delsas.inventarios.beans.ComprasFacadeLocal;
 import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.GiroDeCajaFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
+import net.delsas.inventarios.entities.Compras;
+import net.delsas.inventarios.entities.DetalleCompra;
 import net.delsas.inventarios.entities.DetalleVentas;
 import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Misc;
@@ -35,7 +37,9 @@ import net.delsas.inventarios.entities.Usuario;
 import net.delsas.inventarios.entities.Ventas;
 import net.delsas.inventarios.optional.Existencias;
 import net.delsas.inventarios.optional.auxiliarCtr;
+import net.delsas.inventarios.optional.reporteFacturasCompras;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 /**
@@ -57,6 +61,9 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     private GiroDeCaja giro;
     private List<GiroDeCaja> girosUndía;
     private boolean periodo;
+    private Compras compra;
+    private List<reporteFacturasCompras> facturas;
+    private reporteFacturasCompras facSelected;
 
     @EJB
     private MiscFacadeLocal mfl;
@@ -68,12 +75,17 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     private DetalleVentasFacadeLocal dvfl;
     @EJB
     private GiroDeCajaFacadeLocal gdcfl;
+    @EJB
+    private DetalleCompraFacadeLocal dcfl1;
+    @EJB
+    private ComprasFacadeLocal cfl;
 
     @PostConstruct
     public void init() {
         matrices = new ArrayList<>();
         sucursales = new ArrayList<>();
         existencias = new ArrayList<>();
+        facturas = new ArrayList<>();
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!user.isPresent()) {
             try {
@@ -151,6 +163,7 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
                 generarExistencias(null);
                 break;
             default:
+                limpiarFechas();
         }
     }
 
@@ -184,6 +197,7 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
         inicio = null;
         fin = null;
         generarRepVentas();
+        generarRepCpmra();
     }
 
     public void generarRepVentas() {
@@ -297,6 +311,68 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
 
     public boolean isPeriodo() {
         return periodo;
+    }
+
+    public Compras getCompra() {
+        return compra;
+    }
+
+    public void generarRepCpmra() {
+        facturas.clear();
+        if (inicio != null) {
+            periodo = !(fin == null || fin.equals(inicio));
+            fin = fin == null || fin.before(inicio) ? new Date(inicio.getTime()) : fin;
+            fin.setHours(23);
+            fin.setMinutes(59);
+            fin.setSeconds(59);
+            List<DetalleCompra> dc = dcfl1.findByPeriodoFechas(inicio, fin);
+            compra = new Compras();
+            compra.setValor(dc.stream()
+                    .map(d -> d.getCostoUnitario().multiply(new BigDecimal(d.getCantidad())))
+                    .reduce(BigDecimal::add).orElseGet(() -> BigDecimal.ZERO));
+            List<DetalleCompra> d = new ArrayList<>();
+            dc.stream().forEach(dc1 -> {
+                List<DetalleCompra> hay = d.stream()
+                        .filter(dc0 -> dc0.getInventario().getIdInventario().equals(dc1.getInventario().getIdInventario()))
+                        .collect(Collectors.toList());
+                if (hay.isEmpty()) {
+                    List<DetalleCompra> dcl = dc.stream()
+                            .filter(dc3 -> dc3.getInventario().getIdInventario().equals(dc1.getInventario().getIdInventario()))
+                            .collect(Collectors.toList());
+                    dc1.setCostoUnitario(dcl.stream().map(DetalleCompra::getCostoUnitario)
+                            .reduce(BigDecimal::add)
+                            .orElseGet(() -> BigDecimal.ZERO)
+                            .divide(new BigDecimal(dcl.isEmpty() ? 1 : dcl.size())));
+                    d.add(dc1);
+                } else {
+                    DetalleCompra dc2 = hay.get(0);
+                    int idx = hay.indexOf(dc2);
+                    dc2.setCantidad(dc2.getCantidad() + dc1.getCantidad());
+                    d.remove(idx);
+                    d.add(idx, dc2);
+                }
+            });
+            compra.setDetalleCompraList(d);
+            cfl.findConFacturaByPeriodo(inicio, fin).forEach(c -> facturas.add(new reporteFacturasCompras(c)));
+        } else {
+            compra = null;
+        }
+    }
+
+    public void onSelectF(SelectEvent<reporteFacturasCompras> e) {
+        facSelected = e.getObject();
+    }
+
+    public List<reporteFacturasCompras> getFacturas() {
+        return facturas;
+    }
+
+    public reporteFacturasCompras getFacSelected() {
+        return facSelected;
+    }
+
+    public void setFacSelected(reporteFacturasCompras facSelected) {
+        this.facSelected = facSelected;
     }
 
 }

@@ -5,6 +5,8 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,13 @@ public class ComprasFacade extends AbstractFacade<Compras> implements ComprasFac
     public ComprasFacade() {
         super(Compras.class);
     }
-    
+
+    @Override
+    public List<Compras> findConFacturaByPeriodo(Date inicio, Date fin) {
+        return em.createNamedQuery("Compras.findConFacturaByPeriodo")
+                .setParameter("fin", fin)
+                .setParameter("inicio", inicio)
+                .getResultList();
+    }
+
 }

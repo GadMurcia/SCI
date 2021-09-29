@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.DetalleCompra;
@@ -31,5 +32,7 @@ public interface DetalleCompraFacadeLocal {
     int count();
     
     public List<DetalleCompra> findByProducto(Integer odProducto);
+    
+    public List<DetalleCompra> findByPeriodoFechas(Date inicio, Date fin);
     
 }

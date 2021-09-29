@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.Compras;
@@ -29,5 +30,7 @@ public interface ComprasFacadeLocal {
     List<Compras> findRange(int[] range);
 
     int count();
-    
+
+    List<Compras> findConFacturaByPeriodo(Date inicio, Date fin);
+
 }

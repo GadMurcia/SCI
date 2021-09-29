@@ -32,8 +32,9 @@ import net.delsas.inventarios.entities.DetalleCompraPK;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
+import net.delsas.inventarios.optional.auxiliarCtr;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
@@ -43,7 +44,7 @@ import org.primefaces.event.UnselectEvent;
  */
 @ViewScoped
 @Named
-public class compraCtr implements Serializable {
+public class compraCtr extends auxiliarCtr implements Serializable {
 
     private Compras nCompra;
     private DetalleCompra ndCompra;
@@ -211,7 +212,7 @@ public class compraCtr implements Serializable {
         this.comprando = comprando;
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Session de compras",
-                        "Se ha "+(this.comprando?"iniciado una nueva ":"finalizado la ")+"sesión de compras."));
+                        "Se ha " + (this.comprando ? "iniciado una nueva " : "finalizado la ") + "sesión de compras."));
         PrimeFaces.current().ajax().update("form0:msgs");
     }
 
@@ -302,6 +303,25 @@ public class compraCtr implements Serializable {
         if (o != null && selected.contains(o)) {
             selected.remove(o);
         }
+    }
+
+    public boolean getHayDocumento() {
+        return nCompra != null && nCompra.getFactura() != null;
+    }
+
+    public void factura(FileUploadEvent f) {
+        nCompra.setFactura(f.getFile().getContent());
+        nCompra.setExtencion(f.getFile().getContentType());
+    }
+
+    public String getDocFactura() {
+        return (nCompra == null || nCompra.getFactura() == null) ? ""
+                : (getDoc(nCompra.getFactura(), nCompra.getExtencion()));
+    }
+
+    public void quitarFactura() {
+        nCompra.setFactura(null);
+        nCompra.setExtencion("");
     }
 
 }

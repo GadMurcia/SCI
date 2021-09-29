@@ -16,6 +16,7 @@ import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
+import org.apache.commons.codec.binary.Base64;
 import org.primefaces.event.CellEditEvent;
 
 /**
@@ -60,5 +61,11 @@ public class auxiliarCtr implements Serializable {
 
     public String getDateToString(Date d) {
         return d != null ? new SimpleDateFormat("dd/MM/yyyy").format(d) : "";
+    }
+    
+    public String getDoc(byte[] doc, String ex) {
+        String a = doc == null ? ""
+                : "data:" + ex + ";base64, " + new String(Base64.encodeBase64(doc));
+        return a;
     }
 }

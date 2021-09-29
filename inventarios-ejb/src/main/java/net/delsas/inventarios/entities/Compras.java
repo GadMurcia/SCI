@@ -7,14 +7,17 @@ package net.delsas.inventarios.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,7 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Compras.findByIdCompras", query = "SELECT c FROM Compras c WHERE c.comprasPK.idCompras = :idCompras"),
     @NamedQuery(name = "Compras.findByUsuario", query = "SELECT c FROM Compras c WHERE c.comprasPK.usuario = :usuario"),
     @NamedQuery(name = "Compras.findByValor", query = "SELECT c FROM Compras c WHERE c.valor = :valor"),
-    @NamedQuery(name = "Compras.findByComentario", query = "SELECT c FROM Compras c WHERE c.comentario = :comentario")})
+    @NamedQuery(name = "Compras.findByComentario", query = "SELECT c FROM Compras c WHERE c.comentario = :comentario"),
+    @NamedQuery(name = "Compras.findConFacturaByPeriodo", query = "SELECT c FROM Compras c WHERE c.comprasPK.idCompras >= :inicio AND c.comprasPK.idCompras <= :fin AND c.factura != NULL")
+})
 public class Compras implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +56,12 @@ public class Compras implements Serializable {
     @Size(max = 250)
     @Column(length = 250)
     private String comentario;
+    @Lob
+    private byte[] factura;
+    @Size(max = 10)
+    @Column(length = 10)
+    private String extencion;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @JoinColumn(name = "usuario", referencedColumnName = "idUsuario", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Usuario usuario1;
@@ -115,28 +126,66 @@ public class Compras implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "net.delsas.inventarios.entities.Compras[ comprasPK=" + comprasPK + " ]";
+    }
+
+    public byte[] getFactura() {
+        return factura;
+    }
+
+    public void setFactura(byte[] factura) {
+        this.factura = factura;
+    }
+
+    public String getExtencion() {
+        return extencion;
+    }
+
+    public void setExtencion(String extencion) {
+        this.extencion = extencion;
+    }
+
+    @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (comprasPK != null ? comprasPK.hashCode() : 0);
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.comprasPK);
+        hash = 79 * hash + Objects.hashCode(this.valor);
+        hash = 79 * hash + Objects.hashCode(this.comentario);
+        hash = 79 * hash + Arrays.hashCode(this.factura);
+        hash = 79 * hash + Objects.hashCode(this.extencion);
+        hash = 79 * hash + Objects.hashCode(this.usuario1);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Compras)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Compras other = (Compras) object;
-        if ((this.comprasPK == null && other.comprasPK != null) || (this.comprasPK != null && !this.comprasPK.equals(other.comprasPK))) {
+        if (getClass() != obj.getClass()) {
             return false;
         }
-        return true;
+        final Compras other = (Compras) obj;
+        if (!Objects.equals(this.comentario, other.comentario)) {
+            return false;
+        }
+        if (!Objects.equals(this.extencion, other.extencion)) {
+            return false;
+        }
+        if (!Objects.equals(this.comprasPK, other.comprasPK)) {
+            return false;
+        }
+        if (!Objects.equals(this.valor, other.valor)) {
+            return false;
+        }
+        if (!Arrays.equals(this.factura, other.factura)) {
+            return false;
+        }
+        return Objects.equals(this.usuario1, other.usuario1);
     }
 
-    @Override
-    public String toString() {
-        return "net.delsas.inventarios.entities.Compras[ comprasPK=" + comprasPK + " ]";
-    }
-    
 }
