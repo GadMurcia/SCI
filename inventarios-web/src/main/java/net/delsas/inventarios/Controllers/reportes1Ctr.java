@@ -168,25 +168,30 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     }
 
     public List<Existencias> getExistencias() {
+        existencias.clear();
+        ifl.findByTienda(1).stream().forEachOrdered(p -> {
+            existencias.add(new Existencias(p, dcfl, dvfl));
+        });
+        Collections.sort(existencias, (Existencias u, Existencias d) -> u.getNombre().compareToIgnoreCase(d.getNombre()));
         return existencias;
     }
 
     public double costoTotal() {
-        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getCostoTotal).sum());
+        return redondeo2decimales(getExistencias().stream().mapToDouble(Existencias::getCostoTotal).sum());
     }
 
     public double valorTotal() {
-        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getValorTotal).sum());
+        return redondeo2decimales(getExistencias().stream().mapToDouble(Existencias::getValorTotal).sum());
     }
 
     public double utilidadTotal() {
-        return redondeo2decimales(existencias.stream().mapToDouble(Existencias::getUtilidad).sum());
+        return redondeo2decimales(getExistencias().stream().mapToDouble(Existencias::getUtilidad).sum());
     }
 
     public void generarExistencias(AjaxBehaviorEvent e) {
         existencias.clear();
         if (sucSel != null) {
-            ifl.findByTienda(sucSel.getIdMisc()).stream().forEachOrdered(p -> {
+            ifl.findByTienda(1).stream().forEachOrdered(p -> {
                 existencias.add(new Existencias(p, dcfl, dvfl));
             });
             Collections.sort(existencias, (Existencias u, Existencias d) -> u.getNombre().compareToIgnoreCase(d.getNombre()));
@@ -207,7 +212,7 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
             fin.setHours(23);
             fin.setMinutes(59);
             fin.setSeconds(59);
-            girosUndía = gdcfl.findByPeriodoYSucursal(inicio, fin, sucSel.getIdMisc());
+            girosUndía = gdcfl.findByPeriodoYSucursal(inicio, fin, 1);
             giro = new GiroDeCaja();
             if (!girosUndía.isEmpty()) {
                 giro.setFin(fin);
@@ -373,6 +378,11 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
 
     public void setFacSelected(reporteFacturasCompras facSelected) {
         this.facSelected = facSelected;
+    }
+
+    public String getDocFactura() {
+        return (facSelected == null || facSelected.getFactura() == null) ? ""
+                : (getDoc(facSelected.getFactura(), facSelected.getExt()));
     }
 
 }

@@ -13,7 +13,7 @@
             <ui:define name="content">                
                 <h:form id="form">
                     <h:outputScript library="js" name="local-es.js"/>
-                    <h:panelGrid columns="4"  style="margin: auto">
+                    <h:panelGrid columns="4"  style="margin: auto" rendered="false">
                         <p:outputLabel for="matrices" value="Matriz:"/>
                         <p:selectOneMenu id="matrices" value="#{reportes1Ctr.matSel}" 
                                          converter="omnifaces.SelectItemsConverter">
@@ -247,18 +247,22 @@
                                         </p:dataTable>
                                     </p:tab>
                                     <p:tab title="Facturas">
-                                        <p:dataTable value="#{reportes1Ctr.facturas}" var="item"  reflow="true" >
+                                        <p:dataTable value="#{reportes1Ctr.facturas}" var="fac"  reflow="true" 
+                                                     selectionMode="single" selection="#{reportes1Ctr.facSelected}"
+                                                     rowKey="#{fac.fecha}">
+                                            <p:ajax event="rowSelect" listener="#{reportes1Ctr.onSelectF}"
+                                                    update="h0" oncomplete="PF('DConstancia').show();"/>
                                             <p:column>
                                                 <f:facet name="header">
                                                     <h:outputText value="Fecha"/>
                                                 </f:facet>
-                                                <h:outputText value="#{reportes1Ctr.getDateToString(item.fecha)}"/>
+                                                <h:outputText value="#{reportes1Ctr.getDateToString(fac.fecha)}"/>
                                             </p:column>
                                             <p:column>
                                                 <f:facet name="header">
-                                                    <h:outputText value="Valor"/>
+                                                    <h:outputText value="Valor de la compra"/>
                                                 </f:facet>
-                                                <h:outputText value="#{item.valor}"/>
+                                                <h:outputText value="#{fac.valor}"/>
                                             </p:column>
                                         </p:dataTable>
                                     </p:tab>
@@ -300,15 +304,15 @@
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Precio Unitario"/>
-                                        </f:facet>
-                                        <h:outputText value="#{item.precioAVG}"/>
-                                    </p:column>
-                                    <p:column>
-                                        <f:facet name="header">
                                             <h:outputText value="Subtotal de Costo"/>
                                         </f:facet>
                                         <h:outputText value="#{item.costoTotal}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Precio Unitario"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.precioAVG}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
@@ -328,6 +332,17 @@
                         <p:tab title="Tab 4"></p:tab>
                     </p:tabView>
                 </h:form>
+
+                <p:dialog id="dialog" widgetVar="DConstancia" modal="true" style="width: 60%;"
+                          showHeader="true" header="Factura " 
+                          closeOnEscape="true">
+                    <h:form id="h0">
+                        <h:panelGrid columns="1" cellspacing="2">
+                            <img src="#{reportes1Ctr.docFactura}"
+                                 width="640" height="480"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
             </ui:define>
 
         </ui:composition>
