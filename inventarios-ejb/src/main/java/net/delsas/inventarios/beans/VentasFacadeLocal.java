@@ -29,5 +29,7 @@ public interface VentasFacadeLocal {
     List<Ventas> findRange(int[] range);
 
     int count();
+
+    List<Ventas> findByGiroCaja(Integer idGiroDeCaja);
     
 }
