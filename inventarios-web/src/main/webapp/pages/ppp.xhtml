@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantillas/pl1.xhtml">
+
+            <ui:define name="content">
+                <h:form id="form">
+                    <h:outputScript library="js" name="local-es.js"/>
+                    <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
+                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
+                        <p:tab title="Ventas">
+                            <h:panelGrid columns="1"  style="margin: auto">
+                                <h:panelGrid columns="4" style="margin: auto">
+                                    <p:outputLabel value="Fecha de inicio del reporte" for="ini"/>
+                                    <p:outputLabel value="Fecha de finalización del reporte" for="fin"/>
+                                    <p:column />
+                                    <p:column />
+
+                                    <p:datePicker id="ini" value="#{reportes1Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:datePicker id="fin" value="#{reportes1Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
+                                                     styleClass="rounded-button ui-button-outlined" update="@form"
+                                                     actionListener="#{reportes1Ctr.generarRepVentas1()}"
+                                                     />
+                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
+                                                     styleClass="rounded-button ui-button-outlined" update="@form"
+                                                     actionListener="#{reportes1Ctr.limpiarFechas()}"
+                                                     />
+                                </h:panelGrid>
+                                <p:scrollPanel style="margin: auto;" rendered="#{reportes1Ctr.periodo}">
+                                    <h1>Periodo del reporte: #{reportes1Ctr.getDateToString(reportes1Ctr.inicio)} al 
+                                        #{reportes1Ctr.getDateToString(reportes1Ctr.fin)}</h1>
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Total de ventas: "/>
+                                        <p:outputLabel value="$ #{reportes1Ctr.totalVendidoPeriodo}"/>
+
+                                        <p:outputLabel value="Total de retiros de efectivo: "/>
+                                        <p:outputLabel value="$ #{reportes1Ctr.giro.retiros}"/>
+
+                                        <p:outputLabel value="Total de faltantes de caja: "/>
+                                        <p:outputLabel value="$ #{reportes1Ctr.giro.faltantes}"/>
+
+                                        <p:outputLabel value="Utilidad: "/>
+                                        <p:outputLabel value="$ #{reportes1Ctr.giro.excedentes}"/>
+
+                                        <p:column /><p:column />
+
+                                        <p:outputLabel value="Detalle de retiros: "/>
+                                        <p:inputTextarea disabled="true" value="#{reportes1Ctr.giro.detalleRetiros}"  style="width: 80%; height: 15%"/>
+                                    </h:panelGrid> 
+                                    <p:dataTable value="#{reportes1Ctr.detalleReporte}" var="item"
+                                                 rows="7" reflow="true" paginator="true" paginatorPosition="top"
+                                                 paginatorAlwaysVisible="false" rendered="#{reportes1Ctr.periodo}">
+                                        <f:facet name="header">
+                                            Detalle de productos vendidos 
+                                        </f:facet>
+                                        <f:facet name="footer">
+                                            Total $#{reportes1Ctr.totalVendidoPeriodo}
+                                        </f:facet>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Producto"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.inventario.producto}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Cantidad"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.cantidad}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="PrecioUnitario"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.precioUnitario}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Sub Total"/>
+                                            </f:facet>
+                                            <h:outputText value="#{reportes1Ctr.redondeo2decimales(item.cantidad*item.precioUnitario)}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:scrollPanel>
+                                <p:accordionPanel value="#{reportes1Ctr.girosUndía}" var="giro" 
+                                                  rendered="#{!reportes1Ctr.periodo}">
+                                    <p:tab title="Cajero: #{giro.responsable.nombres} #{giro.responsable.apellidos}"
+                                           >
+                                        <p:scrollPanel style="margin: 0 auto;">
+                                            <h:panelGrid columns="2">
+                                                <p:outputLabel value="Caja inicial: "/>
+                                                <p:outputLabel value="$ #{giro.cajaInicial}"/>
+
+                                                <p:outputLabel value="Total de ventas: "/>
+                                                <p:outputLabel value="$ #{reportes1Ctr.getTotalVendido(reportes1Ctr.getDetalleReporte(giro))}"/>
+
+                                                <p:outputLabel value="Total de retiros de efectivo: "/>
+                                                <p:outputLabel value="$ #{reportes1Ctr.redondeo2decimales(giro.retiros)}"/>
+
+                                                <p:outputLabel value="Total de faltantes de caja: "/>
+                                                <p:outputLabel value="$ #{reportes1Ctr.redondeo2decimales(giro.faltantes)}"/>
+
+                                                <p:outputLabel value="Utilidad: "/>
+                                                <p:outputLabel value="$ #{reportes1Ctr.redondeo2decimales(giro.excedentes)}"/>
+
+                                                <p:column /><p:column />
+
+                                                <p:outputLabel value="Detalle de retiros: "/>
+                                                <p:inputTextarea disabled="true" value="#{giro.detalleRetiros}"  style="width: 80%; height: 15%"/>
+                                            </h:panelGrid> 
+                                            <p:dataTable value="#{reportes1Ctr.getDetalleReporte(giro)}" var="g"
+                                                         rows="7" reflow="true" paginator="true" paginatorPosition="top"
+                                                         paginatorAlwaysVisible="false">
+                                                <f:facet name="header">
+                                                    Detalle de productos vendidos 
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    Total $ #{reportes1Ctr.getTotalVendido(reportes1Ctr.getDetalleReporte(giro))}
+                                                </f:facet>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Producto"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{g.inventario.producto}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Cantidad"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{g.cantidad}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="PrecioUnitario"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{g.precioUnitario}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Sub Total"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{reportes1Ctr.redondeo2decimales(g.cantidad*g.precioUnitario)}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:scrollPanel>
+                                    </p:tab>
+                                </p:accordionPanel>
+
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
