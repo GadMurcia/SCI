@@ -13,27 +13,6 @@
             <ui:define name="content">                
                 <h:form id="form">
                     <h:outputScript library="js" name="local-es.js"/>
-                    <h:panelGrid columns="4"  style="margin: auto" rendered="false">
-                        <p:outputLabel for="matrices" value="Matriz:"/>
-                        <p:selectOneMenu id="matrices" value="#{reportes1Ctr.matSel}" 
-                                         converter="omnifaces.SelectItemsConverter">
-                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-                            <f:selectItems value="#{reportes1Ctr.matrices}" var="m"
-                                           itemValue="#{m}" itemLabel="#{m.nombre}"/>
-                            <p:ajax event="itemSelect" listener="#{reportes1Ctr.onBlour}" 
-                                    update="form"/>
-                        </p:selectOneMenu>
-
-                        <p:outputLabel for="sucursales" value="Sucursal:"/>
-                        <p:selectOneMenu id="sucursales" value="#{reportes1Ctr.sucSel}" 
-                                         converter="omnifaces.SelectItemsConverter">
-                            <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
-                            <f:selectItems value="#{reportes1Ctr.sucursales}" var="s"
-                                           itemValue="#{s}" itemLabel="#{s.nombre}"/>
-                            <p:ajax event="itemSelect" listener="#{reportes1Ctr.generarExistencias}"
-                                    update="form"/>
-                        </p:selectOneMenu>
-                    </h:panelGrid>
                     <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
                         <p:tab title="Ventas">

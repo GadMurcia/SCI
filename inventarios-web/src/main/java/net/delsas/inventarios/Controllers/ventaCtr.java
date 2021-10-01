@@ -205,6 +205,7 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
 
     public List<Inventario> completeInventario(String query) {
         return getInventario().stream()
+                .filter(Inventario::isActivo)
                 .filter(i -> i.getProducto().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
     }

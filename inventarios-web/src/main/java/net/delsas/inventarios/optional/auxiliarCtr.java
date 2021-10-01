@@ -27,6 +27,7 @@ import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
+import net.delsas.inventarios.entities.Usuario;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.util.IOUtils;
 import org.primefaces.component.export.ExportConfiguration;
@@ -77,14 +78,14 @@ public class auxiliarCtr implements Serializable {
     public String getDateToString(Date d) {
         return d != null ? new SimpleDateFormat("dd/MM/yyyy").format(d) : "";
     }
-    
+
     public String getDoc(byte[] doc, String ex) {
         String a = doc == null ? ""
                 : "data:" + ex + ";base64, " + new String(Base64.encodeBase64(doc));
         return a;
     }
-    
-     public OutputStream getOutputStream(FacesContext fc, ExportConfiguration ec, String tipoArchivo) throws IOException {
+
+    public OutputStream getOutputStream(FacesContext fc, ExportConfiguration ec, String tipoArchivo) throws IOException {
         fc.getExternalContext().setResponseContentType(tipoArchivo);
         fc.getExternalContext().setResponseHeader("Expires", "0");
         fc.getExternalContext().setResponseHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
@@ -127,5 +128,9 @@ public class auxiliarCtr implements Serializable {
         c1.setHorizontalAlignment(hAligmnet);
         c1.setVerticalAlignment(vAligment);
         return c1;
+    }
+
+    public String getNombreususario(Usuario u) {
+        return u == null ? "" : u.getNombres() + " " + u.getApellidos();
     }
 }

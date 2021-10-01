@@ -5,12 +5,15 @@
  */
 package net.delsas.inventarios.Controllers;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -20,6 +23,7 @@ import javax.inject.Named;
 import net.delsas.inventarios.beans.GiroDeCajaFacadeLocal;
 import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Usuario;
+import net.delsas.inventarios.entities.Ventas;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -42,18 +46,26 @@ public class cajaCtr implements Serializable {
     @PostConstruct
     public void init() {
         giro = new GiroDeCaja();
-        us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance()
-                .getExternalContext().getSessionMap().get("user"));
-        us.ifPresent(u -> {
-            giro = Optional.ofNullable(gdcfl.findNoTerminadas(u.getIdUsuario()))
+        us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
+        if (!us.isPresent()) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Acceso fallido",
+                                "Usted no está autorizado para ver esa funcionalidad. Loguéese."));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("./../");
+            } catch (IOException ex) {
+                Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            giro = Optional.ofNullable(gdcfl.findNoTerminadas(us.get().getIdUsuario()))
                     .orElseGet(() -> new GiroDeCaja(null, null, null, 0, 0, 0, 0, 0));
+            giro.setResponsable(us.get());
             iniciada = giro.getIdGiroDeCaja() != null;
-        });
+        }
     }
 
     public void abrirGiro() {
         giro.setInicio(new Date());
-        giro.setResponsable(us.get());
         gdcfl.create(giro);
         iniciada = true;
         PrimeFaces.current().ajax().update("formVenta");
@@ -73,8 +85,7 @@ public class cajaCtr implements Serializable {
 
     public void cerrarCaja() {
         giro.setFin(new Date());
-        giro.setExcedentes(giro.getExcedentes() - giro.getRetiros());
-        giro.setFaltantes(giro.getCierre() - (giro.getExcedentes() + giro.getCajaInicial()));
+        giro.setFaltantes(giro.getCierre() - (getVentas() - giro.getRetiros() + giro.getCajaInicial()));
         gdcfl.edit(giro);
         giro = new GiroDeCaja(null, null, null, 0, 0, 0, 0, 0);
         giro.setDetalleRetiros("");
@@ -120,15 +131,14 @@ public class cajaCtr implements Serializable {
     }
 
     public double getVentas() {
-        giro.setExcedentes(0);
-        gdcfl.findVentas(giro.getIdGiroDeCaja()).forEach(v -> giro.setExcedentes(giro.getExcedentes() + v.getValor().doubleValue()));
+        giro.setExcedentes(gdcfl.findVentas(giro.getIdGiroDeCaja()).stream().map(Ventas::getValor).reduce(BigDecimal::add).orElseGet(() -> BigDecimal.ZERO).doubleValue());
         return giro.getExcedentes();
     }
 
     public void registrarRetiro() {
         giro.setRetiros(giro.getRetiros() + this.valor.doubleValue());
         String t = Optional.ofNullable(giro.getDetalleRetiros()).orElseGet(() -> "");
-        giro.setDetalleRetiros((t.isEmpty() ? "" : t + "\n") + (valor.doubleValue() + "   ><  " + Descr + ""));
+        giro.setDetalleRetiros((t.isEmpty() ? "" : t + "\n") + (valor.doubleValue() + "   ->  " + Descr + ""));
         gdcfl.edit(giro);
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage("Retiro",
