@@ -18,7 +18,7 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:panelGrid columns="2">
-            <p:outputLabel value="DUI:" for="idUsuario" />
+            <p:outputLabel value="DUI:" for="idUsuario" style=" color: #ffffff" />
             <p:inputMask id="idUsuario" value="#{cc.attrs.us.idUsuario}" 
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
                          requiredMessage="The IdUsuario field is required."
@@ -26,28 +26,28 @@
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputMask>
 
-            <p:outputLabel value="Nombres:" for="nombres" />
+            <p:outputLabel value="Nombres:" for="nombres" style=" color: #ffffff" />
             <p:inputText id="nombres" value="#{cc.attrs.us.nombres}" 
                          title="Nombres" required="true" disabled="#{!cc.attrs.editable}"
                          requiredMessage="The Nombres field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputText>
 
-            <p:outputLabel value="Apellidos:" for="apellidos" />
+            <p:outputLabel value="Apellidos:" for="apellidos" style=" color: #ffffff" />
             <p:inputText id="apellidos" value="#{cc.attrs.us.apellidos}" 
                          title="Apellidos" required="true" disabled="#{!cc.attrs.editable}"
                          requiredMessage="The Apellidos field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputText>
 
-            <p:outputLabel value="Permitir Acceso:" for="activo" rendered="#{!cc.attrs.ediId}"/>
+            <p:outputLabel value="Permitir Acceso:" for="activo" style=" color: #ffffff" rendered="#{!cc.attrs.ediId}"/>
             <p:selectBooleanButton id="activo" onIcon="pi pi-check" offIcon="pi pi-times" 
                                    disabled="#{!cc.attrs.editable}" rendered="#{!cc.attrs.ediId}"
                                    value="#{cc.attrs.us.activo}" offLabel="No" onLabel="Sí">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:selectBooleanButton>
 
-            <p:outputLabel value="TipoUsuario:" for="tipoUsuario" />
+            <p:outputLabel value="TipoUsuario:" for="tipoUsuario"  style=" color: #ffffff" />
             <p:selectOneMenu id="tipoUsuario" value="#{cc.attrs.us.tipoUsuario}" 
                              disabled="#{!cc.attrs.editable}"
                              required="true" requiredMessage="The TipoUsuario field is required."

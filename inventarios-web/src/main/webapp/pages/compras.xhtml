@@ -12,12 +12,12 @@
             <p:card>
                 <f:facet name="header">
                 </f:facet>
-                <f:facet name="title">
-                    Registro de compras
+                <f:facet name="title" >
+                    Registro de Compras 
                 </f:facet>
                 <f:facet name="subtitle">
                     <h:panelGrid columns="4">
-                        <p:outputLabel for="matrices" value="Matriz:"/>
+                        <p:outputLabel for="matrices" value="Matriz:" style=" color: #ffffff"/>
                         <p:selectOneMenu id="matrices" value="#{compraCtr.matSel}" 
                                          converter="omnifaces.SelectItemsConverter">
                             <f:selectItem itemValue="#{null}" itemLabel="Seleccione" noSelectionOption="true"/>
@@ -27,7 +27,7 @@
                                     update="form"/>
                         </p:selectOneMenu>
 
-                        <p:outputLabel for="sucursales" value="Sucursal:"/>
+                        <p:outputLabel for="sucursales" value="Sucursal:" style=" color: #ffffff"/>
                         <p:selectOneMenu id="sucursales" value="#{compraCtr.sucSel}" 
                                          converter="omnifaces.SelectItemsConverter">
                             <f:selectItem itemValue="#{null}" itemLabel="Seleccione" noSelectionOption="true"/>
@@ -41,38 +41,41 @@
 
                 <h:panelGrid columns="1">
                     <h:panelGrid columns="2">
-                        <p:outputLabel value="Total: "/>
+                        <p:outputLabel value="Total: " style=" color: #ffffff"/>
                         <p:inputNumber value="#{compraCtr.nueCompra.valor}" 
                                        title="Valor total de la compra" disabled="true"
                                        symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," />
 
-                        <p:outputLabel value="Usuario que registra: "/>
-                        <p:outputLabel value="#{compraCtr.nueCompra.usuario1.nombres} #{compraCtr.nueCompra.usuario1.apellidos}"/>
+                        <p:outputLabel value="Usuario: " style=" color: #ffffff"/>
+                        <p:outputLabel value="#{compraCtr.nueCompra.usuario1.nombres} #{compraCtr.nueCompra.usuario1.apellidos}" style="color: #ece3a5"/>
                     </h:panelGrid>
                     <h:panelGrid columns="1">
                         <h:panelGrid columns="1">                            
                             <p:focus context="cant"/>
                             <h:panelGrid columns="1">
                                 <h:panelGrid columns="2">
-                                    <p:outputLabel value="Factura: " />
+                                    <p:outputLabel value="Factura: " style=" color: #ffffff" />
                                     <h:panelGrid columns="3">
                                         <p:fileUpload id="partida" listener="#{compraCtr.factura}" 
                                                       mode="advanced" invalidSizeMessage="El archivo sobrepasa el límited de 1MB."
                                                       invalidFileMessage="El archivo seleccionado no es válido"
-                                                      update="messagesp"  sizeLimit="1000000" label="Elejir"
+                                                      update="messagesp"  sizeLimit="1000000" label="Agregar Archivo"
                                                       allowTypes="/(\.|\/)(jpe?g|png)$/" auto="true"
                                                       oncomplete="update();" disabled="#{!compraCtr.comprando}"/>
                                         <p:remoteCommand name="update" update="btnV"/>
-                                        <p:commandButton id="btnV" value="Ver factura" update="h0" 
+                                        <p:commandButton 
+                                            styleClass="ui-button-outlined ui-button-warning"
+                                            icon="pi pi-fw pi-eye"
+                                            id="btnV" value="Ver factura" update="h0" 
                                                          disabled="#{!compraCtr.hayDocumento}"
                                                          oncomplete="PF('DConstancia').show();"/>                             
                                         <p:growl id="messagesp" showDetail="true" for="partida"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid columns="3">
-                                    <p:outputLabel value="Cantidad: "/>
-                                    <p:outputLabel value="Producto: "/>
-                                    <p:outputLabel value="Costo por unidad"/>
+                                    <p:outputLabel value="Cantidad " style=" color: #ffffff; margin-left: 28%"/>
+                                    <p:outputLabel value="Producto " style=" color: #ffffff; margin-left: 28%" />
+                                    <p:outputLabel value="Costo por Unidad" style=" color: #ffffff; margin-left: 14%"/>
 
                                     <p:inputNumber id="cant" value="#{compraCtr.ndCompra.cantidad}" 
                                                    title="Cantidad del producto a comprar" 
@@ -106,11 +109,11 @@
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid columns="1" style="margin: 0 auto">
-                                <p:commandButton id="add" icon="pi pi-check" value="Agregar" 
+                                <p:commandButton id="add" icon="pi pi-fw pi-shopping-cart" value="Agregar Productos" 
                                                  title="Agregar producto a la factura"
                                                  disabled="#{!compraCtr.comprando}"
                                                  actionListener="#{compraCtr.agregarDetalleCompra()}"
-                                                 update="form"/>
+                                                 update="form"  styleClass="ui-button-raised ui-button-info "/>
                             </h:panelGrid>
                         </h:panelGrid>
                         <p:dataTable id="productos" var="p" value="#{compraCtr.detalles}" 
@@ -119,19 +122,19 @@
                             <p:ajax event="rowSelect" listener="#{compraCtr.onRowSelect}" update="form:context"/>
                             <p:ajax event="rowUnselect" listener="#{compraCtr.onRowUnselect}" update="form:context"/>
 
-                            <p:column headerText="Cantidad">
+                            <p:column headerText="CANTIDAD" style="color: #ece3a5">
                                 <h:outputText value="#{p.cantidad}" />
                             </p:column>
 
-                            <p:column headerText="Nombre de producto">
+                            <p:column headerText="PRODUCTO" style="color: #ece3a5">
                                 <h:outputText value="#{p.inventario.producto}" />
                             </p:column>
 
-                            <p:column headerText="Costo por unidad">
+                            <p:column headerText="COSTO UNITARIO" style="color: #ece3a5">
                                 <h:outputText value="#{p.costoUnitario}" />
                             </p:column>
 
-                            <p:column headerText="Subtotal">
+                            <p:column headerText="TOTAL" style="color: #ece3a5">
                                 <h:outputText value="#{p.cantidad*p.costoUnitario}" />
                             </p:column>
                         </p:dataTable>
@@ -145,27 +148,34 @@
                 </h:panelGrid>
 
                 <f:facet name="footer">
-                    <p:commandButton id="save" icon="pi pi-check" value="Guardar" 
+                    <p:commandButton id="save" icon="pi pi-save" 
+                                     styleClass="ui-button-raised ui-button-info "
+                                     style=" margin-left: 10%"
+                                     value="Guardar Compra" 
                                      title="Guardar los datos de la compra actual."
                                      actionListener="#{compraCtr.guardarCompra()}"
                                      rendered="#{compraCtr.comprando}"
                                      disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton id="clean" icon="pi pi-times" value="Limpiar" 
+                    <p:commandButton id="clean" icon="pi pi-exclamation-triangle" value="Limpiar los datos" 
+                                     style=" margin-left: 5%"
                                      title="Limpiar todos los campos"
                                      styleClass="ui-button-secondary" 
                                      rendered="#{compraCtr.comprando}"
                                      actionListener="#{compraCtr.nuevaCompra()}"
                                      disabled="#{compraCtr.sucSel==null}"
-                                     update="form"/>
-                    <p:commandButton id="inic" icon="pi pi-check" value="Iniciar" 
+                                     update="form"/> 
+                    <p:commandButton id="inic" icon="pi pi-chevron-circle-right" value="Iniciar una compra" 
+                                     styleClass="ui-button-raised ui-button-primary "
                                      title="Iniciar la sesión de compras."
                                      actionListener="#{compraCtr.setComprando(true)}"
                                      action="#{compraCtr.nuevaCompra()}"
                                      rendered="#{!compraCtr.comprando}"
                                      disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton id="end" icon="pi pi-check" value="Finalizar"
+                    <p:commandButton id="end" icon="pi pi-check-circle" value="Cancelar compra"
+                                     style=" margin-left: 5%"
+                                     styleClass="ui-button-raised ui-button-danger "
                                      title="Finalizar la sesión de compras."
                                      actionListener="#{compraCtr.setComprando(false)}"
                                      action="#{compraCtr.nuevaCompra()}"

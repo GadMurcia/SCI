@@ -8,10 +8,10 @@
                 xmlns:t="http://xmlns.jcp.org/jsf/composite/components">
 
     <ui:define name="content">
-        <h:form id="form" style="width: 80%; margin: auto">
+        <h:form  id="form" style=" background-color: #01011a" >
             <h:panelGrid columns="1">
                 <h:panelGrid columns="2">
-                    <p:outputLabel value="Matriz" for="mats" />
+                    <p:outputLabel value="Matriz" for="mats" style="color: #ffffff" />
                     <p:selectOneMenu id="mats" value="#{userCtr.matSel}"
                                      converter="omnifaces.SelectItemsConverter">
                         <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
@@ -21,7 +21,7 @@
                                        itemValue="#{m}" itemLabel="#{m.nombre}"/>
                     </p:selectOneMenu>
 
-                    <p:outputLabel value="Sucursal" for="emps" />
+                    <p:outputLabel value="Sucursal" for="emps"  style="color: #ffffff"/>
                     <p:selectOneMenu id="emps" value="#{userCtr.sucSel}"
                                      converter="omnifaces.SelectItemsConverter">
                         <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
@@ -30,8 +30,9 @@
                         <f:selectItems value="#{userCtr.sucursales}" var="s" 
                                        itemValue="#{s}" itemLabel="#{s.nombre}"/>
                     </p:selectOneMenu>
+                    <br></br>
                 </h:panelGrid>
-                <p:dataTable id="usuarios" var="item" 
+                <p:dataTable style="background-color:#01011a " id="usuarios" var="item" 
                              value="#{userCtr.usuarios}" 
                              rowKey="#{item.idUsuario}"
                              selection="#{userCtr.nus}" 
@@ -39,29 +40,31 @@
                              rows="10" paginatorPosition="top" paginatorAlwaysVisible="false">
                     <p:ajax event="rowSelect" listener="#{userCtr.Selecion}" 
                             update="h0"/>
-                    <p:column>
+                    <p:column >
                         <f:facet name="header">
-                            <h:outputText value="DUI"/>
+                            <h:outputText value="DUI" />
                         </f:facet>
                         <h:outputText value="#{item.idUsuario}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Nombre"/>
+                            <h:outputText value="Nombre" style="color: #ece3a5"/>
                         </f:facet>
                         <h:outputText value="#{item.nombres} #{item.apellidos}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
-                            <h:outputText value="Funcion"/>
+                            <h:outputText value="Funcion" style="color: #ece3a5"/>
                         </f:facet>
                         <h:outputText value="#{item.tipoUsuario.nombre}"/>
                     </p:column>
                 </p:dataTable>
+                <br></br>
                 <h:panelGrid style="margin:  0 auto">
-                    <p:commandButton value="+" label="Agregar un usuario nueo" update="form h0"
+                    <p:commandButton value="Nuevo" label="Agregar un usuario nueo" update="form h0"
                                      actionListener="#{userCtr.nuevo()}"
-                                     oncomplete="PF('userDialog').show()"/>
+                                     oncomplete="PF('userDialog').show()"
+                                     styleClass="ui-button-outlined ui-button-info" style="height: 50px; width: 130px;" icon="pi pi-fw pi-plus-circle"/>
                 </h:panelGrid>
             </h:panelGrid>
             <p:remoteCommand name="activar" actionListener="#{userCtr.setEditable(true)}"
@@ -91,10 +94,12 @@
                                 emps="#{userCtr.empresas}" editable="#{userCtr.editable}"
                                 ediId="#{userCtr.editId}"/>
                     <h:panelGrid style="margin: 0 auto">
-                        <p:commandButton value="guardar" update="form"
+                        <br></br>
+                        <p:commandButton value="Guardar" update="form"
                                          rendered="#{userCtr.editable}"
                                          actionListener="#{userCtr.persist()}"
-                                         type="summit"/>
+                                         type="summit"
+                                         styleClass="ui-button-outlined ui-button-warning" style="height: 50px; width: 130px;" icon="pi pi-fw pi-check-circle"/>
                     </h:panelGrid>
                 </h:panelGrid>
             </h:form>

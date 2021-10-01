@@ -24,7 +24,7 @@
                          rows="1" paginatorPosition="top" paginatorAlwaysVisible="false">
                 <p:ajax event="rowEdit" listener="#{dtTiendaCtr.onRowEdit}" update=":form0:msgs"/>
                 <p:ajax event="rowEditCancel" listener="#{dtTiendaCtr.onRowCancel}" update=":form0:msgs"/>
-                <p:column headerText="Nombre">
+                <p:column headerText="Nombre" style="color: #ece3a5">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{item.nombre}" style="color: #ffffff"/>
@@ -34,9 +34,9 @@
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column headerText="Dirección">
+                <p:column headerText="Dirección" style="color: #ece3a5">
                     <p:cellEditor>
-                        <f:facet name="output">
+                        <f:facet name="output" >
                             <h:outputText value="#{item.direccion}" style="color:#ffffff"/>
                         </f:facet>
                         <f:facet name="input">
@@ -44,7 +44,7 @@
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column headerText="Teléfono">
+                <p:column headerText="Teléfono" style="color: #ece3a5">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{item.telefonos}" style="color: #ffffff"/>
@@ -54,7 +54,7 @@
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column headerText="Propietario">
+                <p:column headerText="Propietario" style="color: #ece3a5">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{item.propietario.nombres} #{item.propietario.apellidos}" style="color: #ffffff" />

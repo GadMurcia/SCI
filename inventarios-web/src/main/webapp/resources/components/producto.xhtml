@@ -13,9 +13,10 @@
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
-    <cc:implementation>
-        <h:panelGrid columns="2">
-            <p:outputLabel value="Nombre de producto:" for="producto" />
+    <cc:implementation >
+        <h:panelGrid columns="2"  >
+            <p:outputLabel 
+                value="Nombre:" for="producto" style="color: #ffffff; margin-left: -45%"/>
             <p:inputText id="producto" value="#{cc.attrs.producto.producto}" 
                          title="Nombre" required="true" disabled="#{!cc.attrs.edit}"
                          requiredMessage="El nombre de producto no debe quedar vacío.">
@@ -23,7 +24,7 @@
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputText>
 
-            <p:outputLabel value="Precio Unitario:" for="precioUnitario" />
+            <p:outputLabel value="Precio Unitario:" for="precioUnitario" style="color: #ffffff;margin-left: -45%" />
             <p:inputNumber id="precioUnitario" value="#{cc.attrs.producto.precioUnitario}" 
                            title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
                            requiredMessage="El precio unitario no debe quedar vacío." 
@@ -32,14 +33,14 @@
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputNumber>
 
-            <p:outputLabel value="Descripción:" for="descripcion" />
+            <p:outputLabel value="Descripción:" for="descripcion" style="color: #ffffff; margin-left: -45%"/>
             <p:inputTextarea id="descripcion" value="#{cc.attrs.producto.descripcion}" 
                              disabled="#{!cc.attrs.edit}"
                              title="Descripcion" placeholder="Ingrese una descripcion del producto">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputTextarea>
 
-            <p:outputLabel value="Permitir venta:" for="activo" />
+            <p:outputLabel value="Permitir venta:" for="activo" style="color: #ffffff; margin-left: -45%" />
             <p:selectBooleanButton id="activo" value="#{cc.attrs.producto.activo}" 
                                    disabled="#{!cc.attrs.edit}" offLabel="No" onLabel="Sí">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
