@@ -173,34 +173,38 @@
                         </p:tab>
                         <p:tab title="Compras">
                             <h:panelGrid columns="1" style="margin: auto">
-                                <h1 align="center">Reporte de Compras</h1>
+                                <h2 align="center" style="color: #ece3a5; margin: 0 auto">Reporte de Compras</h2>
                                 <h:panelGrid columns="2" style="margin: auto">
-                                    <p:outputLabel value="Fecha de inicio del reporte:" for="cini"/>
-                                    <p:datePicker id="cini" value="#{reportes3Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:outputLabel value="Desde la Fecha" for="cini"/>
+                                    <p:datePicker id="cini" style="margin-left:15%" value="#{reportes3Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
-                                    <p:outputLabel value="Fecha de finalización del reporte:" for="cfin"/>
-                                    <p:datePicker id="cfin" value="#{reportes3Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
-                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
+                                    <p:outputLabel value="Hasta la Fecha" for="cfin"/>
+                                    <p:datePicker id="cfin" style="margin-left:15%" value="#{reportes3Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect"  listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:column/>
                                     <h:panelGrid columns="2">
-                                        <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
-                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                        <p:commandButton type="summit" icon="pi pi-chart-line" title="Generar reporte."
+                                                         value="Generar Reporte"
+                                                         style="margin-left: -30%"
+                                                         styleClass="ui-button-raised ui-button-primary " update="@form"
                                                          actionListener="#{reportes3Ctr.generarReporteVentas()}"
                                                          onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
-                                        <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                        <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
+                                                         value="Limpiar los Datos"
+                                                         style="margin-left: -30%"
+                                                         styleClass="ui-button-raised ui-button-secondary "  update="@form"
                                                          actionListener="#{reportes3Ctr.limpiarFechas()}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <p:card  style="width: available; margin: auto" rendered="#{reportes3Ctr.detalle.size()>0}">
+                                <p:card  style="width: available; margin: auto; background-color:#01011a " rendered="#{reportes3Ctr.detalle.size()>0}">
                                     <f:facet name="title">
-                                        <h2 align="center">Reporte de Compras</h2>
+                                        <h2  align="center" style="margin: auto; color: burlywood">Reporte General </h2>
                                     </f:facet>
                                     <f:facet name="subtitle">
-                                        <h:panelGrid columns="1" style="margin: auto">                                            
-                                            <h3 align="center">Compra total: $#{reportes3Ctr.compraTotal}</h3>
+                                        <h:panelGrid columns="1" style="margin: auto" >                                            
+                                            <h3 align="center">Compra Total: $#{reportes3Ctr.compraTotal}</h3>
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <p:commandLink title="Descargue como documento PDF" styleClass="p-mr-2 p-mb-2" 
                                                                onstart="PF('espere').show();"
@@ -215,61 +219,57 @@
                                         </h:panelGrid>
                                     </f:facet>
                                     <p:tabView orientation="right">
-                                        <p:tab title="Detalle de productos">
+                                        <p:tab title="PRODUCTOS"    >
                                             <p:dataTable value="#{reportes3Ctr.detalle}" var="item" rows="10"
                                                          paginator="true" paginatorPosition="top"
                                                          paginatorAlwaysVisible="false" reflow="true">
-                                                <f:facet name="header">
-                                                    Detalle de la compra de productos en las fechas ingresadas.
-                                                </f:facet>
+                                               
                                                 <f:facet name="footer">
                                                     Total de compra: $ #{reportes3Ctr.compraTotal}
                                                 </f:facet>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Producto"/>
+                                                        <h:outputText value="PRODUCTO" style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="#{item.inv.producto}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Cantidad"/>
+                                                        <h:outputText value="CANTIDAD" style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="#{item.cantidad}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Costo Unitario"/>
+                                                        <h:outputText value="COSTO UNITARIO" style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="$ #{item.costoU}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Costo Total"/>
+                                                        <h:outputText value="COSTO TOTAL" style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="$ #{item.subTotal}"/>
                                                 </p:column>
                                             </p:dataTable>
                                         </p:tab>
-                                        <p:tab title="Facturas" rendered="#{reportes3Ctr.facturas.size()!=0}">
+                                        <p:tab title="FACTURAS" rendered="#{reportes3Ctr.facturas.size()!=0}">
                                             <p:dataTable value="#{reportes3Ctr.facturas}" var="f" rows="10"
                                                          paginator="true" paginatorPosition="top" rowKey="#{f.fecha}"
                                                          paginatorAlwaysVisible="false" reflow="true"
                                                          selectionMode="single" selection="#{reportes3Ctr.selected}">
                                                 <p:ajax event="rowSelect" listener="#{reportes3Ctr.onSelectFactura}"
                                                         update="h0" onsuccess="PF('DConstancia').show()"/>
-                                                <f:facet name="header">
-                                                    Facturas de compras para las fechas ingresadas.
-                                                </f:facet>
+                                                
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Fecha"/>
+                                                        <h:outputText value="FECHA DE LA FACTURA " style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="#{reportes3Ctr.getDateToString(f.fecha)}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        <h:outputText value="Valor de la Factura"/>
+                                                        <h:outputText value="VALOR DE LA FACTURA" style="color: #ece3a5"/>
                                                     </f:facet>
                                                     <h:outputText value="$ #{f.valor}"/>
                                                 </p:column>
@@ -350,29 +350,29 @@
                         </p:tab>
                         <p:tab title="Gráficos">
                             <p:tabView id="qw" dynamic="true" effect="fade" orientation="left">
-                                <p:tab title="Ventas totales">
+                                <p:tab title="VENTAS TOTALES">
                                     <p:card>
                                         <f:facet name="header">
-                                            <h2 align="center">Visualización de ventas en el tiempo</h2>
+                                            <h2 align="center" style="color: burlywood">Visualización de Ventas en el Tiempo</h2>
                                         </f:facet>
                                         <f:facet name="title">
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
-                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini"/>
+                                                    <p:outputLabel value="Desde la Fecha" for="gini" style="color: #ffffff"/>
                                                     <p:datePicker id="gini" value="#{reportes3Ctr.ginicio}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 update="gfin in graf" 
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin"/>
+                                                    <p:outputLabel value="Hasta la Fecha" for="gfin" style="color: #ffffff"/>
                                                     <p:datePicker id="gfin" value="#{reportes3Ctr.gfin}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
                                                                 update="in graf"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel for="in" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="in" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in" value="#{reportes3Ctr.sel}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
@@ -383,8 +383,10 @@
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
                                                 <h:panelGrid style="margin: auto">
-                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                    <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
+                                                         value="Limpiar los Datos"
+                                                         style="margin-left: -10%"
+                                                         styleClass="ui-button-raised ui-button-secondary "
                                                                      update="gini gfin in graf"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
                                                 </h:panelGrid>
@@ -395,29 +397,29 @@
                                                      style="width: 80%; height: 400px;"/>
                                     </p:card>
                                 </p:tab>
-                                <p:tab title="Ventas por producto">
+                                <p:tab title="VENTAS POR PRODUCTO">
                                     <p:card>
                                         <f:facet name="header">
-                                            <h2 align="center">Visualización de ventas por producto en el tiempo</h2>
+                                            <h2 align="center" style="color: burlywood">Visualización de Ventas por Producto en el Tiempo</h2>
                                         </f:facet>
                                         <f:facet name="title">
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
-                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini0"/>
+                                                    <p:outputLabel value="Desde la Fecha" for="gini0" style=" color: #ffffff"/>
                                                     <p:datePicker id="gini0" value="#{reportes3Ctr.ginicio}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 update="gfin0 in0 p0 graf0" 
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin0"/>
+                                                    <p:outputLabel value="Hasta la Fecha" for="gfin0" style=" color: #ffffff"/>
                                                     <p:datePicker id="gfin0" value="#{reportes3Ctr.gfin}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
                                                                 update="p0 in0 graf0"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="p0" value="Producto" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p0" value="#{reportes3Ctr.invSel}" filter="true"
                                                                      converter="omnifaces.SelectItemsConverter">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
@@ -427,7 +429,7 @@
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
                                                                 update="in0 graf0"/>
                                                     </p:selectOneMenu>
-                                                    <p:outputLabel for="in0" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="in0" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in0" value="#{reportes3Ctr.sel}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
@@ -438,8 +440,10 @@
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
                                                 <h:panelGrid style="margin: auto">
-                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                    <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
+                                                         value="Limpiar los Datos"
+                                                         style="margin-left: -10%"
+                                                         styleClass="ui-button-raised ui-button-secondary "
                                                                      update="gini0 gfin0 p0 in0 graf0"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
                                                 </h:panelGrid>
@@ -450,29 +454,29 @@
                                                      style="width: 80%; height: 400px;"/>
                                     </p:card>
                                 </p:tab>
-                                <p:tab title="Costo por producto">
-                                    <p:card>
+                                <p:tab title="COSTO POR PRODUCTO">
+                                    <p:card >
                                         <f:facet name="header">
-                                            <h2 align="center">Variación del costo unitario por producto en el tiempo</h2>
+                                            <h2 align="center " style="color: burlywood">Variación del Costo Unitario por Producto en el Tiempo</h2>
                                         </f:facet>
                                         <f:facet name="title">
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
-                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini1"/>
+                                                    <p:outputLabel value="Desde la Fecha" for="gini1" style=" color: #ffffff"/>
                                                     <p:datePicker id="gini1" value="#{reportes3Ctr.ginicio}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 update="gfin1 in1 p1 graf1" 
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin1"/>
+                                                    <p:outputLabel value="Hasta la Fecha" for="gfin1" style=" color: #ffffff"/>
                                                     <p:datePicker id="gfin1" value="#{reportes3Ctr.gfin}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
                                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
                                                                 update="p1 in1 graf1"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="p1" value="Producto" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p1" value="#{reportes3Ctr.invSel}" filter="true"
                                                                      converter="omnifaces.SelectItemsConverter">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
@@ -482,7 +486,7 @@
                                                                 onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
                                                                 update="in1 graf1"/>
                                                     </p:selectOneMenu>
-                                                    <p:outputLabel for="in1" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="in1" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in1" value="#{reportes3Ctr.sel}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
@@ -493,8 +497,10 @@
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
                                                 <h:panelGrid style="margin: auto">
-                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                    <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
+                                                         value="Limpiar los Datos"
+                                                         style="margin-left: -10%"
+                                                         styleClass="ui-button-raised ui-button-secondary "
                                                                      update="gini1 gfin1 p1 in1 graf1"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
                                                 </h:panelGrid>
@@ -502,7 +508,7 @@
                                         </f:facet>
                                         <p:lineChart id="graf1" 
                                                      model="#{reportes3Ctr.lineModelToCostProduct}" 
-                                                     style="width: 80%; height: 400px;"/>
+                                                     style="width: 80%; height: 400px"/>
                                     </p:card>
                                 </p:tab>
                             </p:tabView>
