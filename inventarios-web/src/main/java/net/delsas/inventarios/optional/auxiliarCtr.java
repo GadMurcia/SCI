@@ -74,9 +74,33 @@ public class auxiliarCtr implements Serializable {
         o = o / 100;
         return o;
     }
+    
+    public double redondeo3decimales(double o) {
+        o = o * 1000;
+        o = Math.round(o);
+        o = o / 1000;
+        return o;
+    }
+    
+    public double redondeo4decimales(double o) {
+        o = o * 10000;
+        o = Math.round(o);
+        o = o / 10000;
+        return o;
+    }
+    public double redondeo5decimales(double o) {
+        o = o * 100000;
+        o = Math.round(o);
+        o = o / 100000;
+        return o;
+    }
 
     public String getDateToString(Date d) {
         return d != null ? new SimpleDateFormat("dd/MM/yyyy").format(d) : "";
+    }
+    
+    public String getDateTimeToString12H(Date d) {
+        return d != null ? new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a").format(d) : "";
     }
 
     public String getDoc(byte[] doc, String ex) {
@@ -116,7 +140,7 @@ public class auxiliarCtr implements Serializable {
     }
 
     public PdfPCell getTextCell(String txt, int cSpan, int rSpan, boolean nWrap, boolean borde, int tSize, int tStyle, int hAligmnet, int vAligment) {
-        PdfPCell c1 = new PdfPCell(new Phrase(txt));
+        PdfPCell c1 = new PdfPCell(Phrase.getInstance(txt));
         c1.setRowspan(rSpan);
         c1.setColspan(cSpan);
         c1.setNoWrap(nWrap);

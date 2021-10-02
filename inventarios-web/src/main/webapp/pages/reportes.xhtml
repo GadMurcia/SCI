@@ -16,110 +16,157 @@
                     <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
                         <p:tab title="Ventas">
-
-                        </p:tab>
-                        <p:tab title="Compras">
-                            <h:panelGrid columns="4" style="margin: auto">
-                                <p:outputLabel value="Fecha de inicio del reporte" for="inic"/>
-                                <p:outputLabel value="Fecha de finalización del reporte" for="finc"/>
-                                <p:column />
-                                <p:column />
-
-                                <p:datePicker id="inic" value="#{reportes1Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
-                                    <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
-                                </p:datePicker>
-                                <p:datePicker id="finc" value="#{reportes1Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
-                                    <p:ajax event="dateSelect" listener="#{reportes1Ctr.onBlour}"/>
-                                </p:datePicker>
-                                <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
-                                                 styleClass="rounded-button ui-button-outlined" update="@form"
-                                                 actionListener="#{reportes1Ctr.generarRepCpmra()}"
-                                                 />
-                                <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                 styleClass="rounded-button ui-button-outlined" update="@form"
-                                                 actionListener="#{reportes1Ctr.limpiarFechas()}"
-                                                 />
-                            </h:panelGrid>
-                            <p:scrollPanel style="margin: auto;" rendered="#{reportes1Ctr.compra!=null}">
-                                <h1>Periodo del reporte: #{reportes1Ctr.getDateToString(reportes1Ctr.inicio)} al 
-                                    #{reportes1Ctr.getDateToString(reportes1Ctr.fin)}</h1>
-                                <h:panelGrid columns="2">
-                                    <p:outputLabel value="Total de compras: "/>
-                                    <p:outputLabel value="$ #{reportes1Ctr.compra.valor}"/>
-                                    <p:commandLink title="Descargue como documento PDF." styleClass="p-mr-2 p-mb-2" 
+                            <h:panelGrid columns="1"  style="margin: auto">
+                                <h1 align="center" style="margin: auto">Reporte de ventas</h1>
+                                <h:panelGrid columns="2" style="margin: auto">
+                                    <p:outputLabel value="Fecha de inicio del reporte:" for="ini"/>
+                                    <p:datePicker id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:outputLabel value="Fecha de finalización del reporte:" for="fin"/>
+                                    <p:datePicker id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
+                                    </p:datePicker>
+                                    <p:column/>
+                                    <h:panelGrid columns="2">
+                                        <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
+                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                                         actionListener="#{reportes2Ctr.generarReporteVentas()}"/>
+                                        <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
+                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                                         actionListener="#{reportes2Ctr.limpiarFechas()}"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <h:panelGrid style="margin: auto">
+                                    <p:commandLink title="Descargue como documento PDF" styleClass="p-mr-2 p-mb-2" 
                                                    onstart="PF('espere').show();"
                                                    onsuccess="PF('espere').hide();"
-                                                   disabled="#{reportes1Ctr.compra.detalleCompraList.size()==0}">
+                                                   rendered="#{reportes2Ctr.giros.size()!=0}">
                                         <p:graphicImage library="imgs" name="pdf.png" width="37px" height="32px"/>
-                                        <p:dataExporter type="pdf" target="twp:producto"
-                                                        fileName="Reporte de compras"
-                                                        exporter="#{reportes1Ctr.pdfExporterCompras}"/>
+                                        <p:dataExporter type="pdf" target="axmc"
+                                                        fileName="Reporte de ventas"
+                                                        exporter="#{reportes2Ctr.pdfExporterVentas}"/>
                                     </p:commandLink>
+                                    <p:dataTable rendered="false" id="axmc"></p:dataTable>
                                 </h:panelGrid>
-                                <p:tabView id="twp">
-                                    <p:tab title="Productos">
-                                        <p:dataTable id="producto" value="#{reportes1Ctr.compra.detalleCompraList}" var="c"
-                                                     rows="7" reflow="true" paginator="true" paginatorPosition="top"
-                                                     paginatorAlwaysVisible="false">
-                                            <f:facet name="header">
-                                                Detalle de productos comprados 
-                                            </f:facet>
-                                            <f:facet name="footer">
-                                                Total $#{reportes1Ctr.compra.valor}
-                                            </f:facet>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Producto"/>
-                                                </f:facet>
-                                                <h:outputText value="#{c.inventario.producto}"/>
-                                            </p:column>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Cantidad"/>
-                                                </f:facet>
-                                                <h:outputText value="#{c.cantidad}"/>
-                                            </p:column>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Costo Unitario"/>
-                                                </f:facet>
-                                                <h:outputText value="#{c.costoUnitario}"/>
-                                            </p:column>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Costo del producto"/>
-                                                </f:facet>
-                                                <h:outputText value="#{reportes1Ctr.redondeo2decimales(c.cantidad*c.costoUnitario)}"/>
-                                            </p:column>
-                                        </p:dataTable>
+                                <p:card style="width: 25rem; margin: auto" rendered="#{reportes2Ctr.giros.size()>1}">
+                                    <f:facet name="title">
+                                        <h2 align="center">Resumen Global de Saldos</h2>
+                                    </f:facet>
+                                    <div class="product-list-action">
+                                        <h:panelGrid columns="2" style="margin: auto">
+                                            <p:outputLabel value="Ventas Globales:"/>
+                                            <h:outputText value="#{reportes2Ctr.giroGlobal.excedentes}" styleClass="product-price">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                            <p:outputLabel value="Total de retiros:"/>
+                                            <h:outputText value="#{reportes2Ctr.giroGlobal.retiros}" styleClass="product-price">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>                                                    
+                                            <p:outputLabel value="#{reportes2Ctr.getEstadoCaja(reportes2Ctr.giroGlobal)}:"/>
+                                            <h:outputText value="#{reportes2Ctr.giroGlobal.faltantes}" styleClass="product-price">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                            <p:outputLabel value="Utilidad Global:"/>
+                                            <h:outputText value="#{reportes2Ctr.getUtilidad(reportes2Ctr.giroGlobal)}" styleClass="product-price">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </h:panelGrid>
+                                        <h3 align="center" style="margin: auto">Detalle de Retiros</h3>
+                                        <h:panelGrid  style="margin: auto">
+                                            <p:inputTextarea disabled="true" value="#{reportes2Ctr.giroGlobal.detalleRetiros}"/>
+                                        </h:panelGrid>
+                                    </div>
+                                </p:card>
+                                 <h2 align="center">Resumen Por Caja</h2>
+                                <p:accordionPanel value="#{reportes2Ctr.giros}" var="g" dynamic="true" 
+                                                  rendered="#{reportes2Ctr.giros.size()>0}">
+                                    <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
+                                        <div class="product-list-item">
+                                            <div class="product-list-action">
+                                                <h2 align="center" style="margin: auto">Resumen de saldos</h2>
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:outputLabel value="Caja inicial:" rendered="#{!reportes2Ctr.periodo}"/>
+                                                    <h:outputText value="#{g.cajaInicial}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                    <p:outputLabel value="Ventas:"/>
+                                                    <h:outputText value="#{g.excedentes}" styleClass="product-price">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                    <p:outputLabel value="Retiros:"/>
+                                                    <h:outputText value="#{g.retiros}" styleClass="product-price">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                    <p:outputLabel value="Cierre de caja:" rendered="#{!reportes2Ctr.periodo}"/>
+                                                    <h:outputText value="#{g.cierre}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>                                                    
+                                                    <p:outputLabel value="#{reportes2Ctr.getEstadoCaja(g)}:"/>
+                                                    <h:outputText value="#{g.faltantes}" styleClass="product-price">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                    <p:outputLabel value="Utilidad:"/>
+                                                    <h:outputText value="#{reportes2Ctr.getUtilidad(g)}" styleClass="product-price">
+                                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                                    </h:outputText>
+                                                </h:panelGrid>
+                                                <h3 align="center" style="margin: auto">Detalle de Retiros</h3>
+                                                <h:panelGrid  style="margin: auto">
+                                                    <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
+                                                </h:panelGrid>
+                                            </div>
+                                            <div class="product-list-detail">
+                                                <p:dataTable value="#{reportes2Ctr.getDetalleVentas(g)}" reflow="true" 
+                                                             var="dv" paginator="true" paginatorPosition="top"
+                                                             paginatorAlwaysVisible="false" rows="10">
+                                                    <f:facet name="header">
+                                                        <h2 align="center">Detalle de productos vendidos</h2>
+                                                    </f:facet>
+                                                    <f:facet name="footer">
+                                                        <h:panelGrid columns="2">
+                                                            <p:outputLabel value="Costo de lo Vendido:"/>
+                                                            <h:outputText value="#{reportes2Ctr.getCostoVendido(g)}" styleClass="product-price">
+                                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                                            </h:outputText>
+
+                                                            <p:outputLabel value="Ventas:"/>
+                                                            <h:outputText value="#{reportes2Ctr.getValorVendido(g)}" styleClass="product-price">
+                                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                                            </h:outputText>
+
+                                                            <p:outputLabel value="Utilidad de lo vendido:"/>
+                                                            <h:outputText value="#{reportes2Ctr.getutilidadVendido(g)}" styleClass="product-price">
+                                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                                            </h:outputText>
+                                                        </h:panelGrid>
+                                                    </f:facet>
+                                                    <p:column headerText="Producto">
+                                                        <h:outputText value="#{dv.inv.producto}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Cantidad">
+                                                        <h:outputText value="#{dv.cantidad}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Costo Unitario">
+                                                        <h:outputText value="#{dv.costoU}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Precio Unitario">
+                                                        <h:outputText value="#{dv.precioU}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Valor de venta">
+                                                        <h:outputText value="#{dv.subTotal}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </div>
+                                        </div>
                                     </p:tab>
-                                    <p:tab title="Facturas">
-                                        <p:dataTable value="#{reportes1Ctr.facturas}" var="fac"  reflow="true" 
-                                                     selectionMode="single" selection="#{reportes1Ctr.facSelected}"
-                                                     rowKey="#{fac.fecha}">
-                                            <p:ajax event="rowSelect" listener="#{reportes1Ctr.onSelectF}"
-                                                    update="h0" oncomplete="PF('DConstancia').show();"/>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Fecha"/>
-                                                </f:facet>
-                                                <h:outputText value="#{reportes1Ctr.getDateToString(fac.fecha)}"/>
-                                            </p:column>
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    <h:outputText value="Valor de la compra"/>
-                                                </f:facet>
-                                                <h:outputText value="#{fac.valor}"/>
-                                            </p:column>
-                                        </p:dataTable>
-                                    </p:tab>
-                                </p:tabView>
-                            </p:scrollPanel>
+                                </p:accordionPanel>
+                            </h:panelGrid>
                         </p:tab>
                         <p:tab id="ex" title="Existencias">
                             <h:panelGrid columns="1">
                                 <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="item"
-                                             rows="8" reflow="true" disabledTextSelection="true"  size="small"
+                                             rows="10" reflow="true" disabledTextSelection="true"  size="small"
                                              paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
                                     <f:facet name="header">
                                         Reporte de Existencias de  productos

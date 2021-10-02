@@ -32,15 +32,24 @@ public class DetalleCompraFacade extends AbstractFacade<DetalleCompra> implement
     }
 
     @Override
-    public List<DetalleCompra> findByProducto(Integer odProducto) {
+    public List<DetalleCompra> findByProducto(Integer idProducto) {
         return em.createNamedQuery("DetalleCompra.findByProducto")
-                .setParameter("producto", odProducto)
+                .setParameter("producto", idProducto)
                 .getResultList();
     }
 
     @Override
     public List<DetalleCompra> findByPeriodoFechas(Date inicio, Date fin) {
         return em.createNamedQuery("DetalleCompra.findByPeriodoFechas")
+                .setParameter("fin", fin)
+                .setParameter("inicio", inicio)
+                .getResultList();
+    }
+
+    @Override
+    public List<DetalleCompra> findByProductoAdnPeriodoFechas(Integer idProducto, Date inicio, Date fin) {
+        return em.createNamedQuery("DetalleCompra.findByProductoAdnPeriodoFechas")
+                .setParameter("producto", idProducto)
                 .setParameter("fin", fin)
                 .setParameter("inicio", inicio)
                 .getResultList();

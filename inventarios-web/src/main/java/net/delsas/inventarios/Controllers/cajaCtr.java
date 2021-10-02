@@ -24,6 +24,7 @@ import net.delsas.inventarios.beans.GiroDeCajaFacadeLocal;
 import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Usuario;
 import net.delsas.inventarios.entities.Ventas;
+import net.delsas.inventarios.optional.auxiliarCtr;
 import org.primefaces.PrimeFaces;
 
 /**
@@ -32,7 +33,7 @@ import org.primefaces.PrimeFaces;
  */
 @SessionScoped
 @Named
-public class cajaCtr implements Serializable {
+public class cajaCtr extends auxiliarCtr implements Serializable {
 
     private GiroDeCaja giro;
     private Optional<Usuario> us;
@@ -60,6 +61,7 @@ public class cajaCtr implements Serializable {
             giro = Optional.ofNullable(gdcfl.findNoTerminadas(us.get().getIdUsuario()))
                     .orElseGet(() -> new GiroDeCaja(null, null, null, 0, 0, 0, 0, 0));
             giro.setResponsable(us.get());
+            giro.setDetalleRetiros("");
             iniciada = giro.getIdGiroDeCaja() != null;
         }
     }
@@ -85,16 +87,14 @@ public class cajaCtr implements Serializable {
 
     public void cerrarCaja() {
         giro.setFin(new Date());
-        giro.setFaltantes(giro.getCierre() - (getVentas() - giro.getRetiros() + giro.getCajaInicial()));
+        giro.setFaltantes(redondeo2decimales(giro.getCierre() - (getVentas() - giro.getRetiros() + giro.getCajaInicial())));
         gdcfl.edit(giro);
-        giro = new GiroDeCaja(null, null, null, 0, 0, 0, 0, 0);
-        giro.setDetalleRetiros("");
-        iniciada = false;
         PrimeFaces.current().ajax().update("formVenta");
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage("Cierre de caja",
                         "Su caja ha cerrado. "
                         + "Ticket: " + giro.getIdGiroDeCaja()));
+        init();
     }
 
     public GiroDeCaja getGiro() {

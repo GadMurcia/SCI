@@ -13,17 +13,17 @@
             <ui:define name="content">
                 <h:form id="form">
                     <h:outputScript library="js" name="local-es.js"/>
-                    <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
-                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
-                        <p:tab title="Ventas">
-                            <h:panelGrid columns="1"  style="margin: auto">
-                                <h1 align="center" style="margin: auto">Reporte de ventas</h1>
+                    <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade">
+                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>                        
+                        <p:tab title="Compras">
+                            <h:panelGrid columns="1">
+                                <h1 align="center">Reporte de Compras</h1>
                                 <h:panelGrid columns="2" style="margin: auto">
-                                    <p:outputLabel value="Fecha de inicio del reporte" for="ini"/>
+                                    <p:outputLabel value="Fecha de inicio del reporte:" for="ini"/>
                                     <p:datePicker id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
-                                    <p:outputLabel value="Fecha de finalización del reporte" for="fin"/>
+                                    <p:outputLabel value="Fecha de finalización del reporte:" for="fin"/>
                                     <p:datePicker id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
@@ -37,47 +37,18 @@
                                                          actionListener="#{reportes2Ctr.limpiarFechas()}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <p:accordionPanel value="#{reportes2Ctr.giros}" var="g" dynamic="true" 
-                                                  rendered="#{reportes2Ctr.giros.size()>0}">
-                                    <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)}">
-                                        <div class="product-list-item">
-                                            <div class="product-list-action">
-                                                <h2 align="center" style="margin: auto">Resumen de saldos</h2>
-                                                <h:panelGrid columns="2">
-                                                    <p:outputLabel value="Caja inicial:"/>
-                                                    <h:outputText value="#{g.cajaInicial}" styleClass="product-price">
-                                                        <f:convertNumber currencySymbol="$" type="currency"/>
-                                                    </h:outputText>
-                                                    <p:outputLabel value="Ventas totales:"/>
-                                                    <h:outputText value="#{g.excedentes}" styleClass="product-price">
-                                                        <f:convertNumber currencySymbol="$" type="currency"/>
-                                                    </h:outputText>
-                                                    <p:outputLabel value="Total de retiros:"/>
-                                                    <h:outputText value="#{g.retiros}" styleClass="product-price">
-                                                        <f:convertNumber currencySymbol="$" type="currency"/>
-                                                    </h:outputText>                                                    
-                                                    <p:outputLabel value="Faltantes de caja:"/>
-                                                    <h:outputText value="#{g.faltantes}" styleClass="product-price">
-                                                        <f:convertNumber currencySymbol="$" type="currency"/>
-                                                    </h:outputText>
-                                                    <p:outputLabel value="Utilidad:"/>
-                                                    <h:outputText value="#{reportes2Ctr.getUtilidad(g)}" styleClass="product-price">
-                                                        <f:convertNumber currencySymbol="$" type="currency"/>
-                                                    </h:outputText>
-                                                </h:panelGrid>
-                                                <h2 align="center" style="margin: auto">Detalle de Retiros</h2>
-                                                <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
-                                            </div>
-                                            <div class="product-list-detail">
-
-                                            </div>
-                                        </div>
-                                    </p:tab>
-                                </p:accordionPanel>
                             </h:panelGrid>
                         </p:tab>
                     </p:tabView>
                 </h:form>
+                <p:dialog id="dialog1" widgetVar="espere" modal="true" style="width: 60%;"
+                          showHeader="true" header="Descarga en curso..." closable="false">
+                    <h:form>
+                        <h:panelGrid style="margin: auto">
+                            Espere mientras se descarga el archivo...
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
             </ui:define>
 
         </ui:composition>

@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "DetalleVentas.findByProducto", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.producto = :producto"),
     @NamedQuery(name = "DetalleVentas.findByCantidad", query = "SELECT d FROM DetalleVentas d WHERE d.cantidad = :cantidad"),
     @NamedQuery(name = "DetalleVentas.findByPrecioUnitario", query = "SELECT d FROM DetalleVentas d WHERE d.precioUnitario = :precioUnitario"),
-    @NamedQuery(name = "DetalleVentas.findByIdVentasAndGiro", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.idVentas = :idVentas AND d.detalleVentasPK.giroCaja = :giroCaja")
+    @NamedQuery(name = "DetalleVentas.findByIdVentasAndGiro", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.idVentas = :idVentas AND d.detalleVentasPK.giroCaja = :giroCaja"),
+    @NamedQuery(name = "DetalleVentas.findByProductoAndPeriodo", query = "SELECT d FROM DetalleVentas d WHERE d.detalleVentasPK.producto = :producto AND d.ventas.ventasPK.idVentas >= :inicio AND d.ventas.ventasPK.idVentas <= :fin ORDER BY d.inventario.producto ASC")
 })
 public class DetalleVentas implements Serializable {
 

@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.DetalleVentas;
@@ -34,4 +35,6 @@ public interface DetalleVentasFacadeLocal {
     public List<DetalleVentas> findByProducto(Integer idProducto);
 
     public List<DetalleVentas> findByVenta(VentasPK ventasPK);
+    
+    public List<DetalleVentas> findByProductoAndPeriodo(Integer idProducto, Date inicio, Date fin);
 }

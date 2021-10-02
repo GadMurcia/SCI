@@ -30,9 +30,11 @@ public interface DetalleCompraFacadeLocal {
     List<DetalleCompra> findRange(int[] range);
 
     int count();
-    
-    public List<DetalleCompra> findByProducto(Integer odProducto);
-    
+
+    public List<DetalleCompra> findByProducto(Integer idProducto);
+
     public List<DetalleCompra> findByPeriodoFechas(Date inicio, Date fin);
-    
+
+    public List<DetalleCompra> findByProductoAdnPeriodoFechas(Integer idProducto, Date inicio, Date fin);
+
 }

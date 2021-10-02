@@ -6,6 +6,8 @@ package net.delsas.inventarios.optional;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,7 +22,7 @@ import net.delsas.inventarios.entities.Inventario;
  * @author delsas
  */
 @Entity
-public class Existencias implements Serializable {
+public class Existencias extends auxiliarCtr implements Serializable {
 
     @Id
     private String nombre;
@@ -40,14 +42,11 @@ public class Existencias implements Serializable {
         this.nombre = prod.getProducto();
         this.existencias = redondeo2decimales(prod.getDetalleCompraList().stream().mapToDouble(DetalleCompra::getCantidad).sum()
                 - prod.getDetalleVentasList().stream().mapToDouble(DetalleVentas::getCantidad).sum());
-        this.costoAVG = redondeo2decimales(prod.getDetalleCompraList().stream().map(DetalleCompra::getCostoUnitario)
-                .reduce(BigDecimal::add).orElseGet(() -> BigDecimal.ZERO).doubleValue());
-        this.costoAVG = redondeo2decimales(this.costoAVG != 0 ? this.costoAVG / prod.getDetalleCompraList().size() : 0);
+        this.costoAVG = redondeo4decimales(getCostoAVGGlobal(prod.getIdInventario(), dcfl)); //redondeo4decimales(prod.getDetalleCompraList().stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum() / prod.getDetalleCompraList().stream().mapToInt(DetalleCompra::getCantidad).sum());
         this.costoTotal = redondeo2decimales(this.existencias * this.costoAVG);
         this.precioAVG = redondeo2decimales(prod.getPrecioUnitario().doubleValue());
         this.valorTotal = redondeo2decimales(this.existencias * this.precioAVG);
         this.utilidad = redondeo2decimales(this.valorTotal - this.costoTotal);
-
     }
 
     public Existencias(String nombre, double existencias, double costoAVG, double precioAVG) {
@@ -84,6 +83,18 @@ public class Existencias implements Serializable {
         this.costoAVG = costoAVG;
     }
 
+    public static double getCostoAVGGlobal(int id, DetalleCompraFacadeLocal dcfl) {
+        List<DetalleCompra> f = dcfl.findByProducto(id);
+        return (f.stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum()
+                / f.stream().mapToInt(DetalleCompra::getCantidad).sum());
+    }
+    
+    public static double getCostoAVGPeriodo(int id, DetalleCompraFacadeLocal dcfl, Date inicio, Date fin) {
+        List<DetalleCompra> f = dcfl.findByProductoAdnPeriodoFechas(id, inicio, fin);
+        return (f.stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum()
+                / f.stream().mapToInt(DetalleCompra::getCantidad).sum());
+    }
+
     public double getPrecioAVG() {
         return precioAVG;
     }
@@ -114,13 +125,6 @@ public class Existencias implements Serializable {
 
     public void setUtilidad(double utilidad) {
         this.utilidad = utilidad;
-    }
-
-    private double redondeo2decimales(double o) {
-        o = o * 100;
-        o = Math.round(o);
-        o = o / 100;
-        return o;
     }
 
     @Override
