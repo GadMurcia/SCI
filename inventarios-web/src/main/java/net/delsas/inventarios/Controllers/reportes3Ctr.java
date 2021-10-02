@@ -420,7 +420,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                 values.add(redondeo2decimales(dvfl.findByProductoAndPeriodo(invSel0.getIdInventario(), r0, r1).stream().mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario().doubleValue()).sum()));
                 System.out.println(getDateTimeToString12H(r0) + " al " + getDateTimeToString12H(r1));//////////////////////
                 r0 = sel0 == 1 ? suma1Dia(r0) : sel0 == 2 ? suma1Mes(r0) : sel0 == 3 ? suma1Año(r0) : suma1Dia(gfin0);
-            } while (!r1.after(gfin));
+            } while (!r1.after(gfin0));
 
             if (lineModel != null) {
                 Title title = new Title();
@@ -448,7 +448,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         List<String> labels = new ArrayList<>();
         LineChartOptions options = new LineChartOptions();
 
-        if (ginicio1 != null && gfin1 != null && invSel != null) {
+        if (ginicio1 != null && gfin1 != null && invSel1 != null) {
             if (gfin1.before(ginicio1)) {
                 Date f = new Date(gfin1.getTime());
                 gfin1 = new Date(ginicio1.getTime());
