@@ -37,7 +37,9 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         this.fin = fin;
     }
     
-    
+    public String docFacrura(){
+        return "";
+    }
 
     public void limpiarFechas() {
 
