@@ -78,7 +78,9 @@
                                         </h:panelGrid>
                                     </div>
                                 </p:card>
-                                 <h2 align="center">Resumen Por Caja</h2>
+                                <h:panelGrid rendered="#{reportes2Ctr.giros.size()>1}" style="margin: auto">
+                                    <h2 align="center">Resumen Por Caja</h2>
+                                </h:panelGrid>
                                 <p:accordionPanel value="#{reportes2Ctr.giros}" var="g" dynamic="true" 
                                                   rendered="#{reportes2Ctr.giros.size()>0}">
                                     <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
