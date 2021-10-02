@@ -151,14 +151,14 @@
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Abrir caja" widgetVar="caja2Dialog" 
+                <p:dialog header="Apertura de Caja" widgetVar="caja2Dialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h2"  style="margin: auto">
                         <h:panelGrid columns="1">
-                            <h1>Apertura de caja</h1>
+                           
                             <h:panelGrid columns="2">
-                                <p:outputLabel value="Inicio de caja:"/>
+                                <p:outputLabel value="Iniciar Caja Con:" style="color: #ffffff "/>
                                 <p:inputNumber value="#{cajaCtr.giro.cajaInicial}" 
                                                title="Dinero inicial en caja" 
                                                required="true"
@@ -168,7 +168,9 @@
                                 </p:inputNumber>
                             </h:panelGrid>
                             <h:panelGrid columns="1" style="margin: 0 auto">
-                                <p:commandButton value="Abrir Caja" update="h1" 
+                                <p:commandButton  icon="pi pi-save" 
+                                     styleClass="ui-button-outlined ui-button-info"
+                                    value="Guardar" update="h1" 
                                                  actionListener="#{cajaCtr.abrirGiro()}"
                                                  oncomplete="PF('caja2Dialog').hide();"/>
                             </h:panelGrid>
@@ -182,7 +184,7 @@
                         <h:panelGrid columns="1">
                             
                             <h:panelGrid columns="2">
-                                <p:outputLabel value="Dinero en caja:" style="color: #ffffff"/>
+                                <p:outputLabel value="Dinero que quedó en caja:" style="color: #ffffff"/>
                                 <p:inputNumber value="#{cajaCtr.giro.cierre}" 
                                                title="Dinero final en caja" 
                                                required="true"

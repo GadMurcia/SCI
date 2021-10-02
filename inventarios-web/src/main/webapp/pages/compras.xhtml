@@ -8,7 +8,7 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        <h:form id="form"  style="width: 80%; margin: auto">
+        <h:form id="form"  style="width: auto; margin: 0 auto">
             <p:card>
                 <f:facet name="header">
                 </f:facet>
@@ -173,7 +173,7 @@
                                      rendered="#{!compraCtr.comprando}"
                                      disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
-                    <p:commandButton id="end" icon="pi pi-check-circle" value="Cancelar compra"
+                    <p:commandButton id="end" icon="pi pi-times-circle" value="Cancelar compra"
                                      style=" margin-left: 5%"
                                      styleClass="ui-button-raised ui-button-danger "
                                      title="Finalizar la sesión de compras."
