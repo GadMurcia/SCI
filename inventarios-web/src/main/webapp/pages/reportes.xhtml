@@ -11,29 +11,33 @@
         <ui:composition template="./../WEB-INF/plantillas/pl1.xhtml">
 
             <ui:define name="content">                
-                <h:form id="form">
+                <h:form id="form" >
                     <h:outputScript library="js" name="local-es.js"/>
                     <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>
-                        <p:tab title="Ventas">
+                        <p:tab title="Ventas"  >
                             <h:panelGrid columns="1"  style="margin: auto">
-                                <h1 align="center" style="margin: auto">Reporte de ventas</h1>
-                                <h:panelGrid columns="2" style="margin: auto">
-                                    <p:outputLabel value="Fecha de inicio del reporte:" for="ini"/>
-                                    <p:datePicker id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
-                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
+                                <h2 align="center" style="margin: auto; color: #ece3a5"  >Reporte de Ventas</h2>
+                                <h:panelGrid columns="2" style="margin: auto" >
+                                    <p:outputLabel   value="Desde la Fecha" for="ini" />
+                                    <p:datePicker  style="margin-left:15%" id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}" />
                                     </p:datePicker>
-                                    <p:outputLabel value="Fecha de finalización del reporte:" for="fin"/>
-                                    <p:datePicker id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:outputLabel value="Hasta la Fecha" for="fin"/>
+                                    <p:datePicker style="margin-left: 15%" id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:column/>
                                     <h:panelGrid columns="2">
-                                        <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
-                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                        <p:commandButton type="summit" icon="pi pi-chart-line" title="Generar reporte."
+                                                         value="Generar Reporte"
+                                                         style="margin-left: -30%"
+                                                          styleClass="ui-button-raised ui-button-primary " update="@form"
                                                          actionListener="#{reportes2Ctr.generarReporteVentas()}"/>
-                                        <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
-                                                         styleClass="rounded-button ui-button-outlined" update="@form"
+                                        <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
+                                                         value="Limpiar los Datos"
+                                                          style="margin-left: -30%"
+                                                         styleClass="ui-button-raised ui-button-secondary " update="@form"
                                                          actionListener="#{reportes2Ctr.limpiarFechas()}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
@@ -49,13 +53,13 @@
                                     </p:commandLink>
                                     <p:dataTable rendered="false" id="axmc"></p:dataTable>
                                 </h:panelGrid>
-                                <p:card style="width: 25rem; margin: auto" rendered="#{reportes2Ctr.giros.size()>1}">
+                                <p:card style="width: 45rem; margin: auto; background-color: #01011a" rendered="#{reportes2Ctr.giros.size()>1}">
                                     <f:facet name="title">
-                                        <h2 align="center">Resumen Global de Saldos</h2>
+                                        <h3 align="center" style="color: burlywood">Resumen general</h3>
                                     </f:facet>
-                                    <div class="product-list-action">
+                                    <div class="product-list-action" >
                                         <h:panelGrid columns="2" style="margin: auto">
-                                            <p:outputLabel value="Ventas Globales:"/>
+                                            <p:outputLabel value="Ventas globales:" />
                                             <h:outputText value="#{reportes2Ctr.giroGlobal.excedentes}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
@@ -63,30 +67,31 @@
                                             <h:outputText value="#{reportes2Ctr.giroGlobal.retiros}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>                                                    
-                                            <p:outputLabel value="#{reportes2Ctr.getEstadoCaja(reportes2Ctr.giroGlobal)}:"/>
+                                            <p:outputLabel value="#{reportes2Ctr.getEstadoCaja(reportes2Ctr.giroGlobal)}: "/>
                                             <h:outputText value="#{reportes2Ctr.giroGlobal.faltantes}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
-                                            <p:outputLabel value="Utilidad Global:"/>
+                                            <p:outputLabel value="Utilidad global:" />
                                             <h:outputText value="#{reportes2Ctr.getUtilidad(reportes2Ctr.giroGlobal)}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
                                         </h:panelGrid>
-                                        <h3 align="center" style="margin: auto">Detalle de Retiros</h3>
+                                        <br></br>
+                                        <h2 align="center" style="margin: auto; color: #ece3a5" >Detalle de retiros</h2>
                                         <h:panelGrid  style="margin: auto">
                                             <p:inputTextarea disabled="true" value="#{reportes2Ctr.giroGlobal.detalleRetiros}"/>
                                         </h:panelGrid>
                                     </div>
                                 </p:card>
                                 <h:panelGrid rendered="#{reportes2Ctr.giros.size()>1}" style="margin: auto">
-                                    <h2 align="center">Resumen Por Caja</h2>
+                                    <h2 align="center" style="color: burlywood">Resumen por caja</h2>
                                 </h:panelGrid>
                                 <p:accordionPanel value="#{reportes2Ctr.giros}" var="g" dynamic="true" 
                                                   rendered="#{reportes2Ctr.giros.size()>0}">
                                     <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
                                         <div class="product-list-item">
                                             <div class="product-list-action">
-                                                <h2 align="center" style="margin: auto">Resumen de saldos</h2>
+                                                <h2 align="center" style="margin: auto; color: #ece3a5">Resumen de saldos</h2>
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Caja inicial:" rendered="#{!reportes2Ctr.periodo}"/>
                                                     <h:outputText value="#{g.cajaInicial}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
@@ -113,7 +118,8 @@
                                                         <f:convertNumber currencySymbol="$" type="currency"/>
                                                     </h:outputText>
                                                 </h:panelGrid>
-                                                <h3 align="center" style="margin: auto">Detalle de Retiros</h3>
+                                                <br></br>
+                                                <h2 align="center" style="margin: auto; color: #ece3a5">Detalle de retiros</h2>
                                                 <h:panelGrid  style="margin: auto">
                                                     <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
                                                 </h:panelGrid>
@@ -123,7 +129,7 @@
                                                              var="dv" paginator="true" paginatorPosition="top"
                                                              paginatorAlwaysVisible="false" rows="10">
                                                     <f:facet name="header">
-                                                        <h2 align="center">Detalle de productos vendidos</h2>
+                                                        <h2 align="center" style="color: burlywood">Detalle de productos vendidos</h2>
                                                     </f:facet>
                                                     <f:facet name="footer">
                                                         <h:panelGrid columns="2">
@@ -143,19 +149,19 @@
                                                             </h:outputText>
                                                         </h:panelGrid>
                                                     </f:facet>
-                                                    <p:column headerText="Producto">
+                                                    <p:column headerText="PRODUCTO" style="color: #ece3a5">
                                                         <h:outputText value="#{dv.inv.producto}"/>
                                                     </p:column>
-                                                    <p:column headerText="Cantidad">
+                                                    <p:column headerText="CANTIDAD" style="color: #ece3a5" >
                                                         <h:outputText value="#{dv.cantidad}"/>
                                                     </p:column>
-                                                    <p:column headerText="Costo Unitario">
+                                                    <p:column headerText="COSTO UNITARIO" style="color: #ece3a5">
                                                         <h:outputText value="#{dv.costoU}"/>
                                                     </p:column>
-                                                    <p:column headerText="Precio Unitario">
+                                                    <p:column headerText="PRECIO UNITARIO" style="color: #ece3a5">
                                                         <h:outputText value="#{dv.precioU}"/>
                                                     </p:column>
-                                                    <p:column headerText="Valor de venta">
+                                                    <p:column headerText="VALOR DE VENTA " style="color: #ece3a5">
                                                         <h:outputText value="#{dv.subTotal}"/>
                                                     </p:column>
                                                 </p:dataTable>
@@ -171,54 +177,54 @@
                                              rows="10" reflow="true" disabledTextSelection="true"  size="small"
                                              paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
                                     <f:facet name="header">
-                                        Reporte de Existencias de  productos
+                                        <h2 style="color: #ece3a5"> Reporte de Existencias de Productos</h2>
                                     </f:facet>
                                     <f:facet name="footer">
                                         <h:panelGrid columns="1" dir="RTL">
-                                            <p:outputLabel value="Costo Global: $#{reportes1Ctr.costoTotal()}"/>
-                                            <p:outputLabel value="Valor Global: $#{reportes1Ctr.valorTotal()}"/>
-                                            <p:outputLabel value="Utilidad Global: $#{reportes1Ctr.utilidadTotal()}"/>
+                                            <p:outputLabel value="Costo Global: $#{reportes1Ctr.costoTotal()}" style="color: #ece3a5"/>
+                                            <p:outputLabel value="Valor Global: $#{reportes1Ctr.valorTotal()}" style="color: #ece3a5"/>
+                                            <p:outputLabel value="Utilidad Global: $#{reportes1Ctr.utilidadTotal()}" style="color: #ece3a5"/>
                                         </h:panelGrid>
                                     </f:facet>
-                                    <p:column filterBy="#{item.nombre}" width="20%">
+                                    <p:column filterBy="#{item.nombre}" width="10%">
                                         <f:facet name="header">
-                                            <h:outputText value="Producto"/>
+                                            <h:outputText value="PRODUCTO" style="color: burlywood"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.nombre}"/>
+                                        <h:outputText value="#{item.nombre}" style="text-align: center"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Cantidad"/>
+                                            <h:outputText value="CANTIDAD" style="color: burlywood; text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.existencias}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Costo Unitario"/>
+                                            <h:outputText value="COSTO UNITARIO" style="color: burlywood;text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.costoAVG}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Costo del producto"/>
+                                            <h:outputText value="COSTO TOTAL" style="color: burlywood;text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.costoTotal}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Precio Unitario"/>
+                                            <h:outputText value="PRECIO VENTA" style="color: burlywood;text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.precioAVG}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Valor de venta"/>
+                                            <h:outputText value="VALOR TOTAL " style="color: burlywood;text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.valorTotal}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Utilidad"/>
+                                            <h:outputText value="UTILIDAD" style="color: burlywood; text-align: center"/>
                                         </f:facet>
                                         <h:outputText value="#{item.utilidad}"/>
                                     </p:column>
