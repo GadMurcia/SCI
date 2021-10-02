@@ -16,7 +16,7 @@
                     Registro de ventas
                 </f:facet>
                 <f:facet name="subtitle">
-                    <h:panelGrid columns="4">
+                    <h:panelGrid columns="4" rendered="false">
                         <p:outputLabel for="matrices" value="Matriz:" style=" color: #ffffff"/>
                         <p:selectOneMenu id="matrices" value="#{ventaCtr.matSel}" 
                                          converter="omnifaces.SelectItemsConverter">
@@ -133,7 +133,6 @@
                                      title="Guardar los datos de la venta actual."
                                      actionListener="#{ventaCtr.guardarVenta()}"
                                      rendered="#{ventaCtr.vendiendo}"
-                                     disabled="#{ventaCtr.sucSel==null}"
                                      update="formVenta"/>
                     <p:commandButton id="clean" icon="pi pi-exclamation-triangle" value="Limpiar los datos" 
                                      style=" margin-left: 5%"
@@ -141,7 +140,6 @@
                                      styleClass="ui-button-secondary" 
                                      rendered="#{ventaCtr.vendiendo}"
                                      actionListener="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
-                                     disabled="#{ventaCtr.sucSel==null}"
                                      update="formVenta"/>
                     <p:commandButton id="inic"  icon="pi pi-chevron-circle-right" value="Iniciar una Venta" 
                                      styleClass="ui-button-raised ui-button-primary "
@@ -149,7 +147,6 @@
                                      actionListener="#{ventaCtr.setVendiendo(true)}"
                                      action="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
                                      rendered="#{!ventaCtr.vendiendo}"
-                                     disabled="#{ventaCtr.sucSel==null}"
                                      update="formVenta"/>
                     <p:commandButton id="end" icon="pi pi-times-circle" value="Cancelar Venta"
                                      style=" margin-left: 5%"
@@ -158,7 +155,6 @@
                                      actionListener="#{ventaCtr.setVendiendo(false)}"
                                      action="#{ventaCtr.nuevaVentas(cajaCtr.giro)}"
                                      rendered="#{ventaCtr.vendiendo}"
-                                     disabled="#{ventaCtr.sucSel==null}"
                                      update="formVenta"/>
                 </f:facet>
             </p:card>

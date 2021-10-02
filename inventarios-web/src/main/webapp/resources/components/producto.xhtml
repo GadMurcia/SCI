@@ -41,10 +41,9 @@
             </p:inputTextarea>
 
             <p:outputLabel value="Permitir venta:" for="activo" style="color: #ffffff; margin-left: -45%" />
-            <p:selectBooleanButton id="activo" value="#{cc.attrs.producto.activo}" 
-                                   disabled="#{!cc.attrs.edit}" offLabel="No" onLabel="Sí">
+            <p:toggleSwitch id="activo" value="#{cc.attrs.producto.activo}" disabled="#{!cc.attrs.edit}">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-            </p:selectBooleanButton>
+            </p:toggleSwitch>
         </h:panelGrid>
     </cc:implementation>
 </html>

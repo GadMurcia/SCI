@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,6 +35,14 @@ public class VentasFacade extends AbstractFacade<Ventas> implements VentasFacade
     public List<Ventas> findByGiroCaja(Integer idGiroDeCaja) {
         return em.createNamedQuery("Ventas.findByGiroCaja")
                 .setParameter("giroCaja", idGiroDeCaja)
+                .getResultList();
+    }
+
+    @Override
+    public List<Ventas> findByPeriodoFechas(Date i, Date f) {
+        return em.createNamedQuery("Ventas.findByPeriodoFechas")
+                .setParameter("inicio", i)
+                .setParameter("fin", f)
                 .getResultList();
     }
 

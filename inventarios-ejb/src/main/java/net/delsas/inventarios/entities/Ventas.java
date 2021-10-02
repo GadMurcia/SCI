@@ -37,7 +37,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Ventas.findByIdVentas", query = "SELECT v FROM Ventas v WHERE v.ventasPK.idVentas = :idVentas"),
     @NamedQuery(name = "Ventas.findByGiroCaja", query = "SELECT v FROM Ventas v WHERE v.ventasPK.giroCaja = :giroCaja"),
     @NamedQuery(name = "Ventas.findByValor", query = "SELECT v FROM Ventas v WHERE v.valor = :valor"),
-    @NamedQuery(name = "Ventas.findByComentario", query = "SELECT v FROM Ventas v WHERE v.comentario = :comentario")})
+    @NamedQuery(name = "Ventas.findByComentario", query = "SELECT v FROM Ventas v WHERE v.comentario = :comentario"),
+    @NamedQuery(name = "Ventas.findByPeriodoFechas", query = "SELECT v FROM Ventas v WHERE v.ventasPK.idVentas >= :inicio AND v.ventasPK.idVentas <= :fin")
+})
 public class Ventas implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -138,5 +140,5 @@ public class Ventas implements Serializable {
     public String toString() {
         return "net.delsas.inventarios.entities.Ventas[ ventasPK=" + ventasPK + " ]";
     }
-    
+
 }

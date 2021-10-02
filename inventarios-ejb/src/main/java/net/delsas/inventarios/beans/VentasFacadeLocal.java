@@ -5,6 +5,7 @@
  */
 package net.delsas.inventarios.beans;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import net.delsas.inventarios.entities.Ventas;
@@ -31,5 +32,7 @@ public interface VentasFacadeLocal {
     int count();
 
     List<Ventas> findByGiroCaja(Integer idGiroDeCaja);
-    
+
+    List<Ventas> findByPeriodoFechas(Date i, Date f);
+
 }

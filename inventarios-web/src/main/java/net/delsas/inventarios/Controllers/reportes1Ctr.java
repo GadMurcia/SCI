@@ -185,10 +185,10 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
 
                     t.addCell(getTextCell("Producto", 2, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("Cantidad", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Costo unitario", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Costo de producto", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Precio unitario", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Valor de venta", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Costo Unitario", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Costo Total", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Precio de Venta", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Valor Total", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("Utilidad", 1, 1, false, true, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
 
                     List<Existencias> ex = getExistencias();

@@ -5,7 +5,6 @@
  */
 package net.delsas.inventarios.Controllers;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.beans.TipoUsuarioFacadeLocal;

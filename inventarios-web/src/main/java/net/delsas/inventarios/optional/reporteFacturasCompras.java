@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 import net.delsas.inventarios.entities.Compras;
 
 /**
@@ -21,6 +22,7 @@ import net.delsas.inventarios.entities.Compras;
 public class reporteFacturasCompras implements Serializable {
 
     @Id
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fecha;
     private BigDecimal valor;
     private byte[] factura;

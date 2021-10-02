@@ -4,17 +4,13 @@
  */
 package net.delsas.inventarios.Controllers;
 
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
-import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -171,7 +167,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             try {
                 fin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(periodo ? fin : inicio) + " 23:59:59");
             } catch (ParseException ex) {
-                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte1Crt");
+                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte2Crt");
                 fin = new Date();
             }
             giros = gcfl.findByPeriodoYSucursal(inicio, fin, 1);

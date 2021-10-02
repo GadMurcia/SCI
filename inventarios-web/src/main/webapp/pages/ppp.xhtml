@@ -14,33 +14,294 @@
                 <h:form id="form">
                     <h:outputScript library="js" name="local-es.js"/>
                     <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade">
-                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/>                        
+                        <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"/> 
+                        <p:tab title="Tab 4">
+                            <p:tabView id="qw" dynamic="true" effect="fade" orientation="left">
+                                <p:tab title="Ventas totales">
+                                    <p:card>
+                                        <f:facet name="header">
+                                            <h2 align="center">Visualización de ventas en el tiempo</h2>
+                                        </f:facet>
+                                        <f:facet name="title">
+                                            <h:panelGrid columns="1" style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini"/>
+                                                    <p:datePicker id="gini" value="#{reportes3Ctr.ginicio}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                update="gfin in graf" 
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin"/>
+                                                    <p:datePicker id="gfin" value="#{reportes3Ctr.gfin}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="in graf"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel for="in" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:selectOneMenu id="in" value="#{reportes3Ctr.sel}">
+                                                        <f:selectItem itemValue="1" itemLabel="Por Día"/>
+                                                        <f:selectItem itemValue="2" itemLabel="Por Mes"/>
+                                                        <f:selectItem itemValue="3" itemLabel="Por Año"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="graf"/>
+                                                    </p:selectOneMenu>
+                                                </h:panelGrid>
+                                                <h:panelGrid style="margin: auto">
+                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
+                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                                     update="gini gfin in graf"
+                                                                     actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </f:facet>
+                                        <p:lineChart id="graf" 
+                                                     model="#{reportes3Ctr.lineModel}" 
+                                                     style="width: 80%; height: 400px;"/>
+                                    </p:card>
+                                </p:tab>
+                                <p:tab title="Ventas por producto">
+                                    <p:card>
+                                        <f:facet name="header">
+                                            <h2 align="center">Visualización de ventas por producto en el tiempo</h2>
+                                        </f:facet>
+                                        <f:facet name="title">
+                                            <h:panelGrid columns="1" style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini0"/>
+                                                    <p:datePicker id="gini0" value="#{reportes3Ctr.ginicio}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                update="gfin0 in0 p0 graf0" 
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin0"/>
+                                                    <p:datePicker id="gfin0" value="#{reportes3Ctr.gfin}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="p0 in0 graf0"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:selectOneMenu id="p0" value="#{reportes3Ctr.invSel}" filter="true"
+                                                                     converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                                                        <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
+                                                                       itemValue="#{i}" itemLabel="#{i.producto}"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="in0 graf0"/>
+                                                    </p:selectOneMenu>
+                                                    <p:outputLabel for="in0" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:selectOneMenu id="in0" value="#{reportes3Ctr.sel}">
+                                                        <f:selectItem itemValue="1" itemLabel="Por Día"/>
+                                                        <f:selectItem itemValue="2" itemLabel="Por Mes"/>
+                                                        <f:selectItem itemValue="3" itemLabel="Por Año"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="graf0"/>
+                                                    </p:selectOneMenu>
+                                                </h:panelGrid>
+                                                <h:panelGrid style="margin: auto">
+                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
+                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                                     update="gini0 gfin0 p0 in0 graf0"
+                                                                     actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </f:facet>
+                                        <p:lineChart id="graf0" 
+                                                     model="#{reportes3Ctr.lineModelToProduct}" 
+                                                     style="width: 80%; height: 400px;"/>
+                                    </p:card>
+                                </p:tab>
+                                <p:tab title="Costo por producto">
+                                    <p:card>
+                                        <f:facet name="header">
+                                            <h2 align="center">Variación del costo unitario por producto en el tiempo</h2>
+                                        </f:facet>
+                                        <f:facet name="title">
+                                            <h:panelGrid columns="1" style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:outputLabel value="Fecha de inicio del reporte:" for="gini1"/>
+                                                    <p:datePicker id="gini1" value="#{reportes3Ctr.ginicio}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                update="gfin1 in1 p1 graf1" 
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel value="Fecha de finalización del reporte:" for="gfin1"/>
+                                                    <p:datePicker id="gfin1" value="#{reportes3Ctr.gfin}" locale="es" 
+                                                                  pattern="dd/MMMM/yyyy">
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="p1 in1 graf1"/>
+                                                    </p:datePicker>
+                                                    <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:selectOneMenu id="p1" value="#{reportes3Ctr.invSel}" filter="true"
+                                                                     converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
+                                                        <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
+                                                                       itemValue="#{i}" itemLabel="#{i.producto}"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="in1 graf1"/>
+                                                    </p:selectOneMenu>
+                                                    <p:outputLabel for="in1" value="Tipo de visualización:" style=" color: #ffffff"/>
+                                                    <p:selectOneMenu id="in1" value="#{reportes3Ctr.sel}">
+                                                        <f:selectItem itemValue="1" itemLabel="Por Día"/>
+                                                        <f:selectItem itemValue="2" itemLabel="Por Mes"/>
+                                                        <f:selectItem itemValue="3" itemLabel="Por Año"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
+                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
+                                                                update="graf1"/>
+                                                    </p:selectOneMenu>
+                                                </h:panelGrid>
+                                                <h:panelGrid style="margin: auto">
+                                                    <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
+                                                                     styleClass="rounded-button ui-button-outlined" 
+                                                                     update="gini1 gfin1 p1 in1 graf1"
+                                                                     actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
+                                                </h:panelGrid>
+                                            </h:panelGrid>
+                                        </f:facet>
+                                        <p:lineChart id="graf1" 
+                                                     model="#{reportes3Ctr.lineModelToCostProduct}" 
+                                                     style="width: 80%; height: 400px;"/>
+                                    </p:card>
+                                </p:tab>
+                            </p:tabView>
+                        </p:tab>
                         <p:tab title="Compras">
-                            <h:panelGrid columns="1">
+                            <h:panelGrid columns="1" style="margin: auto">
                                 <h1 align="center">Reporte de Compras</h1>
                                 <h:panelGrid columns="2" style="margin: auto">
                                     <p:outputLabel value="Fecha de inicio del reporte:" for="ini"/>
-                                    <p:datePicker id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
-                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
+                                    <p:datePicker id="ini" value="#{reportes3Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:outputLabel value="Fecha de finalización del reporte:" for="fin"/>
-                                    <p:datePicker id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
-                                        <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
+                                    <p:datePicker id="fin" value="#{reportes3Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:column/>
                                     <h:panelGrid columns="2">
                                         <p:commandButton type="summit" icon="pi pi-check" title="Generar reporte."
                                                          styleClass="rounded-button ui-button-outlined" update="@form"
-                                                         actionListener="#{reportes2Ctr.generarReporteVentas()}"/>
+                                                         actionListener="#{reportes3Ctr.generarReporteVentas()}"
+                                                         onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                         <p:commandButton type="summit" icon="pi pi-times" title="Limpiar datos."
                                                          styleClass="rounded-button ui-button-outlined" update="@form"
-                                                         actionListener="#{reportes2Ctr.limpiarFechas()}"/>
+                                                         actionListener="#{reportes3Ctr.limpiarFechas()}"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
+                                <p:card  style="width: available; margin: auto" rendered="#{reportes3Ctr.detalle.size()>0}">
+                                    <f:facet name="title">
+                                        <h2 align="center">Reporte de Compras</h2>
+                                    </f:facet>
+                                    <f:facet name="subtitle">
+                                        <h:panelGrid columns="1" style="margin: auto">                                            
+                                            <h3 align="center">Compra total: $#{reportes3Ctr.compraTotal}</h3>
+                                            <h:panelGrid columns="1" style="margin: auto">
+                                                <p:commandLink title="Descargue como documento PDF" styleClass="p-mr-2 p-mb-2" 
+                                                               onstart="PF('espere').show();"
+                                                               onsuccess="PF('espere').hide();">
+                                                    <p:graphicImage library="imgs" name="pdf.png" width="37px" height="32px"/>
+                                                    <p:dataExporter type="pdf" target="dcmc"
+                                                                    fileName="Reporte de compras"
+                                                                    exporter="#{reportes3Ctr.pdfExporterCompras}"/>
+                                                </p:commandLink>
+                                            </h:panelGrid>
+                                            <p:dataTable rendered="false" id="dcmc"></p:dataTable>
+                                        </h:panelGrid>
+                                    </f:facet>
+                                    <p:tabView orientation="right">
+                                        <p:tab title="Detalle de productos">
+                                            <p:dataTable value="#{reportes3Ctr.detalle}" var="item" rows="10"
+                                                         paginator="true" paginatorPosition="top"
+                                                         paginatorAlwaysVisible="false" reflow="true">
+                                                <f:facet name="header">
+                                                    Detalle de la compra de productos en las fechas ingresadas.
+                                                </f:facet>
+                                                <f:facet name="footer">
+                                                    Total de compra: $ #{reportes3Ctr.compraTotal}
+                                                </f:facet>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Producto"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{item.inv.producto}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Cantidad"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{item.cantidad}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Costo Unitario"/>
+                                                    </f:facet>
+                                                    <h:outputText value="$ #{item.costoU}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Costo Total"/>
+                                                    </f:facet>
+                                                    <h:outputText value="$ #{item.subTotal}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:tab>
+                                        <p:tab title="Facturas" rendered="#{reportes3Ctr.facturas.size()!=0}">
+                                            <p:dataTable value="#{reportes3Ctr.facturas}" var="f" rows="10"
+                                                         paginator="true" paginatorPosition="top" rowKey="#{f.fecha}"
+                                                         paginatorAlwaysVisible="false" reflow="true"
+                                                         selectionMode="single" selection="#{reportes3Ctr.selected}">
+                                                <p:ajax event="rowSelect" listener="#{reportes3Ctr.onSelectFactura}"
+                                                        update="h0" onsuccess="PF('DConstancia').show()"/>
+                                                <f:facet name="header">
+                                                    Facturas de compras para las fechas ingresadas.
+                                                </f:facet>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Fecha"/>
+                                                    </f:facet>
+                                                    <h:outputText value="#{reportes3Ctr.getDateToString(f.fecha)}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Valor de la Factura"/>
+                                                    </f:facet>
+                                                    <h:outputText value="$ #{f.valor}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:tab>
+                                    </p:tabView>
+                                </p:card>
                             </h:panelGrid>
                         </p:tab>
                     </p:tabView>
                 </h:form>
+                <p:dialog widgetVar="generando" modal="true" style="width: 60%;"
+                          showHeader="true" header="Creando el reporte..." closable="false">
+                    <h:form>
+                        <h:panelGrid style="margin: auto">
+                            Espere mientras el sistema reune los datos para crear el reporte...
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="dialog" widgetVar="DConstancia" modal="true" style="width: 60%;"
+                          showHeader="true" header="Factura " 
+                          closeOnEscape="true">
+                    <h:form id="h0">
+                        <h:panelGrid columns="1" cellspacing="2">
+                            <img src="#{reportes3Ctr.docFacrura()}"
+                                 width="640" height="480"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
                 <p:dialog id="dialog1" widgetVar="espere" modal="true" style="width: 60%;"
                           showHeader="true" header="Descarga en curso..." closable="false">
                     <h:form>

@@ -15,8 +15,8 @@
                 <f:facet name="title" >
                     Registro de Compras 
                 </f:facet>
-                <f:facet name="subtitle">
-                    <h:panelGrid columns="4">
+                <f:facet name="subtitle" rendered="false">
+                    <h:panelGrid columns="4" rendered="false">
                         <p:outputLabel for="matrices" value="Matriz:" style=" color: #ffffff"/>
                         <p:selectOneMenu id="matrices" value="#{compraCtr.matSel}" 
                                          converter="omnifaces.SelectItemsConverter">
@@ -155,7 +155,6 @@
                                      title="Guardar los datos de la compra actual."
                                      actionListener="#{compraCtr.guardarCompra()}"
                                      rendered="#{compraCtr.comprando}"
-                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
                     <p:commandButton id="clean" icon="pi pi-exclamation-triangle" value="Limpiar los datos" 
                                      style=" margin-left: 5%"
@@ -163,7 +162,6 @@
                                      styleClass="ui-button-secondary" 
                                      rendered="#{compraCtr.comprando}"
                                      actionListener="#{compraCtr.nuevaCompra()}"
-                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/> 
                     <p:commandButton id="inic" icon="pi pi-chevron-circle-right" value="Iniciar una compra" 
                                      styleClass="ui-button-raised ui-button-primary "
@@ -171,7 +169,6 @@
                                      actionListener="#{compraCtr.setComprando(true)}"
                                      action="#{compraCtr.nuevaCompra()}"
                                      rendered="#{!compraCtr.comprando}"
-                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
                     <p:commandButton id="end" icon="pi pi-times-circle" value="Cancelar compra"
                                      style=" margin-left: 5%"
@@ -180,7 +177,6 @@
                                      actionListener="#{compraCtr.setComprando(false)}"
                                      action="#{compraCtr.nuevaCompra()}"
                                      rendered="#{compraCtr.comprando}"
-                                     disabled="#{compraCtr.sucSel==null}"
                                      update="form"/>
                 </f:facet>
             </p:card>

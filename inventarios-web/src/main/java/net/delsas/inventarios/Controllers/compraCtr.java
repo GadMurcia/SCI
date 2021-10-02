@@ -205,7 +205,7 @@ public class compraCtr extends auxiliarCtr implements Serializable {
     }
 
     public boolean isComprando() {
-        return comprando && sucSel != null;
+        return comprando ;
     }
 
     public void setComprando(boolean comprando) {
@@ -256,7 +256,7 @@ public class compraCtr extends auxiliarCtr implements Serializable {
     }
 
     public List<Inventario> getInventario() {
-        inventarios = ifl.findByTienda(Optional.ofNullable(sucSel).orElseGet(() -> new Misc(0)).getIdMisc());
+        inventarios = ifl.findByTienda(1);
         Collections.sort(inventarios, (Inventario uno, Inventario dos) -> uno.getProducto().toLowerCase().compareTo(dos.getProducto().toLowerCase()));
         return inventarios;
     }

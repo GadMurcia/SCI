@@ -34,7 +34,7 @@ import org.primefaces.PrimeFaces;
  */
 @ViewScoped
 @Named
-public class prodCtr extends auxiliarCtr implements Serializable{
+public class prodCtr extends auxiliarCtr implements Serializable {
 
     private Optional<Usuario> us;
     private Inventario sel;
@@ -110,7 +110,7 @@ public class prodCtr extends auxiliarCtr implements Serializable{
     }
 
     public List<Inventario> getInventario() {
-        inventarios = ifl.findByTienda(Optional.ofNullable(sucSel).orElseGet(() -> new Misc(0)).getIdMisc());
+        inventarios = ifl.findByTienda(1);
         Collections.sort(inventarios, (Inventario uno, Inventario dos) -> uno.getProducto().toLowerCase().compareTo(dos.getProducto().toLowerCase()));
         return inventarios;
     }
@@ -145,34 +145,28 @@ public class prodCtr extends auxiliarCtr implements Serializable{
     }
 
     public void persist() {
-        if (Optional.ofNullable(sucSel).isPresent()) {
-            FacesMessage ms;
-            if (sel.getIdInventario() == null) {
-                sel.setTienda(sucSel);
-                sel.setActivo(true);
-                if (!Optional.ofNullable(ifl.find(sel.getProducto())).isPresent()) {
-                    ifl.create(sel);
-                    ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Agregación",
-                            "El catálogo de productos se ha modificado. "
-                            + "Nombre de producto agregado: " + sel.getProducto());
-
-                    PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
-                } else {
-                    ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Imposible continuar",
-                            "Ya hay un producto agregado al catálogo con el nombre: " + sel.getProducto());
-                }
-            } else {
-                ifl.edit(sel);
-                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificación",
+        FacesMessage ms;
+        if (sel.getIdInventario() == null) {
+            sel.setTienda(mfl.find(1));
+            sel.setActivo(true);
+            if (!Optional.ofNullable(ifl.find(sel.getProducto())).isPresent()) {
+                ifl.create(sel);
+                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Agregación",
                         "El catálogo de productos se ha modificado. "
-                        + "Nombre de producto Modificado: " + sel.getProducto());
+                        + "Nombre de producto agregado: " + sel.getProducto());
+
                 PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
+            } else {
+                ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "Imposible continuar",
+                        "Ya hay un producto agregado al catálogo con el nombre: " + sel.getProducto());
             }
-            Optional.ofNullable(ms).ifPresent(m -> FacesContext.getCurrentInstance().addMessage("form0:msgs", m));
         } else {
-            FacesContext.getCurrentInstance().addMessage("form0:msgs",
-                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error",
-                            "No se puede agregar el producto al catálogo porque no se seleccionó ninguna tienda."));
+            ifl.edit(sel);
+            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificación",
+                    "El catálogo de productos se ha modificado. "
+                    + "Nombre de producto Modificado: " + sel.getProducto());
+            PrimeFaces.current().executeInitScript("PF('prodDialog').hide()");
         }
+        Optional.ofNullable(ms).ifPresent(m -> FacesContext.getCurrentInstance().addMessage("form0:msgs", m));
     }
 }

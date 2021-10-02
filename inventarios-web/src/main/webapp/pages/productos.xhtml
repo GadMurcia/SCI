@@ -9,9 +9,9 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        <h:form id="form" style="width: 80%; margin: auto">
-            <h:panelGrid columns="1" style=" background-color: #01011a">
-                <h:panelGrid columns="4">
+        <h:form id="form">
+            <h:panelGrid columns="1" style=" background-color: #01011a; margin: auto; width: 80%">
+                <h:panelGrid columns="4" rendered="false">
                     <p:outputLabel for="matrices" value="Matriz:" style="color: #ffffff"/>
                     <p:selectOneMenu id="matrices" value="#{prodCtr.matSel}" 
                                      converter="omnifaces.SelectItemsConverter">
@@ -35,45 +35,22 @@
                 <p:dataTable id="products" var="product" value="#{prodCtr.inventario}" 
                              widgetVar="cellprod" rows="10" selectionMode="single" reflow="true"
                              selection="#{prodCtr.sel}" rowKey="#{product.idInventario}" size="small"
-                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
-                             >
+                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
 
                     <p:ajax event="rowSelect"/>
 
                     <p:column headerText="PRODUCTO" filterBy="#{product.producto}" style="color: #ece3a5">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{product.producto}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText value="#{product.producto}" style="width:100%" label="Name"/>
-                            </f:facet>
-                        </p:cellEditor>
+                        <h:outputText value="#{product.producto}"/>
                     </p:column>
 
                     <p:column headerText="PRECIO UNITARIO" style="color: #ece3a5">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{product.precioUnitario}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputNumber value="#{product.precioUnitario}" 
-                                               symbol="USD " symbolPosition="p" decimalSeparator="." 
-                                               thousandSeparator="," />
-                            </f:facet>
-                        </p:cellEditor>
+                        <p:inputNumber value="#{product.precioUnitario}" 
+                                       symbol="USD " symbolPosition="p" decimalSeparator="." 
+                                       thousandSeparator="," />
                     </p:column>
 
-                    <p:column headerText="DESCRIPCIÓN" style="color: #ece3a5">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{product.descripcion}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputTextarea value="#{product.descripcion}" 
-                                                 style="width:100%" label="Price"/>
-                            </f:facet>
-                        </p:cellEditor>
+                    <p:column headerText="ACTIVO" style="color: #ece3a5">
+                        <p:toggleSwitch value="#{product.activo}" disabled="true"/>
                     </p:column>
                 </p:dataTable>
 
@@ -85,7 +62,7 @@
                 <h:panelGrid style="margin: 0 auto" width="30%">
                     <p:commandButton icon="pi pi-shopping-cart" 
                                      styleClass="ui-button-raised ui-button-info "
-                        value="Agregar Nuevo Producto" title="Agregar un nuevo producto al catálogo" 
+                                     value="Agregar Nuevo Producto" title="Agregar un nuevo producto al catálogo" 
                                      actionListener="#{prodCtr.nuevo()}" update="h0"
                                      onsuccess="PF('prodDialog').show()"/>
                 </h:panelGrid>
@@ -99,8 +76,8 @@
                     <t:producto producto="#{prodCtr.sel}"/>
                     <h:panelGrid style="margin: 0 auto">
                         <p:commandButton icon="pi pi-save" 
-                                     styleClass="ui-button-raised ui-button-warning "
-                            value="Guardar" update="form:products form0:msgs"
+                                         styleClass="ui-button-raised ui-button-warning "
+                                         value="Guardar" update="form:products form0:msgs"
                                          actionListener="#{prodCtr.persist()}"
                                          type="summit"/>
                     </h:panelGrid>
