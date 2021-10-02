@@ -9,7 +9,7 @@
                 xmlns="http://www.w3.org/1999/xhtml">
 
     <ui:define name="content">
-        <h:form id="form" style="width: 80%; margin: auto">
+        <h:form id="form" style=" margin: auto">
             <h:panelGrid columns="1" style=" background-color: #01011a">
                 <h:panelGrid columns="4">
                     <p:outputLabel for="matrices" value="Matriz:" style="color: #ffffff"/>
@@ -40,7 +40,7 @@
 
                     <p:ajax event="rowSelect"/>
 
-                    <p:column headerText="PRODUCTO" filterBy="#{product.producto}" style="color: #ece3a5">
+                    <p:column headerText="PRODUCTO" filterBy="#{product.producto}"  style="color: #ece3a5">
                         <p:cellEditor>
                             <f:facet name="output">
                                 <h:outputText value="#{product.producto}"/>
