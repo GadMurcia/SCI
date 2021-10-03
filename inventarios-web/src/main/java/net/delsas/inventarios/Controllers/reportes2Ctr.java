@@ -196,6 +196,12 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                 fin = new Date();
             }
             giros = gcfl.findByPeriodoYSucursal(inicio, fin, 1);
+            if(giros.isEmpty()){
+                FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Sin Registros", 
+                        "No se enconraron Ventas para las fechas especificada."));
+                PrimeFaces.current().ajax().update("form0:msgs");
+            }
             giros.stream().forEach(g -> {
                 RepDetalleVentas rdv = new RepDetalleVentas(g.getIdGiroDeCaja(), new ArrayList<>());
                 vfl.findByGiroCaja(rdv.getId()).stream().map(Ventas::getDetalleVentasList).forEachOrdered(dl -> {
