@@ -13,7 +13,7 @@
             <ui:define name="content">                
                 <h:form id="form" >
                     <h:outputScript library="js" name="local-es.js"/>
-                    <p:tabView id="tw" scrollable="true" dynamic="true" effect="fade" >
+                    <p:tabView id="tw" scrollable="false" dynamic="true" effect="fade" >
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"
                                 onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
                         <p:tab title="Ventas"  >
@@ -365,31 +365,28 @@
                                                     <p:outputLabel value="Desde la Fecha" for="gini" style="color: #ffffff"/>
                                                     <p:datePicker id="gini" value="#{reportes3Ctr.ginicio}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                update="gfin in graf" 
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha" for="gfin" style="color: #ffffff"/>
                                                     <p:datePicker id="gfin" value="#{reportes3Ctr.gfin}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="in graf"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="in" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in" value="#{reportes3Ctr.sel}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
                                                         <f:selectItem itemValue="3" itemLabel="Por Año"/>
-                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="graf"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
-                                                <h:panelGrid style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:commandButton icon="pi pi-chart-line" title="Generar reporte."
+                                                                     value="Generar Gráfico"
+                                                                     styleClass="ui-button-raised ui-button-primary " update="gini gfin in graf"
+                                                                     onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
-                                                                     style="margin-left: -10%"
                                                                      styleClass="ui-button-raised ui-button-secondary "
                                                                      update="gini gfin in graf"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico()}"/>
@@ -412,16 +409,12 @@
                                                     <p:outputLabel value="Desde la Fecha:" for="gini0"/>
                                                     <p:datePicker id="gini0" value="#{reportes3Ctr.ginicio0}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                update="gfin0 in0 p0 graf0" 
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha:" for="gfin0"/>
                                                     <p:datePicker id="gfin0" value="#{reportes3Ctr.gfin0}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="p0 in0 graf0"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p0" value="#{reportes3Ctr.invSel0}" filter="true"
@@ -429,26 +422,26 @@
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
-                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="in0 graf0"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
                                                     </p:selectOneMenu>
                                                     <p:outputLabel for="in0" value="Visualizar:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in0" value="#{reportes3Ctr.sel0}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
                                                         <f:selectItem itemValue="3" itemLabel="Por Año"/>
-                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="graf0"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
-                                                <h:panelGrid style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:commandButton icon="pi pi-chart-line" title="Generar reporte."
+                                                                     value="Generar Gráfico"
+                                                                     styleClass="ui-button-raised ui-button-primary " 
+                                                                     update="gini0 gfin0 in0 graf0"
+                                                                     onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
-                                                                     style="margin-left: -10%"
                                                                      styleClass="ui-button-raised ui-button-secondary "
-                                                                     update="gini0 gfin0 p0 in0 graf0"
+                                                                     update="gini0 gfin0 in0 graf0"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico0()}"/>
                                                 </h:panelGrid>
                                             </h:panelGrid>
@@ -469,16 +462,12 @@
                                                     <p:outputLabel value="Desde la Fecha:" for="gini1"/>
                                                     <p:datePicker id="gini1" value="#{reportes3Ctr.ginicio1}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                update="gfin1 in1 p1 graf1" 
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha:" for="gfin1"/>
                                                     <p:datePicker id="gfin1" value="#{reportes3Ctr.gfin1}" locale="es" 
                                                                   pattern="dd/MMMM/yyyy">
-                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="p1 in1 graf1"/>
+                                                        <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p1" value="#{reportes3Ctr.invSel1}" filter="true"
@@ -486,26 +475,26 @@
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
-                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="in1 graf1"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
                                                     </p:selectOneMenu>
                                                     <p:outputLabel for="in1" value="Visualizar:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in1" value="#{reportes3Ctr.sel1}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
                                                         <f:selectItem itemValue="3" itemLabel="Por Año"/>
-                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"
-                                                                onstart="PF('generando').show()" oncomplete="PF('generando').hide()"
-                                                                update="graf1"/>
+                                                        <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
                                                     </p:selectOneMenu>
                                                 </h:panelGrid>
-                                                <h:panelGrid style="margin: auto">
+                                                <h:panelGrid columns="2" style="margin: auto">
+                                                    <p:commandButton icon="pi pi-chart-line" title="Generar reporte."
+                                                                     value="Generar Gráfico"
+                                                                     styleClass="ui-button-raised ui-button-primary " 
+                                                                     update="gini1 gfin1 in1 graf1"
+                                                                     onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
-                                                                     style="margin-left: -10%"
                                                                      styleClass="ui-button-raised ui-button-secondary "
-                                                                     update="gini1 gfin1 p1 in1 graf1"
+                                                                     update="gini1 gfin1 in1 graf1"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico1()}"/>
                                                 </h:panelGrid>
                                             </h:panelGrid>

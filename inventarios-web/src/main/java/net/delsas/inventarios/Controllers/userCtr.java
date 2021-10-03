@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -35,7 +36,7 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 @Named
 public class userCtr implements Serializable {
-    
+
     private Optional<Usuario> us;
     private Usuario nus;
     private List<Usuario> usuarios;
@@ -46,14 +47,14 @@ public class userCtr implements Serializable {
     private Misc sucSel;
     private boolean editable;
     private boolean editId;
-    
+
     @EJB
     private UsuarioFacadeLocal ufl;
     @EJB
     private TipoUsuarioFacadeLocal tufl;
     @EJB
     private MiscFacadeLocal mfl;
-    
+
     @PostConstruct
     public void init() {
         nus = new Usuario();
@@ -90,35 +91,33 @@ public class userCtr implements Serializable {
             }
         });
     }
-    
+
     public Usuario getNus() {
         return nus;
     }
-    
+
     public void setNus(Usuario nus) {
         this.nus = nus;
     }
-    
+
     public List<Usuario> getUsuarios() {
-        usuarios.clear();
+        usuarios = ufl.findAll();
         us.ifPresent(u -> {
-            if (u.getTipoUsuario().getIdTipoUsuario().equals(1)) {
-                ufl.findAll().stream().filter(p -> p.getEmpresa() == null).forEachOrdered(usuarios::add);
+            if (!u.getTipoUsuario().getIdTipoUsuario().equals(1)) {
+                usuarios.removeAll(usuarios.stream().filter(p -> p.getTipoUsuario().getIdTipoUsuario().equals(1)).collect(Collectors.toList()));
             }
         });
-        //Optional.ofNullable(sucSel).ifPresent(s -> usuarios.addAll(s.getUsuarioList()));
-        usuarios.addAll(mfl.find(1).getUsuarioList());
         return usuarios;
     }
-    
+
     public List<TipoUsuario> getTiposU() {
         return tiposU;
     }
-    
+
     public void setTiposU(List<TipoUsuario> tiposU) {
         this.tiposU = tiposU;
     }
-    
+
     public List<Misc> getMatrices() {
         matrices.clear();
         us.ifPresent(u -> {
@@ -138,7 +137,7 @@ public class userCtr implements Serializable {
         });
         return matrices;
     }
-    
+
     public List<Misc> getSucursales() {
         sucursales.clear();
         Optional.ofNullable(matSel).ifPresent(m -> {
@@ -154,26 +153,26 @@ public class userCtr implements Serializable {
         });
         return sucursales;
     }
-    
+
     public void Selecion(SelectEvent e) {
         System.out.println(e.getObject());
     }
-    
+
     public List<Misc> getEmpresas() {
         List<Misc> v = new ArrayList<>();
         v.addAll(matrices);
         v.addAll(sucursales);
         return v;
     }
-    
+
     public boolean isEditable() {
         return editable;
     }
-    
+
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
-    
+
     public void persist() {
         FacesMessage ms;
         if (!isEditId()) {
@@ -189,7 +188,7 @@ public class userCtr implements Serializable {
         FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
         PrimeFaces.current().ajax().update("form0:msgs");
     }
-    
+
     public void resetPass() {
         FacesMessage ms;
         nus.setPasswd(DigestUtils.md5Hex(nus.getIdUsuario()));
@@ -199,35 +198,35 @@ public class userCtr implements Serializable {
         FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
         PrimeFaces.current().ajax().update("form0:msgs");
     }
-    
+
     public boolean isEditId() {
         return editId;
     }
-    
+
     public void setEditId(boolean editId) {
         this.editId = editId;
     }
-    
+
     public void nuevo() {
         nus = new Usuario("", "", "", "", true);
         setEditable(true);
         setEditId(true);
     }
-    
+
     public Misc getMatSel() {
         return matSel;
     }
-    
+
     public void setMatSel(Misc matSel) {
         this.matSel = matSel;
     }
-    
+
     public Misc getSucSel() {
         return sucSel;
     }
-    
+
     public void setSucSel(Misc sucSel) {
         this.sucSel = sucSel;
     }
-    
+
 }

@@ -116,8 +116,8 @@
                                                  update="form"  styleClass="ui-button-raised ui-button-info "/>
                             </h:panelGrid>
                         </h:panelGrid>
-                        <p:dataTable id="productos" var="p" value="#{compraCtr.detalles}" 
-                                     selectionMode="multiple" selection="#{compraCtr.selected}" 
+                        <p:dataTable id="productos" var="p" value="#{compraCtr.detalles}" reflow="true"
+                                     selectionMode="multiple" selection="#{compraCtr.selected}" size="small"
                                      rowKey="#{p.detalleCompraPK}" emptyMessage="No hay productos agregados a la factura">
                             <p:ajax event="rowSelect" listener="#{compraCtr.onRowSelect}" update="form:context"/>
                             <p:ajax event="rowUnselect" listener="#{compraCtr.onRowUnselect}" update="form:context"/>
