@@ -56,17 +56,15 @@ public class prodCtr extends auxiliarCtr implements Serializable {
         sucursales = new ArrayList<>();
         us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         us.ifPresent(u -> {
-            if (u.getTipoUsuario().getIdTipoUsuario() > 2) {
+            if (u.getTipoUsuario().getIdTipoUsuario() > 3) {
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
-                            new FacesMessage(FacesMessage.SEVERITY_WARN, "Acceso fallido",
-                                    "Usted no está autorizado para ver esa funcionalidad. Loguéese."));
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Acceso Denegado",
+                                    "Usted no está autorizado para ver esa funcionalidad."));
                     FacesContext.getCurrentInstance().getExternalContext().redirect("home.app");
                 } catch (IOException ex) {
                     Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-
             }
         });
     }

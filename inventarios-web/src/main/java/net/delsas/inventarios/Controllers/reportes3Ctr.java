@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -38,6 +39,7 @@ import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.beans.VentasFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
+import net.delsas.inventarios.entities.Usuario;
 import net.delsas.inventarios.optional.Existencias;
 import net.delsas.inventarios.optional.ReporteDetalleCompra;
 import net.delsas.inventarios.optional.auxiliarCtr;
@@ -51,7 +53,6 @@ import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.line.LineChartDataSet;
 import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.line.LineChartOptions;
-import org.primefaces.model.charts.optionconfig.legend.Legend;
 import org.primefaces.model.charts.optionconfig.title.Title;
 
 /**
@@ -73,7 +74,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
     private List<reporteFacturasCompras> facturas;
     private reporteFacturasCompras selected;
     private List<ReporteDetalleCompra> detalle;
-    //private LineChartModel lineModel;
+    private Optional<Usuario> user;
     private Integer sel;
     private Inventario invSel;
     private Integer sel0;
@@ -103,6 +104,28 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         sel0 = 1;
         sel1 = 1;
         invs = ifl.findAll();
+        user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
+        if (!user.isPresent()) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Acceso fallido",
+                                "Usted no está autorizado para ver esa funcionalidad. Loguéese."));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("./../");
+            } catch (IOException ex) {
+                Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            if (user.get().getTipoUsuario().getIdTipoUsuario() > 3) {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Acceso Denegado",
+                                    "Usted no está autorizado para ver esa funcionalidad."));
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("home.app");
+                } catch (IOException ex) {
+                    Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     public Date getInicio() {
@@ -328,7 +351,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                 title.setDisplay(true);
                 title.setText("Ventas en USD");
                 title.setFontColor("rgb(255, 255, 255)");
-                title.setFontSize(18);                
+                title.setFontSize(18);
                 dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
@@ -431,12 +454,12 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                 title.setDisplay(true);
                 title.setText("Ventas en USD");
                 title.setFontColor("rgb(255, 255, 255)");
-                title.setFontSize(18);                
+                title.setFontSize(18);
                 dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
                 dataSet.setFill(false);
-                dataSet.setLabel("Estimación de la variacion de ventas de "+invSel0.getProducto());
+                dataSet.setLabel("Estimación de la variacion de ventas de " + invSel0.getProducto());
                 dataSet.setBorderColor("rgb(255, 215, 0)");
                 data.addChartDataSet(dataSet);
                 data.setLabels(labels);
@@ -446,7 +469,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         }
         return lineModel;
     }
-    
+
     public LineChartModel getLineModelToCostProduct() {
         LineChartModel lineModel = sel1 == 0 ? null : new LineChartModel();
         ChartData data = new ChartData();
@@ -489,12 +512,12 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                 title.setDisplay(true);
                 title.setText("Costos en USD");
                 title.setFontColor("rgb(255, 255, 255)");
-                title.setFontSize(18);                
+                title.setFontSize(18);
                 dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
                 dataSet.setFill(false);
-                dataSet.setLabel("Estimación de la variacion del costo de "+invSel1.getProducto());
+                dataSet.setLabel("Estimación de la variacion del costo de " + invSel1.getProducto());
                 dataSet.setBorderColor("rgb(178, 34, 34)");
                 data.addChartDataSet(dataSet);
                 data.setLabels(labels);
@@ -511,12 +534,14 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         sel = 1;
         invSel = null;
     }
+
     public void limpiarGrafico0() {
         ginicio0 = null;
         gfin0 = null;
         sel0 = 1;
         invSel0 = null;
     }
+
     public void limpiarGrafico1() {
         ginicio1 = null;
         gfin1 = null;

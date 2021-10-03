@@ -86,7 +86,16 @@ public class compraCtr extends auxiliarCtr implements Serializable {
                 Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-
+            if (user.get().getTipoUsuario().getIdTipoUsuario() > 3) {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Acceso Denegado",
+                                    "Usted no está autorizado para ver esa funcionalidad."));
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("home.app");
+                } catch (IOException ex) {
+                    Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
@@ -205,7 +214,7 @@ public class compraCtr extends auxiliarCtr implements Serializable {
     }
 
     public boolean isComprando() {
-        return comprando ;
+        return comprando;
     }
 
     public void setComprando(boolean comprando) {

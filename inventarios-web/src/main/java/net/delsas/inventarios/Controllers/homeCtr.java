@@ -121,4 +121,8 @@ public class homeCtr implements Serializable {
                 : "SISTEMA"));
     }
 
+    public boolean getVerMenu() {
+        return user.isPresent() && user.get().getTipoUsuario().getIdTipoUsuario() < 4;
+    }
+
 }

@@ -11,6 +11,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -57,6 +59,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
     private Date fin;
     private boolean periodo;
     private List<RepDetalleVentas> detalle;
+    private Optional<Usuario> user;
 
     @EJB
     private GiroDeCajaFacadeLocal gcfl;
@@ -73,6 +76,28 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
     public void init() {
         giros = new ArrayList<>();
         detalle = new ArrayList<>();
+        user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
+        if (!user.isPresent()) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Acceso fallido",
+                                "Usted no está autorizado para ver esa funcionalidad. Loguéese."));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("./../");
+            } catch (IOException ex) {
+                Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            if (user.get().getTipoUsuario().getIdTipoUsuario() > 3) {
+                try {
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Acceso Denegado",
+                                    "Usted no está autorizado para ver esa funcionalidad."));
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("home.app");
+                } catch (IOException ex) {
+                    Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     public boolean isPeriodo() {
@@ -377,7 +402,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                                 String drr[] = dr.split("   ->  ");
                                 if (drr.length == 2) {
                                     t.addCell(getTextCell("", 1, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                                    t.addCell(getTextCell("$ "+drr[0], 1, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                                    t.addCell(getTextCell("$ " + drr[0], 1, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                                     t.addCell(getTextCell(drr[1], 3, 1, true, true, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                                     t.addCell(getTextCell("", 1, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                                 }

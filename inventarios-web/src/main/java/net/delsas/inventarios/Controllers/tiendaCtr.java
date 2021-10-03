@@ -62,8 +62,8 @@ public class tiendaCtr implements Serializable {
             if (u.getTipoUsuario().getIdTipoUsuario() > 2) {
                 try {
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
-                            new FacesMessage(FacesMessage.SEVERITY_WARN, "Acceso fallido",
-                                    "Usted no está autorizado para ver esa funcionalidad. Loguéese."));
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Acceso Denegado",
+                                    "Usted no está autorizado para ver esa funcionalidad."));
                     FacesContext.getCurrentInstance().getExternalContext().redirect("home.app");
                 } catch (IOException ex) {
                     Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
