@@ -69,13 +69,13 @@
                                                 maxResults="5" disabled="#{!ventaCtr.vendiendo}">
                                     <p:ajax event="itemSelect" listener="#{ventaCtr.onItemSelect}" update="precio"/>
                                     <f:facet name="itemtip">
-                                        <h:panelGrid columns="1" cellpadding="5" bgcolor="#6a5f89">
+                                        <h:panelGrid columns="1" cellpadding="5" bgcolor="#6a5f89" style="background-color: #01011a">
                                             <f:facet name="header">
                                                 <h:outputText value="#{inv.producto}" 
-                                                              style=" color: #ffffff; font-stretch: extra-expanded;
-                                                              font-family: fantasy; font-weight: 600; font-style: oblique"/>
+                                                              style=" color: #ece3a5;    font-stretch: extra-expanded;
+                                                              font-family: sans-serif; font-weight: 600; font-style: normal"/>
                                             </f:facet>
-                                            <h:outputText value="Precio de venta $ #{inv.precioUnitario}" style=" color: #ffffff"/>
+                                            <h:outputText value="Precio de Venta $ #{inv.precioUnitario}" style=" color: salmon"/>
                                             <f:facet name="footer">
                                                 <p:outputLabel value="Disponibilidad: #{ventaCtr.disponibilidad(inv)}" style=" color: #ffffff"/>
                                             </f:facet>
