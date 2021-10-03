@@ -51,6 +51,7 @@ import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.line.LineChartDataSet;
 import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.line.LineChartOptions;
+import org.primefaces.model.charts.optionconfig.legend.Legend;
 import org.primefaces.model.charts.optionconfig.title.Title;
 
 /**
@@ -325,7 +326,10 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (lineModel != null) {
                 Title title = new Title();
                 title.setDisplay(true);
-                title.setText("Ventas en USD$");
+                title.setText("Ventas en USD");
+                title.setFontColor("rgb(255, 255, 255)");
+                title.setFontSize(18);                
+                dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
                 dataSet.setFill(false);
@@ -425,7 +429,10 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (lineModel != null) {
                 Title title = new Title();
                 title.setDisplay(true);
-                title.setText("Ventas en USD$");
+                title.setText("Ventas en USD");
+                title.setFontColor("rgb(255, 255, 255)");
+                title.setFontSize(18);                
+                dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
                 dataSet.setFill(false);
@@ -480,7 +487,10 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (lineModel != null) {
                 Title title = new Title();
                 title.setDisplay(true);
-                title.setText("Costos en USD$");
+                title.setText("Costos en USD");
+                title.setFontColor("rgb(255, 255, 255)");
+                title.setFontSize(18);                
+                dataSet.setLineTension(0.1);
                 options.setTitle(title);
                 dataSet.setData(values);
                 dataSet.setFill(false);
