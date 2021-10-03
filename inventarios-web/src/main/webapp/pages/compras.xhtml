@@ -67,8 +67,8 @@
                                             styleClass="ui-button-outlined ui-button-warning"
                                             icon="pi pi-fw pi-eye"
                                             id="btnV" value="Ver factura" update="h0" 
-                                                         disabled="#{!compraCtr.hayDocumento}"
-                                                         oncomplete="PF('DConstancia').show();"/>                             
+                                            disabled="#{!compraCtr.hayDocumento}"
+                                            oncomplete="PF('DConstancia').show();"/>                             
                                         <p:growl id="messagesp" showDetail="true" for="partida"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
@@ -89,16 +89,16 @@
                                                     maxResults="5" disabled="#{!compraCtr.comprando}">
                                         <p:ajax event="itemSelect" listener="#{compraCtr.onItemSelect}"/>
                                         <f:facet name="itemtip">
-                                            <h:panelGrid columns="2" cellpadding="5">
+                                            <h:panelGrid columns="1" cellpadding="5" bgcolor="#6a5f89" style="background-color: #01011a">
                                                 <f:facet name="header">
-                                                    <p:outputLabel value="#{inv.idInventario}"/>
+                                                    <h:outputText value="#{inv.producto}" 
+                                                                  style=" color: #ece3a5;    font-stretch: extra-expanded;
+                                                                  font-family: sans-serif; font-weight: 600; font-style: normal"/>
                                                 </f:facet>
-
-                                                <h:outputText value="Nombre"/>
-                                                <h:outputText value="#{inv.producto}"/>
-
-                                                <h:outputText value="Precio de venta"/>
-                                                <h:outputText value="#{inv.precioUnitario}"/>
+                                                <h:outputText value="Precio de Venta $ #{inv.precioUnitario}" style=" color: salmon"/>
+                                                <f:facet name="footer">
+                                                    <p:outputLabel value="Disponibilidad: #{compraCtr.disponibilidad(inv)}" style=" color: #ffffff"/>
+                                                </f:facet>
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:autoComplete>
