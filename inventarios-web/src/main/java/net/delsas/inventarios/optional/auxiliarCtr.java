@@ -62,8 +62,7 @@ public class auxiliarCtr implements Serializable {
 
     public double disponibilidad(Inventario i) {
         if (i != null) {
-            Existencias e = new Existencias(i, dcfl, dvfl);
-            return e.getExistencias();
+            return new Existencias(i, dcfl, dvfl).getExistencias();
         }
         return 0;
     }
