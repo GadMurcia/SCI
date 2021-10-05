@@ -100,6 +100,7 @@
                                          rendered="#{userCtr.editable}"
                                          actionListener="#{userCtr.persist()}"
                                          type="summit"
+                                         onsuccess="PF('userDialog').hide()"
                                          styleClass="ui-button-outlined ui-button-warning" style="height: 50px; width: 130px;" icon="pi pi-fw pi-check-circle"/>
                     </h:panelGrid>
                 </h:panelGrid>
