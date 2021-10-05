@@ -179,8 +179,9 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                 fin = new Date();
             }
             dcfl.findByPeriodoFechas(inicio, fin).stream().forEachOrdered(dc -> {
-                ReporteDetalleCompra rdc = new ReporteDetalleCompra(dc, dcfl, dvfl, inicio, fin);
+                ReporteDetalleCompra rdc = new ReporteDetalleCompra(dc.getInventario().getIdInventario(), dc.getInventario(), 0, 0, 0);
                 if (!detalle.contains(rdc)) {
+                    rdc = new ReporteDetalleCompra(dc, dcfl, dvfl, inicio, fin);
                     detalle.add(rdc);
                 } else {
                     int idx = detalle.indexOf(rdc);
@@ -190,6 +191,12 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                     detalle.set(idx, detalle0);
                 }
             });
+            if(detalle.isEmpty()){
+                FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                        new FacesMessage(FacesMessage.SEVERITY_WARN, "Sin Registros",
+                                "No se enconraron Compras para las fechas especificada."));
+                PrimeFaces.current().ajax().update("form0:msgs");
+            }
             cfl.findConFacturaByPeriodo(inicio, fin).stream()
                     .filter(c -> c.getFactura() != null)
                     .forEach(c -> facturas.add(new reporteFacturasCompras(
