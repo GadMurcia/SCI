@@ -7,7 +7,6 @@ package net.delsas.inventarios.optional;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
@@ -52,6 +51,7 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
         this.costoU = redondeo4decimales(Existencias.getCostoAVGPeriodo(id, dcfl, inicio, fin));
         this.costoU = this.costoU > 0 ? this.costoU : redondeo4decimales(Existencias.getCostoAVGGlobal(id, dcfl));
         this.precioU = redondeo4decimales(getPrecioAVGPeriodo(id, dvfl, inicio, fin));
+        this.precioU = this.precioU > 0 ? this.precioU : getPrecioAVGGlobal(id, dvfl);
         this.subTotal = redondeo3decimales(this.cantidad * this.precioU);
         this.utilidad = redondeo3decimales(subTotal - (cantidad * costoU));
     }
@@ -136,9 +136,8 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 79 * hash + this.id;
-        hash = 79 * hash + Objects.hashCode(this.inv);
+        int hash = 7;
+        hash = 41 * hash + this.id;
         return hash;
     }
 
@@ -154,10 +153,7 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
             return false;
         }
         final ReporteVentas other = (ReporteVentas) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return Objects.equals(this.inv, other.inv);
+        return this.id == other.id;
     }
 
     @Override

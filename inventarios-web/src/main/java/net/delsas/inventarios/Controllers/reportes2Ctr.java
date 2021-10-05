@@ -172,7 +172,6 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
         inicio = null;
         fin = null;
         giros.clear();
-        //generarReporteVentas();
     }
 
     public double getUtilidad(GiroDeCaja g) {
@@ -204,48 +203,48 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             }
             giros.stream().forEach(g -> {
                 RepDetalleVentas rdv = new RepDetalleVentas(g.getIdGiroDeCaja(), new ArrayList<>());
-                vfl.findByGiroCaja(rdv.getId()).stream().map(Ventas::getDetalleVentasList).forEachOrdered(dl -> {
-                    dl.forEach(d -> {
-                        ReporteVentas rv = new ReporteVentas(d.getInventario().getIdInventario(), d.getInventario(), 0, 0, 0, 0, 0);
-                        if (!rdv.getDetalle().contains(rv)) {
-                            rv = new ReporteVentas(d, dcfl, dvfl, inicio, fin);
-                            rdv.getDetalle().add(rv);
-                        } else {
-                            int idx = rdv.getDetalle().indexOf(rv);
-                            ReporteVentas get = rdv.getDetalle().get(idx);
-                            get.setCantidad(get.getCantidad() + rv.getCantidad());
-                            rdv.getDetalle().set(idx, get);
-                        }
-                    });
-                });
+                vfl.findByGiroCaja(rdv.getId()).stream().map(Ventas::getDetalleVentasList).forEachOrdered(dl -> dl.forEach(d -> {
+                    ReporteVentas rv = new ReporteVentas(d.getInventario().getIdInventario(), d.getInventario(), 0, 0, 0, 0, 0);
+                    if (!rdv.getDetalle().contains(rv)) {
+                        rv = new ReporteVentas(d, dcfl, dvfl, inicio, fin);
+                        rdv.getDetalle().add(rv);
+                    } else {
+                        int idx = rdv.getDetalle().indexOf(rv);
+                        ReporteVentas get = rdv.getDetalle().get(idx);
+                        get.setCantidad(get.getCantidad() + d.getCantidad());
+                        get.setSubTotal(redondeo2decimales(get.getCantidad() * get.getPrecioU()));
+                        get.setUtilidad(redondeo2decimales(get.getSubTotal() - (get.getCantidad() * get.getCostoU())));
+                        rdv.getDetalle().set(idx, get);
+                    }
+                }));
                 detalle.add(rdv);
             });
             giroGlobal.setIdGiroDeCaja(0);
             giroGlobal.setCajaInicial(0);
             giroGlobal.setCierre(0);
             giroGlobal.setDetalleRetiros("");
-            giros.stream().map(GiroDeCaja::getDetalleRetiros).collect(Collectors.toList()).forEach(dr -> {
-                giroGlobal.setDetalleRetiros(giroGlobal.getDetalleRetiros() + "\n" + dr);
+            giros.stream().map(GiroDeCaja::getDetalleRetiros).collect(Collectors.toList()).stream().filter(dr -> !dr.isEmpty()).forEachOrdered(dr -> {
+                giroGlobal.setDetalleRetiros((!giroGlobal.getDetalleRetiros().isEmpty() ? giroGlobal.getDetalleRetiros().isEmpty() + "\n" : "") + dr);
             });
             giroGlobal.setExcedentes(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getExcedentes).sum()));
             giroGlobal.setFaltantes(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getFaltantes).sum()));
             giroGlobal.setFin(fin);
             giroGlobal.setInicio(inicio);
-            giroGlobal.setResponsable(new Usuario("", "Reporte Global", "De ventas por periodo", "", false));
+            giroGlobal.setResponsable(new Usuario("", "Reporte Global", "De Ventas Por Periodo", "", false));
             giroGlobal.setRetiros(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getRetiros).sum()));
             RepDetalleVentas dg = new RepDetalleVentas(giroGlobal.getIdGiroDeCaja(), new ArrayList<>());
-            detalle.stream().map(RepDetalleVentas::getDetalle).forEachOrdered(dl -> {
-                dl.forEach(d -> {
-                    if (!dg.getDetalle().contains(d)) {
-                        dg.getDetalle().add(d);
-                    } else {
-                        int idx = dg.getDetalle().indexOf(d);
-                        ReporteVentas get = dg.getDetalle().get(idx);
-                        get.setCantidad(get.getCantidad() + d.getCantidad());
-                        dg.getDetalle().set(idx, get);
-                    }
-                });
-            });
+            detalle.stream().map(RepDetalleVentas::getDetalle).forEachOrdered(dl -> dl.forEach(d -> {
+                if (!dg.getDetalle().contains(d)) {
+                    dg.getDetalle().add(d);
+                } else {
+                    int idx = dg.getDetalle().indexOf(d);
+                    ReporteVentas get = dg.getDetalle().get(idx);
+                    get.setCantidad(get.getCantidad() + d.getCantidad());
+                    get.setSubTotal(redondeo2decimales(get.getCantidad() * get.getPrecioU()));
+                    get.setUtilidad(redondeo2decimales(get.getSubTotal() - (get.getCantidad() * get.getCostoU())));
+                    dg.getDetalle().set(idx, get);
+                }
+            }));
             if (periodo) {
                 detalle.clear();
                 giros.clear();
@@ -298,7 +297,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
 
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                        t.addCell(getTextCell("Utilidad:", 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
+                        t.addCell(getTextCell("Sumatoria de Recaudación:", 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("$ " + getUtilidad(giroGlobal), 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
 
@@ -394,7 +393,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
 
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                        t.addCell(getTextCell("Utilidad:", 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
+                        t.addCell(getTextCell("Recaudación:", 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("$" + redondeo2decimales(getUtilidad(g)), 1, 1, false, false, 13, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("", 2, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
 
@@ -463,7 +462,6 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                     fc.addMessage("form0:msgs",
                             new FacesMessage(FacesMessage.SEVERITY_FATAL, "Eror!!!", "No se pudo generar el reporte."));
                 }
-
             }
 
             @Override

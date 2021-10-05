@@ -2,7 +2,7 @@
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Testing</param-value>
+        <param-value>Development</param-value>
         <!--  <param-value>Production</param-value>-->
     </context-param>
     <context-param>
@@ -48,22 +48,10 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            3
+            30
         </session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>index.app</welcome-file>
     </welcome-file-list>
-    <error-page>        
-        <exception-type>org.jboss.weld.contexts.ContextNotActiveException</exception-type>
-        <location>/index.app</location>
-    </error-page>
-    <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/pages/errores/error.app</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/pages/errores/error.app</location>
-    </error-page>
 </web-app>

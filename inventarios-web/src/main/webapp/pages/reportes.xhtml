@@ -73,7 +73,7 @@
                                             <h:outputText value="#{reportes2Ctr.giroGlobal.faltantes}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
-                                            <p:outputLabel value="Utilidad global:" />
+                                            <p:outputLabel value="Sumatoria de lo recaudado:" />
                                             <h:outputText value="#{reportes2Ctr.getUtilidad(reportes2Ctr.giroGlobal)}" styleClass="product-price">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
@@ -115,7 +115,7 @@
                                                     <h:outputText value="#{g.faltantes}" styleClass="product-price">
                                                         <f:convertNumber currencySymbol="$" type="currency"/>
                                                     </h:outputText>
-                                                    <p:outputLabel value="Utilidad:"/>
+                                                    <p:outputLabel value="Recaudado:"/>
                                                     <h:outputText value="#{reportes2Ctr.getUtilidad(g)}" styleClass="product-price">
                                                         <f:convertNumber currencySymbol="$" type="currency"/>
                                                     </h:outputText>
@@ -202,7 +202,7 @@
                                 </h:panelGrid>
                                 <p:card  style="width: available; margin: auto; background-color:#01011a " rendered="#{reportes3Ctr.detalle.size()>0}">
                                     <f:facet name="title">
-                                        <h2  align="center" style="margin: auto; color: burlywood">Reporte General </h2>
+                                        <h2  align="center" style="margin: auto; color: burlywood">Reporte General De Compras</h2>
                                     </f:facet>
                                     <f:facet name="subtitle">
                                         <h:panelGrid columns="1" style="margin: auto" >                                            

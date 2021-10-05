@@ -211,14 +211,14 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
                         t.addCell(getTextCell("" + e.getUtilidad(), 1, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     });
                     t.addCell(getTextCell("", 4, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Costo total del inventario: $", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("" + ex.stream().mapToDouble(Existencias::getCostoTotal).sum(), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Costo total del inventario:", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("$ " + redondeo2decimales(ex.stream().mapToDouble(Existencias::getCostoTotal).sum()), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("", 4, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Valor de venta total del inventario: $", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("" + ex.stream().mapToDouble(Existencias::getValorTotal).sum(), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Valor de venta total del inventario:", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("$ " + redondeo2decimales(ex.stream().mapToDouble(Existencias::getValorTotal).sum()), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("", 4, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("Utilidad esperada total: $", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
-                    t.addCell(getTextCell("" + ex.stream().mapToDouble(Existencias::getUtilidad).sum(), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("Utilidad esperada total:", 3, 1, false, true, 12, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
+                    t.addCell(getTextCell("$ " + redondeo2decimales(ex.stream().mapToDouble(Existencias::getUtilidad).sum()), 1, 1, false, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
 
                     t.addCell(getTextCell("", 8, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("", 8, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
