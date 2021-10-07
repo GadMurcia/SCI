@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -103,7 +104,6 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         sel = 1;
         sel0 = 1;
         sel1 = 1;
-        invs = ifl.findAll();
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!user.isPresent()) {
             try {
@@ -167,11 +167,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
         detalle.clear();
         facturas.clear();
         if (inicio != null) {
-            if (fin != null && fin.before(inicio)) {
-                Date f = new Date(fin.getTime());
-                fin = new Date(inicio.getTime());
-                fin = new Date(f.getTime());
-            }
+            arreglarFechas(inicio, fin);
             try {
                 fin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(fin != null ? fin : inicio) + " 23:59:59");
             } catch (ParseException ex) {
@@ -194,7 +190,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (detalle.isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage("form0:msgs",
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Sin Registros",
-                                "No se enconraron Compras para las fechas especificada."));
+                                "No se encontraron Compras para las fechas especificadas."));
                 PrimeFaces.current().ajax().update("form0:msgs");
             }
             cfl.findConFacturaByPeriodo(inicio, fin).stream()
@@ -328,7 +324,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (gfin.before(ginicio)) {
                 Date f = new Date(gfin.getTime());
                 gfin = new Date(ginicio.getTime());
-                gfin = new Date(f.getTime());
+                ginicio = new Date(f.getTime());
             }
             try {
                 gfin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin) + " 23:59:59");
@@ -431,7 +427,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (gfin0.before(ginicio0)) {
                 Date f = new Date(gfin0.getTime());
                 gfin0 = new Date(ginicio0.getTime());
-                gfin0 = new Date(f.getTime());
+                ginicio0 = new Date(f.getTime());
             }
             try {
                 gfin0 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin0) + " 23:59:59");
@@ -489,7 +485,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             if (gfin1.before(ginicio1)) {
                 Date f = new Date(gfin1.getTime());
                 gfin1 = new Date(ginicio1.getTime());
-                gfin1 = new Date(f.getTime());
+                ginicio1 = new Date(f.getTime());
             }
             try {
                 gfin1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin1) + " 23:59:59");
@@ -568,11 +564,9 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
     }
 
     public List<Inventario> getInvs() {
+        invs = ifl.findAll();
+        Collections.sort(invs, (Inventario i0, Inventario i1) -> i0.getProducto().compareToIgnoreCase(i1.getProducto()));
         return invs;
-    }
-
-    public void setInvs(List<Inventario> invs) {
-        this.invs = invs;
     }
 
     public Date getGinicio0() {

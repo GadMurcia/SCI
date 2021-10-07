@@ -50,7 +50,7 @@ public class DetalleCompra implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false, precision = 11, scale = 2)
+    @Column(nullable = false, precision = 11, scale = 4)
     private BigDecimal costoUnitario;
     @JoinColumns({
         @JoinColumn(name = "usuario", referencedColumnName = "usuario", nullable = false, insertable = false, updatable = false),

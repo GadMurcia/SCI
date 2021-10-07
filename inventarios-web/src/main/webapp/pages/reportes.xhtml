@@ -55,7 +55,8 @@
                                     </p:commandLink>
                                     <p:dataTable rendered="false" id="axmc"></p:dataTable>
                                 </h:panelGrid>
-                                <p:card style="width: 45rem; margin: auto; background-color: #01011a" rendered="#{reportes2Ctr.giros.size()>1}">
+                                <p:card style="width: 45rem; margin: auto; background-color: #01011a" 
+                                        rendered="#{reportes2Ctr.giros.size()>1}">
                                     <f:facet name="title">
                                         <h3 align="center" style="color: burlywood">Resumen general</h3>
                                     </f:facet>
@@ -283,6 +284,9 @@
                         </p:tab>
                         <p:tab id="ex" title="Existencias">
                             <h:panelGrid columns="1" >
+                                <h:panelGrid style="margin: auto; width: 10%">
+                                    <p:commandButton value="Actualizar" icon="pi pi-replay" inline="true" update="existencias"/>
+                                </h:panelGrid>
                                 <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="item"
                                              rows="10" reflow="true" disabledTextSelection="true"  size="small"
                                              paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">

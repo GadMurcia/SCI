@@ -27,8 +27,8 @@
             <p:outputLabel value="Precio Unitario:" for="precioUnitario" style="color: #ffffff;margin-left: -45%" />
             <p:inputNumber id="precioUnitario" value="#{cc.attrs.producto.precioUnitario}" 
                            title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
-                           requiredMessage="El precio unitario no debe quedar vacío." 
-                           symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                           requiredMessage="El precio unitario no debe quedar vacío." minValue="0.01" maxValue="100.00"
+                           symbol="$ " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                 <f:validateDoubleRange minimum="0"/>
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputNumber>

@@ -182,11 +182,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
         detalle.clear();
         giroGlobal = new GiroDeCaja();
         if (inicio != null) {
-            if (fin != null && fin.before(inicio)) {
-                Date f = new Date(fin.getTime());
-                fin = new Date(inicio.getTime());
-                fin = new Date(f.getTime());
-            }
+            arreglarFechas(inicio, fin);
             periodo = !(fin == null || fin.equals(inicio));
             try {
                 fin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(periodo ? fin : inicio) + " 23:59:59");
@@ -198,7 +194,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             if (giros.isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage("form0:msgs",
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Sin Registros",
-                                "No se enconraron Ventas para las fechas especificada."));
+                                "No se encontraron Ventas para las fechas especificadas."));
                 PrimeFaces.current().ajax().update("form0:msgs");
             }
             giros.stream().forEach(g -> {
@@ -245,7 +241,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                     dg.getDetalle().set(idx, get);
                 }
             }));
-            if (periodo) {
+            if (periodo && !giros.isEmpty()) {
                 detalle.clear();
                 giros.clear();
                 giros.add(giroGlobal);

@@ -73,20 +73,21 @@ public class auxiliarCtr implements Serializable {
         o = o / 100;
         return o;
     }
-    
+
     public double redondeo3decimales(double o) {
         o = o * 1000;
         o = Math.round(o);
         o = o / 1000;
         return o;
     }
-    
+
     public double redondeo4decimales(double o) {
         o = o * 10000;
         o = Math.round(o);
         o = o / 10000;
         return o;
     }
+
     public double redondeo5decimales(double o) {
         o = o * 100000;
         o = Math.round(o);
@@ -97,7 +98,7 @@ public class auxiliarCtr implements Serializable {
     public String getDateToString(Date d) {
         return d != null ? new SimpleDateFormat("dd/MM/yyyy").format(d) : "";
     }
-    
+
     public String getDateTimeToString12H(Date d) {
         return d != null ? new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a").format(d) : "";
     }
@@ -156,4 +157,16 @@ public class auxiliarCtr implements Serializable {
     public String getNombreususario(Usuario u) {
         return u == null ? "" : u.getNombres() + " " + u.getApellidos();
     }
+
+    public void arreglarFechas(Date uno, Date dos) {
+        uno = uno == null ? dos : uno;
+        dos = dos == null ? uno : dos;
+        if (dos != null && dos.before(uno)) {
+            Date f = new Date(dos.getTime());
+            dos = new Date(uno.getTime());
+            uno = new Date(f.getTime());
+        }
+        System.out.println(uno + " **** " + dos);
+    }
 }
+ 

@@ -175,15 +175,20 @@ public class userCtr implements Serializable {
 
     public void persist() {
         FacesMessage ms;
-        if (!isEditId()) {
-            ufl.edit(nus);
-            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Editado", "Los datos han sido aguardados");
+        if (!validarSNumero(nus.getNombres()) || !validarSNumero(nus.getApellidos())) {
+            ms = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Datos inválidos",
+                    "Los nombres y apellidos de las personas no deben contener números.");
         } else {
-            nus.setActivo(true);
-            nus.setPasswd(DigestUtils.md5Hex(nus.getIdUsuario()));
-            nus.setEmpresa(mfl.find(1));
-            ufl.create(nus);
-            ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "El nuevo usuario ha sido agregado al sistema");
+            if (!isEditId()) {
+                ufl.edit(nus);
+                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Editado", "Los datos han sido aguardados");
+            } else {
+                nus.setActivo(true);
+                nus.setPasswd(DigestUtils.md5Hex(nus.getIdUsuario()));
+                nus.setEmpresa(mfl.find(1));
+                ufl.create(nus);
+                ms = new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "El nuevo usuario ha sido agregado al sistema");
+            }
         }
         FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
         PrimeFaces.current().ajax().update("form0:msgs");
@@ -227,6 +232,28 @@ public class userCtr implements Serializable {
 
     public void setSucSel(Misc sucSel) {
         this.sucSel = sucSel;
+    }
+
+    private boolean validarSNumero(String nombres) {
+        if (nombres != null) {
+            for (String g : nombres.split("")) {
+                switch (g) {
+                    case "0":
+                    case "1":
+                    case "2":
+                    case "3":
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "8":
+                    case "9":
+                        return false;
+                    default:
+                }
+            }
+        }
+        return true;
     }
 
 }

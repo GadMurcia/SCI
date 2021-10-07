@@ -15,7 +15,7 @@
 
 
             <p:dataTable style="background-color: #01011a"
-                         editable="true"
+                         editable="true" reflow="true" size="small" 
                          id="tienda" var="item" 
                          value="#{dtTiendaCtr.empresas}" 
                          rowKey="#{item.idMisc}"
@@ -40,7 +40,7 @@
                             <h:outputText value="#{item.direccion}" style="color:#ffffff"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputText  value="#{item.direccion}" style="width:100%"/>
+                            <p:inputText  value="#{item.direccion}" style="width:100%" maxlength="255"/>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -50,7 +50,7 @@
                             <h:outputText value="#{item.telefonos}" style="color: #ffffff"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputText  value="#{item.telefonos}" style="width:100%"/>
+                            <p:inputMask  value="#{item.telefonos}" style="width:100%" maxlength="9" mask="9999-9999"/>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
