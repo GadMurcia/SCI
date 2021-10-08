@@ -13,7 +13,7 @@
                 <f:facet name="header">
                 </f:facet>
                 <f:facet name="title" >
-                    Registro de Compras 
+                    <h1 align="center" style="color: #ffffff; font-size: xx-large">Registro de Compras</h1>
                 </f:facet>
                 <f:facet name="subtitle" rendered="false">
                     <h:panelGrid columns="4" rendered="false">
@@ -145,40 +145,36 @@
                                         actionListener="#{compraCtr.quitarDetalleCompra()}"/>
                         </p:contextMenu>
                     </h:panelGrid>
+                    <h:panelGrid columns="3" style="margin: auto">
+                        <p:commandButton id="save" icon="pi pi-save" 
+                                         styleClass="ui-button-raised ui-button-info"
+                                         value="Guardar Compra" 
+                                         title="Guardar los datos de la compra actual."
+                                         actionListener="#{compraCtr.guardarCompra()}"
+                                         rendered="#{compraCtr.comprando}"
+                                         update="form"/>
+                        <p:commandButton id="clean" icon="pi pi-exclamation-triangle" value="Limpiar los datos"
+                                         title="Limpiar todos los campos"
+                                         styleClass="ui-button-secondary" 
+                                         rendered="#{compraCtr.comprando}"
+                                         actionListener="#{compraCtr.nuevaCompra()}"
+                                         update="form"/> 
+                        <p:commandButton id="inic" icon="pi pi-chevron-circle-right" value="Iniciar una compra" 
+                                         styleClass="ui-button-raised ui-button-primary "
+                                         title="Iniciar la sesión de compras."
+                                         actionListener="#{compraCtr.setComprando(true)}"
+                                         action="#{compraCtr.nuevaCompra()}"
+                                         rendered="#{!compraCtr.comprando}"
+                                         update="form"/>
+                        <p:commandButton id="end" icon="pi pi-times-circle" value="Cancelar compra"
+                                         styleClass="ui-button-raised ui-button-danger "
+                                         title="Finalizar la sesión de compras."
+                                         actionListener="#{compraCtr.setComprando(false)}"
+                                         action="#{compraCtr.nuevaCompra()}"
+                                         rendered="#{compraCtr.comprando}"
+                                         update="form"/>
+                    </h:panelGrid>
                 </h:panelGrid>
-
-                <f:facet name="footer">
-                    <p:commandButton id="save" icon="pi pi-save" 
-                                     styleClass="ui-button-raised ui-button-info "
-                                     style=" margin-left: 10%"
-                                     value="Guardar Compra" 
-                                     title="Guardar los datos de la compra actual."
-                                     actionListener="#{compraCtr.guardarCompra()}"
-                                     rendered="#{compraCtr.comprando}"
-                                     update="form"/>
-                    <p:commandButton id="clean" icon="pi pi-exclamation-triangle" value="Limpiar los datos" 
-                                     style=" margin-left: 5%"
-                                     title="Limpiar todos los campos"
-                                     styleClass="ui-button-secondary" 
-                                     rendered="#{compraCtr.comprando}"
-                                     actionListener="#{compraCtr.nuevaCompra()}"
-                                     update="form"/> 
-                    <p:commandButton id="inic" icon="pi pi-chevron-circle-right" value="Iniciar una compra" 
-                                     styleClass="ui-button-raised ui-button-primary "
-                                     title="Iniciar la sesión de compras."
-                                     actionListener="#{compraCtr.setComprando(true)}"
-                                     action="#{compraCtr.nuevaCompra()}"
-                                     rendered="#{!compraCtr.comprando}"
-                                     update="form"/>
-                    <p:commandButton id="end" icon="pi pi-times-circle" value="Cancelar compra"
-                                     style=" margin-left: 5%"
-                                     styleClass="ui-button-raised ui-button-danger "
-                                     title="Finalizar la sesión de compras."
-                                     actionListener="#{compraCtr.setComprando(false)}"
-                                     action="#{compraCtr.nuevaCompra()}"
-                                     rendered="#{compraCtr.comprando}"
-                                     update="form"/>
-                </f:facet>
             </p:card>
         </h:form>
 

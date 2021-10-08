@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import javax.ejb.EJB;
@@ -47,9 +48,6 @@ public class auxiliarCtr implements Serializable {
     private DetalleCompraFacadeLocal dcfl;
     @EJB
     private DetalleVentasFacadeLocal dvfl;
-
-    @EJB
-    private InventarioFacadeLocal ifl;
 
     public void onBlour(AjaxBehaviorEvent e) {
     }
@@ -167,6 +165,29 @@ public class auxiliarCtr implements Serializable {
             uno = new Date(f.getTime());
         }
         System.out.println(uno + " **** " + dos);
+    }   
+
+    public Date suma1Dia(Date r0) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(r0);
+        c.add(Calendar.DATE, 1);
+        return c.getTime();
+    }
+
+    public Date suma1Mes(Date r0) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(r0);
+        c.add(Calendar.MONTH, 1);
+        c.add(Calendar.DATE, -1);
+        return c.getTime();
+    }
+
+    public Date suma1Año(Date r0) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(r0);
+        c.add(Calendar.YEAR, 1);
+        c.add(Calendar.DATE, -1);
+        return c.getTime();
     }
 }
  

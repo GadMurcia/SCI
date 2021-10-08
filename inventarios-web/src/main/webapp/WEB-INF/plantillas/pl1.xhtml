@@ -59,8 +59,8 @@
                 </h:form>
 
                 <p:dialog   header="Cambio de Contraseña" widgetVar="contraDialog" 
-                          modal="true" showEffect="fade" hideEffect="fade" 
-                          resizable="false" closeOnEscape="true" responsive="true">
+                            modal="true" showEffect="fade" hideEffect="fade" 
+                            resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h" style="text-align:center;">
                         <h:panelGrid columns="1">
                             <h:panelGrid columns="2" style="margin: 0 auto">
@@ -94,7 +94,7 @@
                     </h:form>
                 </p:dialog>
                 <p:dialog header="Opciones de caja" widgetVar="cajaDialog" 
-                          
+
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="false">
                     <h:form id="h1"  style="margin: auto">
@@ -103,7 +103,7 @@
                                 <f:facet name="title">
                                     Detalle de caja
                                 </f:facet>
-                                
+
                                 <h:panelGrid columns="2" style="background-color: #1b162a">
                                     <p:outputLabel value="Ticket de caja:" style="color: #ffffff"/>
                                     <p:outputLabel value="#{cajaCtr.giro.idGiroDeCaja}" title="IdGiroDeCaja" style="color: #ece3a5"/>
@@ -128,8 +128,8 @@
                                 <f:facet name="footer">
                                     <h:panelGrid columns="1" style="margin: 0 auto">
                                         <p:commandButton icon="pi pi-money-bill" 
-                                     styleClass="ui-button-outlined ui-button-warning"
-                                            value="Hacer un retiro" update="h1 h4" 
+                                                         styleClass="ui-button-outlined ui-button-warning"
+                                                         value="Hacer un retiro" update="h1 h4" 
                                                          title="Registrar un nuevo retiro de efectivo de la caja"
                                                          onclick="PF('retiroDialog').show();"/>  
                                     </h:panelGrid>
@@ -138,16 +138,16 @@
                         </h:panelGrid>
                         <h:panelGrid columns="1" style="margin: 0 auto">
                             <p:commandButton icon="pi pi-money-bill" 
-                                     styleClass="ui-button-outlined ui-button-info"
-                                value="Abrir Caja" update="h1 h2" 
+                                             styleClass="ui-button-outlined ui-button-info"
+                                             value="Abrir Caja" update="h1 h2" 
                                              rendered="#{!cajaCtr.iniciada}"
                                              onclick="PF('caja2Dialog').show();"/>
                             <p:commandButton 
                                 icon="pi pi-wallet" 
-                                     styleClass="ui-button-outlined ui-button-info"
+                                styleClass="ui-button-outlined ui-button-info"
                                 value="Cerrar Caja" update="h1 h3"
-                                             rendered="#{cajaCtr.iniciada}"
-                                             onclick="PF('caja3Dialog').show();"/>
+                                rendered="#{cajaCtr.iniciada}"
+                                onclick="PF('caja3Dialog').show();"/>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
@@ -156,7 +156,7 @@
                           resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h2"  style="margin: auto">
                         <h:panelGrid columns="1">
-                           
+
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Iniciar Caja Con:" style="color: #ffffff "/>
                                 <p:inputNumber value="#{cajaCtr.giro.cajaInicial}" 
@@ -169,10 +169,10 @@
                             </h:panelGrid>
                             <h:panelGrid columns="1" style="margin: 0 auto">
                                 <p:commandButton  icon="pi pi-save" 
-                                     styleClass="ui-button-outlined ui-button-info"
-                                    value="Guardar" update="h1" 
-                                                 actionListener="#{cajaCtr.abrirGiro()}"
-                                                 oncomplete="PF('caja2Dialog').hide();"/>
+                                                  styleClass="ui-button-outlined ui-button-info"
+                                                  value="Guardar" update="h1" 
+                                                  actionListener="#{cajaCtr.abrirGiro()}"
+                                                  oncomplete="PF('caja2Dialog').hide();"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
@@ -182,7 +182,7 @@
                           resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h3"  style="margin: auto">
                         <h:panelGrid columns="1">
-                            
+
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Dinero que quedó en caja:" style="color: #ffffff"/>
                                 <p:inputNumber value="#{cajaCtr.giro.cierre}" 
@@ -199,35 +199,35 @@
                                     icon="pi pi-save" 
                                     styleClass="ui-button-outlined ui-button-primary"
                                     value="Guardar" update="h1"
-                                                 actionListener="#{cajaCtr.cerrarCaja()}"
-                                                 oncomplete="PF('caja3Dialog').hide();"/>
+                                    actionListener="#{cajaCtr.cerrarCaja()}"
+                                    oncomplete="PF('caja3Dialog').hide();"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
                 <p:dialog 
                     header="Retiro de efectivo" widgetVar="retiroDialog" 
-                          modal="true" showEffect="fade" hideEffect="fade" 
-                          resizable="false" closeOnEscape="true" responsive="true">
+                    modal="true" showEffect="fade" hideEffect="fade" 
+                    resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h4"  style="margin: auto" >
                         <h:panelGrid columns="1" >
-                            
+
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Cantidad a retirar:" style="color: #ffffff"/>
                                 <p:inputNumber value="#{cajaCtr.valor}"
                                                symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                                     <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
                                 </p:inputNumber>
-                                
+
                                 <p:outputLabel value="Detalle:" style="color: #ffffff"/>
                                 <p:inputTextarea value="#{cajaCtr.descr}" required="true"/>
                             </h:panelGrid>
                             <h:panelGrid columns="1" style="margin: 0 auto">
                                 <p:commandButton  icon="pi pi-save" 
-                                     styleClass="ui-button-outlined ui-button-primary"
-                                    value="Guardar" update="h1"
-                                                 actionListener="#{cajaCtr.registrarRetiro()}"
-                                                 oncomplete="PF('retiroDialog').hide();"/>
+                                                  styleClass="ui-button-outlined ui-button-primary"
+                                                  value="Guardar" update="h1"
+                                                  actionListener="#{cajaCtr.registrarRetiro()}"
+                                                  oncomplete="PF('retiroDialog').hide();"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
@@ -235,12 +235,12 @@
             </ui:insert>
         </div>
         <div>
-            
-                <div id="content" class="right_content">
-                    <ui:insert name="content">Content</ui:insert>
-                </div>
+
+            <div id="content" class="center_content">
+                <ui:insert name="content">Content</ui:insert>
             </div>
-               
+        </div>
+
     </h:body>
 
 </html>

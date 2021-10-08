@@ -10,7 +10,7 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <h:panelGrid columns="1" style=" background-color: #01011a; margin: auto; width: 80%">
+            <h:panelGrid columns="1" style=" background-color: #01011a; margin: auto;">
                 <h:panelGrid columns="4" rendered="false">
                     <p:outputLabel for="matrices" value="Matriz:" style="color: #ffffff"/>
                     <p:selectOneMenu id="matrices" value="#{prodCtr.matSel}" 
@@ -43,13 +43,13 @@
                         <h:outputText value="#{product.producto}"/>
                     </p:column>
 
-                    <p:column headerText="PRECIO UNITARIO" style="color: #ece3a5">
+                    <p:column headerText="PRECIO UNITARIO" style="color: #ece3a5; width: 25%">
                         <p:inputNumber value="#{product.precioUnitario}" disabled="true" 
                                        symbol="$ " symbolPosition="p" decimalSeparator="." 
                                        thousandSeparator="," />
                     </p:column>
 
-                    <p:column headerText="ACTIVO" style="color: #ece3a5">
+                    <p:column headerText="ACTIVO" style="color: #ece3a5; width: 10%">
                         <p:toggleSwitch value="#{product.activo}" disabled="true"/>
                     </p:column>
                 </p:dataTable>
