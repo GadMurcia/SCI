@@ -77,8 +77,7 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             }
             try {
                 gfin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin) + " 23:59:59");
-            } catch (ParseException ex) {
-                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
+            } catch (ParseException ex) {                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
                 gfin = new Date();
             }
             Date r0, r1;
@@ -89,12 +88,10 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                             : sel == 2 ? suma1Mes(r0)
                                     : sel == 3 ? suma1Año(r0) : suma1Dia(gfin);
                 } catch (ParseException ex) {
-                    System.out.println("Un error ha ocurrido al procesar la fecha de gfin. reporte3Crt");
                     r1 = new Date();
                 }
                 labels.add(new SimpleDateFormat(sel == 1 ? "dd/MM/YY" : sel == 2 ? "MMM/YY" : "YYYY").format(r0));
                 values.add(redondeo2decimales(vfl.findByPeriodoFechas(r0, r1).stream().mapToDouble(v -> v.getValor().doubleValue()).sum()));
-                System.out.println(getDateTimeToString12H(r0) + " al " + getDateTimeToString12H(r1));//////////////////////
                 r0 = sel == 1 ? suma1Dia(r0) : sel == 2 ? suma1Mes(r0) : sel == 3 ? suma1Año(r0) : suma1Dia(gfin);
             } while (!r0.after(gfin));
 
@@ -136,7 +133,6 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             try {
                 gfin0 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin0) + " 23:59:59");
             } catch (ParseException ex) {
-                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
                 gfin0 = new Date();
             }
             Date r0, r1;
@@ -147,12 +143,10 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                             : sel0 == 2 ? suma1Mes(r0)
                                     : sel0 == 3 ? suma1Año(r0) : suma1Dia(gfin0);
                 } catch (ParseException ex) {
-                    System.out.println("Un error ha ocurrido al procesar la fecha de gfin. reporte3Crt");
                     r1 = new Date();
                 }
                 labels.add(new SimpleDateFormat(sel0 == 1 ? "dd/MM/YY" : sel0 == 2 ? "MMM/YY" : "YYYY").format(r0));
                 values.add(redondeo2decimales(dvfl.findByProductoAndPeriodo(invSel0.getIdInventario(), r0, r1).stream().mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario().doubleValue()).sum()));
-                System.out.println(getDateTimeToString12H(r0) + " al " + getDateTimeToString12H(r1));//////////////////////
                 r0 = sel0 == 1 ? suma1Dia(r0) : sel0 == 2 ? suma1Mes(r0) : sel0 == 3 ? suma1Año(r0) : suma1Dia(gfin0);
             } while (!r0.after(gfin0));
 
@@ -194,7 +188,6 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             try {
                 gfin1 = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin1) + " 23:59:59");
             } catch (ParseException ex) {
-                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
                 gfin1 = new Date();
             }
             Date r0, r1;
@@ -206,14 +199,12 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                             : sel1 == 2 ? suma1Mes(r0)
                                     : sel1 == 3 ? suma1Año(r0) : suma1Dia(gfin1);
                 } catch (ParseException ex) {
-                    System.out.println("Un error ha ocurrido al procesar la fecha de gfin. reporte3Crt");
                     r1 = new Date();
                 }
                 labels.add(new SimpleDateFormat(sel1 == 1 ? "dd/MM/YY" : sel1 == 2 ? "MMM/YY" : "YYYY").format(r0));
                 double v = redondeo2decimales(Existencias.getCostoAVGPeriodo(invSel1.getIdInventario(), dcfl, r0, r1));
                 anterior = v == 0 ? anterior : v;
                 values.add(anterior);
-                System.out.println(getDateTimeToString12H(r0) + " al " + getDateTimeToString12H(r1));//////////////////////
                 r0 = sel1 == 1 ? suma1Dia(r0) : sel1 == 2 ? suma1Mes(r0) : sel1 == 3 ? suma1Año(r0) : suma1Dia(gfin1);
             } while (!r0.after(gfin1));
 

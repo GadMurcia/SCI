@@ -150,7 +150,6 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     }
 
     public void onTabChange(TabChangeEvent event) {
-        System.out.println(event.getTab().getTitle());
     }
 
     public List<Existencias> getExistencias() {

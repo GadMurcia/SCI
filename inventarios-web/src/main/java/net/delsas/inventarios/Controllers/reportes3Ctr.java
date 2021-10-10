@@ -37,7 +37,6 @@ import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
-import net.delsas.inventarios.beans.VentasFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Usuario;
 import net.delsas.inventarios.optional.ReporteDetalleCompra;
@@ -147,7 +146,6 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
             try {
                 fin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(fin != null ? fin : inicio) + " 23:59:59");
             } catch (ParseException ex) {
-                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
                 fin = new Date();
             }
             dcfl.findByPeriodoFechas(inicio, fin).stream().forEachOrdered(dc -> {

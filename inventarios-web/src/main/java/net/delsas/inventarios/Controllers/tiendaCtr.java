@@ -19,10 +19,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
-import net.delsas.inventarios.beans.TipoUsuarioFacadeLocal;
 import net.delsas.inventarios.beans.UsuarioFacadeLocal;
 import net.delsas.inventarios.entities.Misc;
-import net.delsas.inventarios.entities.TipoUsuario;
 import net.delsas.inventarios.entities.Usuario;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
@@ -38,25 +36,16 @@ public class tiendaCtr implements Serializable {
 
     private Optional<Usuario> us;
     private Misc nmisc;
-    private List<Misc> tiendas;
     private List<Usuario> usuarios;
-   
-    private List<TipoUsuario> tiposU;
     @EJB
     private UsuarioFacadeLocal ufl;
-
     @EJB
     private MiscFacadeLocal mfl;
-    @EJB
-    private TipoUsuarioFacadeLocal tufl;
 
     @PostConstruct
     public void init() {
-
         nmisc = new Misc();
         usuarios = new ArrayList<>();
-
-        tiposU = new ArrayList<>();
         us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         us.ifPresent(u -> {
             if (u.getTipoUsuario().getIdTipoUsuario() > 2) {
@@ -87,8 +76,8 @@ public class tiendaCtr implements Serializable {
         FacesMessage msg = new FacesMessage("Se canceló la operación", event.getObject().getNombre());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-    
-    public void onSelect(SelectEvent<Misc> e){
+
+    public void onSelect(SelectEvent<Misc> e) {
         System.out.println(e.getObject().toString());
     }
 
