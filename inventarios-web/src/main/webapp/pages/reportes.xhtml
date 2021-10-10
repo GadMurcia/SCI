@@ -293,8 +293,20 @@
                         </p:tab>
                         <p:tab id="ex" title="Existencias">
                             <h:panelGrid columns="1" >
-                                <h:panelGrid style="margin: auto; width: 10%">
-                                    <p:commandButton value="Actualizar" icon="pi pi-replay" inline="true" update="existencias"/>
+                                <h:panelGrid columns="2" style="margin: auto; width: 10%">
+                                    <p:commandButton icon="pi pi-replay" inline="true" title="Actualizar los datos del reporte."
+                                                     update="existencias" onstart="PF('generando').show()" 
+                                                     oncomplete="PF('generando').hide()"/>
+
+                                    <p:commandLink title="Descargue como documento PDF." styleClass="p-mr-2 p-mb-2" 
+                                                   onstart="PF('espere').show();"
+                                                   onsuccess="PF('espere').hide();"
+                                                   disabled="#{reportes1Ctr.existencias.size()==0}">
+                                        <p:graphicImage library="imgs" name="pdf.png" width="37px" height="32px"/>
+                                        <p:dataExporter type="pdf" target="existencias"
+                                                        fileName="existencias de productos"
+                                                        exporter="#{reportes1Ctr.pdfExporterExistencias}"/>
+                                    </p:commandLink>
                                 </h:panelGrid>
                                 <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="item"
                                              rows="10" reflow="true" disabledTextSelection="true"  size="small"
@@ -309,7 +321,7 @@
                                             <p:outputLabel value="Utilidad Global: $#{reportes1Ctr.utilidadTotal()}" style="color: #ece3a5"/>
                                         </h:panelGrid>
                                     </f:facet>
-                                    <p:column filterBy="#{item.nombre}" width="10%">
+                                    <p:column filterBy="#{item.nombre}" filterStyle="width: 85%; margin-left: 0" width="25%">
                                         <f:facet name="header">
                                             <h:outputText value="PRODUCTO" style="color: burlywood"/>
                                         </f:facet>
@@ -352,15 +364,6 @@
                                         <h:outputText value="#{item.utilidad}"/>
                                     </p:column>
                                 </p:dataTable>
-                                <p:commandLink title="Descargue como documento PDF." styleClass="p-mr-2 p-mb-2" 
-                                               onstart="PF('espere').show();"
-                                               onsuccess="PF('espere').hide();"
-                                               disabled="#{reportes1Ctr.existencias.size()==0}">
-                                    <p:graphicImage library="imgs" name="pdf.png" width="37px" height="32px"/>
-                                    <p:dataExporter type="pdf" target="existencias"
-                                                    fileName="existencias de productos"
-                                                    exporter="#{reportes1Ctr.pdfExporterExistencias}"/>
-                                </p:commandLink>
                             </h:panelGrid>
                         </p:tab>
                         <p:tab title="Gráficos">
@@ -434,8 +437,8 @@
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
-                                                    <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="false"
-                                                                     converter="omnifaces.SelectItemsConverter">
+                                                    <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="false" autoWidth="true"
+                                                                     converter="omnifaces.SelectItemsConverter" immediate="true">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
@@ -454,12 +457,12 @@
                                                                      type="submit" actionListener="#{graficoCtr.onBlour}"
                                                                      value="Generar Gráfico"
                                                                      styleClass="ui-button-raised ui-button-primary " 
-                                                                     update="gini0 gfin0 in0 graf0"
+                                                                     update="gini0 gfin0 p0 in0 graf0"
                                                                      onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
                                                                      styleClass="ui-button-raised ui-button-secondary "
-                                                                     update="gini0 gfin0 in0 graf0"
+                                                                     update="gini0 gfin0 p0 in0 graf0"
                                                                      actionListener="#{graficoCtr.limpiarGrafico0()}"/>
                                                 </h:panelGrid>
                                             </h:panelGrid>
@@ -491,7 +494,7 @@
                                                     </p:datePicker>
                                                     <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p1" value="#{graficoCtr.invSel1}" filter="false"
-                                                                     converter="omnifaces.SelectItemsConverter" immediate="true">
+                                                                     converter="omnifaces.SelectItemsConverter" immediate="true" autoWidth="ture">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
@@ -510,12 +513,12 @@
                                                                      value="Generar Gráfico"
                                                                      type="submit" actionListener="#{graficoCtr.onBlour}"
                                                                      styleClass="ui-button-raised ui-button-primary " 
-                                                                     update="gini1 gfin1 in1 graf1"
+                                                                     update="gini1 gfin1 in1 graf1 p1"
                                                                      onstart="PF('generando').show()" oncomplete="PF('generando').hide()"/>
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
                                                                      styleClass="ui-button-raised ui-button-secondary "
-                                                                     update="gini1 gfin1 in1 graf1"
+                                                                     update="gini1 gfin1 in1  p1"
                                                                      actionListener="#{reportes3Ctr.limpiarGrafico1()}"/>
                                                 </h:panelGrid>
                                             </h:panelGrid>

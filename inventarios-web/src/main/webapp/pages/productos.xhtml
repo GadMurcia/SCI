@@ -39,7 +39,9 @@
 
                     <p:ajax event="rowSelect"/>
 
-                    <p:column headerText="PRODUCTO" filterBy="#{product.producto}" style="color: #ece3a5">
+                    <p:column headerText="PRODUCTO" filterBy="#{product.producto}"
+                              filterStyle="width: 50%; margin-left: 0"
+                              style="color: #ece3a5">
                         <h:outputText value="#{product.producto}"/>
                     </p:column>
 
