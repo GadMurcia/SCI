@@ -434,8 +434,8 @@
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
-                                                    <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="true"
-                                                                     converter="omnifaces.SelectItemsConverter" immediate="false">
+                                                    <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="false"
+                                                                     converter="omnifaces.SelectItemsConverter">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
