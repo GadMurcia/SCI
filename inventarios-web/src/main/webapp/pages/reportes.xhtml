@@ -13,7 +13,8 @@
             <ui:define name="content">                
                 <h:form id="form" >
                     <h:outputScript library="js" name="local-es.js"/>
-                    <p:tabView id="tw" scrollable="false" dynamic="true" effect="fade" orientation="left">
+                    <p:tabView id="tw" dynamic="true" orientation="top" 
+                               scrollable="false" touchable="false">
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"
                                 onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
                         <p:tab title="Ventas"  >
@@ -21,11 +22,15 @@
                                 <h2 align="center" style="margin: auto; color: #ece3a5"  >Reporte de Ventas</h2>
                                 <h:panelGrid columns="2" style="margin: auto" >
                                     <p:outputLabel   value="Desde la Fecha" for="ini" />
-                                    <p:datePicker  style="margin-left:15%" id="ini" value="#{reportes2Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:datePicker  style="margin-left:15%" id="ini" value="#{reportes2Ctr.inicio}" 
+                                                   locale="es" pattern="dd/MMMM/yyyy" 
+                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}" />
                                     </p:datePicker>
                                     <p:outputLabel value="Hasta la Fecha" for="fin"/>
-                                    <p:datePicker style="margin-left: 15%" id="fin" value="#{reportes2Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:datePicker style="margin-left: 15%" id="fin" value="#{reportes2Ctr.fin}" 
+                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:column/>
@@ -179,11 +184,15 @@
                                 <h2 align="center" style="color: #ece3a5; margin: 0 auto">Reporte de Compras</h2>
                                 <h:panelGrid columns="2" style="margin: auto">
                                     <p:outputLabel value="Desde la Fecha" for="cini"/>
-                                    <p:datePicker id="cini" style="margin-left:15%" value="#{reportes3Ctr.inicio}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:datePicker id="cini" style="margin-left:15%" value="#{reportes3Ctr.inicio}"
+                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                         <p:ajax event="dateSelect" listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:outputLabel value="Hasta la Fecha" for="cfin"/>
-                                    <p:datePicker id="cfin" style="margin-left:15%" value="#{reportes3Ctr.fin}" locale="es" pattern="dd/MMMM/yyyy">
+                                    <p:datePicker id="cfin" style="margin-left:15%" value="#{reportes3Ctr.fin}" 
+                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                         <p:ajax event="dateSelect"  listener="#{reportes3Ctr.onBlour}"/>
                                     </p:datePicker>
                                     <p:column/>
@@ -221,7 +230,7 @@
                                             <p:dataTable rendered="false" id="dcmc"></p:dataTable>
                                         </h:panelGrid>
                                     </f:facet>
-                                    <p:tabView orientation="right">
+                                    <p:tabView orientation="top" scrollable="false" touchable="false">
                                         <p:tab title="PRODUCTOS"    >
                                             <p:dataTable value="#{reportes3Ctr.detalle}" var="item" rows="10"
                                                          paginator="true" paginatorPosition="top"
@@ -355,7 +364,7 @@
                             </h:panelGrid>
                         </p:tab>
                         <p:tab title="Gráficos">
-                            <p:tabView id="qw" dynamic="true" effect="fade">
+                            <p:tabView id="qw" dynamic="true" orientation="top" scrollable="false" touchable="false">
                                 <p:ajax event="tabChange" 
                                         onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
                                 <p:tab title="VENTAS TOTALES">
@@ -367,17 +376,19 @@
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Desde la Fecha" for="gini" style="color: #ffffff"/>
-                                                    <p:datePicker id="gini" value="#{graficoCtr.ginicio}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gini" value="#{graficoCtr.ginicio}"
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha" for="gfin" style="color: #ffffff"/>
-                                                    <p:datePicker id="gfin" value="#{graficoCtr.gfin}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gfin" value="#{graficoCtr.gfin}"
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="in" value="Visualizar" style=" color: #ffffff"/>
-                                                    <p:selectOneMenu id="in" value="#{graficoCtr.sel}">
+                                                    <p:selectOneMenu id="in" value="#{graficoCtr.sel}" filter="false">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
                                                         <f:selectItem itemValue="3" itemLabel="Por Año"/>
@@ -411,18 +422,20 @@
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Desde la Fecha:" for="gini0"/>
-                                                    <p:datePicker id="gini0" value="#{graficoCtr.ginicio0}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gini0" value="#{graficoCtr.ginicio0}" 
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha:" for="gfin0"/>
-                                                    <p:datePicker id="gfin0" value="#{graficoCtr.gfin0}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gfin0" value="#{graficoCtr.gfin0}" 
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="true"
-                                                                     converter="omnifaces.SelectItemsConverter" immediate="true">
+                                                                     converter="omnifaces.SelectItemsConverter" immediate="false">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
@@ -465,17 +478,19 @@
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Desde la Fecha:" for="gini1"/>
-                                                    <p:datePicker id="gini1" value="#{graficoCtr.ginicio1}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gini1" value="#{graficoCtr.ginicio1}"
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel value="Hasta la Fecha:" for="gfin1"/>
-                                                    <p:datePicker id="gfin1" value="#{graficoCtr.gfin1}" locale="es" 
-                                                                  pattern="dd/MMMM/yyyy">
+                                                    <p:datePicker id="gfin1" value="#{graficoCtr.gfin1}"
+                                                                  locale="es" pattern="dd/MMMM/yyyy" 
+                                                                  monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
                                                     <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
-                                                    <p:selectOneMenu id="p1" value="#{graficoCtr.invSel1}" filter="true"
+                                                    <p:selectOneMenu id="p1" value="#{graficoCtr.invSel1}" filter="false"
                                                                      converter="omnifaces.SelectItemsConverter" immediate="true">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                                                         <f:selectItems value="#{reportes3Ctr.invs}" var="i" 

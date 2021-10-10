@@ -290,7 +290,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
 
     public List<Inventario> getInvs() {
         invs = ifl.findAll();
-        Collections.sort(invs, (Inventario i0, Inventario i1) -> i0.getProducto().compareToIgnoreCase(i1.getProducto()));
+        Collections.sort(invs, (Inventario i0, Inventario i1) -> i0.getProducto().toLowerCase().compareToIgnoreCase(i1.getProducto().toLowerCase()));
         return invs;
     }
 
