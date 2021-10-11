@@ -244,6 +244,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
                     pdf = new Document(PageSize.LETTER);
                     writer = PdfWriter.getInstance(pdf, out);
                     pdf.open();
+                    t.addCell(getTextCell("\n\nGenerado en " + getDateTimeToString12H(new Date()) + " /S.C.I./\n", 5, 1, false, false, 9, Font.NORMAL, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
                     if (!facturas.isEmpty()) {
                         t.addCell(getTextCell("\n\n\n LISTADO DE FACTURAS \n\n\n", 5, 1, false, false, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     }
