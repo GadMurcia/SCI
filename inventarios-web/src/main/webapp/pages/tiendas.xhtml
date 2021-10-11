@@ -43,23 +43,29 @@
                             <h:outputText value="#{tiendaCtr.getNombreususario(emp.propietario)}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <h:selectOneMenu value="#{emp.propietario}" style="width:100%">
+                            <p:selectOneMenu value="#{emp.propietario}" style="width:100%"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="No Seleccionado" itemValue="#{null}" noSelectionOption="true"/>
                                 <f:selectItems value="#{tiendaCtr.dueños}" var="ds"
                                                itemLabel="#{tiendaCtr.getNombreususario(ds)}" itemValue="#{ds}"/>
-                            </h:selectOneMenu>
+                            </p:selectOneMenu>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Price">
+                <p:column headerText="Matriz">
                     <p:cellEditor>
                         <f:facet name="output">
-                            <h:outputText value="#{product.price}">
-                                <f:convertNumber type="currency" currencySymbol="$"/>
-                            </h:outputText>
+                            <h:outputText value="#{emp.matriz.nombre}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputNumber value="#{product.price}" style="width:100%" label="Price" symbol="$"/>
+                            <p:selectOneMenu value="#{emp.matriz}" style="width:100%"
+                                             converter="omnifaces.SelectItemsConverter">
+                                <f:selectItem itemLabel="Ninguna" itemValue="#{null}"
+                                              noSelectionOption="#{!tiendaCtr.admin}"/>
+                                <f:selectItems value="#{tiendaCtr.matrices}" var="ts"
+                                               itemLabel="#{ts.nombre}" itemValue="#{ts}"/>
+                            </p:selectOneMenu>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -83,7 +89,7 @@
                                matrices="#{tiendaCtr.matrices}" 
                                usuarios="#{tiendaCtr.dueños}" 
                                editable="#{tiendaCtr.nueva}"
-                               isMatriz="#{tiendaCtr.admin}"/>
+                               isMatriz="#{!tiendaCtr.admin}"/>
                     <h:panelGrid columns="1" style="margin: 0 auto">
                         <p:commandButton  icon="pi pi-save" 
                                           styleClass="ui-button-outlined ui-button-primary"
