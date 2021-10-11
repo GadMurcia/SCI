@@ -1,78 +1,99 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../WEB-INF/plantillas/pl1.xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../WEB-INF/plantillas/pl2.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:t="http://xmlns.jcp.org/jsf/composite/components">
 
     <ui:define name="content">
+        <h:form id="form">
+            <p:dataTable id="empresas" var="emp" value="#{tiendaCtr.empresas}" editable="true" editMode="cell"
+                         widgetVar="emps" editInitEvent="dblclick" style="margin-bottom:20px">
 
+                <p:ajax event="cellEdit" listener="#{tiendaCtr.onCellEdit}" update="form0:msgs"/>
 
-
-        <h:form>
-
-
-
-            <p:dataTable style="background-color: #01011a"
-                         editable="true" reflow="true" size="small" 
-                         id="tienda" var="item" 
-                         value="#{dtTiendaCtr.empresas}" 
-                         rowKey="#{item.idMisc}"
-                         selection="#{dtTiendaCtr.nmisc}" 
-                         selectionMode="single"
-                         rows="1" paginatorPosition="top" paginatorAlwaysVisible="false">
-                <p:ajax event="rowEdit" listener="#{dtTiendaCtr.onRowEdit}" update=":form0:msgs"/>
-                <p:ajax event="rowEditCancel" listener="#{dtTiendaCtr.onRowCancel}" update=":form0:msgs"/>
-                <p:column headerText="Nombre" style="color: #ece3a5">
+                <p:column headerText="Nombre">
                     <p:cellEditor>
                         <f:facet name="output">
-                            <h:outputText value="#{item.nombre}" style="color: #ffffff"/>
+                            <h:outputText value="#{emp.nombre}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputText  value="#{item.nombre}" style="width:100%"/>
+                            <p:inputText id="modelInput3" value="#{emp.nombre}" style="width:100%"/>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column headerText="Dirección" style="color: #ece3a5">
-                    <p:cellEditor>
-                        <f:facet name="output" >
-                            <h:outputText value="#{item.direccion}" style="color:#ffffff"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText  value="#{item.direccion}" style="width:100%" maxlength="255"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-                <p:column headerText="Teléfono" style="color: #ece3a5">
+
+                <p:column headerText="Dirección">
                     <p:cellEditor>
                         <f:facet name="output">
-                            <h:outputText value="#{item.telefonos}" style="color: #ffffff"/>
+                            <h:outputText value="#{emp.direccion}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputMask  value="#{item.telefonos}" style="width:100%" maxlength="9" mask="9999-9999"/>
+                            <p:inputText value="#{emp.direccion}" style="width:100%" label="Name"/>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column headerText="Propietario" style="color: #ece3a5">
+
+                <p:column headerText="Propietario">
                     <p:cellEditor>
                         <f:facet name="output">
-                            <h:outputText value="#{item.propietario.nombres} #{item.propietario.apellidos}" style="color: #ffffff" />
+                            <h:outputText value="#{tiendaCtr.getNombreususario(emp.propietario)}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:selectOneMenu id="propietario" value="#{item.propietario}" required="true" requiredMessage="The Propietario field is required." converter= "omnifaces.SelectItemsConverter">
-                                <!-- TODO: update below reference to list of available items-->
-                                <f:selectItems value="#{dtTiendaCtr.usuarios}" var="u" itemLabel="#{u.nombres} #{u.apellidos} " itemValue="#{u}"/>
-                            </p:selectOneMenu>
+                            <h:selectOneMenu value="#{emp.propietario}" style="width:100%">
+                                <f:selectItems value="#{tiendaCtr.dueños}" var="ds"
+                                               itemLabel="#{tiendaCtr.getNombreususario(ds)}" itemValue="#{ds}"/>
+                            </h:selectOneMenu>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-                <p:column style="width:6rem">
-                    <p:rowEditor editTitle="Editar" cancelTitle="Cancelar" saveTitle="Guardar"/>
+
+                <p:column headerText="Price">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.price}">
+                                <f:convertNumber type="currency" currencySymbol="$"/>
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputNumber value="#{product.price}" style="width:100%" label="Price" symbol="$"/>
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
             </p:dataTable>
-
+            <h:panelGrid columns="1" style="margin: 0 auto">
+                <p:commandButton  icon="pi pi-save" 
+                                  styleClass="ui-button-outlined ui-button-primary"
+                                  value="+" update="h0"
+                                  actionListener="#{tiendaCtr.nuevaEmpresa()}"
+                                  oncomplete="PF('ntiendaDg').show();"/>
+            </h:panelGrid>
         </h:form>
+
+        <p:dialog 
+            header="Nueva Tienda" widgetVar="ntiendaDg" 
+            modal="true" showEffect="fade" hideEffect="fade" 
+            resizable="false" closeOnEscape="true" responsive="true">
+            <h:form id="h0"  style="margin: auto" >
+                <h:panelGrid columns="1" >
+                    <t:tiendas empesa="#{tiendaCtr.nmisc}" 
+                               matrices="#{tiendaCtr.matrices}" 
+                               usuarios="#{tiendaCtr.dueños}" 
+                               editable="#{tiendaCtr.nueva}"
+                               isMatriz="#{tiendaCtr.admin}"/>
+                    <h:panelGrid columns="1" style="margin: 0 auto">
+                        <p:commandButton  icon="pi pi-save" 
+                                          styleClass="ui-button-outlined ui-button-primary"
+                                          value="Guardar" update="form"
+                                          actionListener="#{tiendaCtr.guardar()}"
+                                          oncomplete="PF('ntiendaDg').hide();"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>

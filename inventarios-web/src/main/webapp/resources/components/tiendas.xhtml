@@ -1,13 +1,72 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <!-- INTERFACE -->
     <cc:interface>
+        <cc:attribute name="empesa" type="net.delsas.inventarios.entities.Misc" required="true"/>
+        <cc:attribute name="editable" type="java.lang.Boolean" default="false"/>
+        <cc:attribute name="isMatriz" type="java.lang.Boolean" default="false"/>
+        <cc:attribute name="usuarios" type="java.util.List" required="true"/>
+        <cc:attribute name="matrices" type="java.util.List" required="true"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
+        <h:panelGrid columns="2" rendered="#{cc.attrs.editable}">
+            <p:outputLabel value="Nombre:" for="nombre" style="color: #ffffff"/>
+            <p:inputText id="nombre" value="#{cc.attrs.empesa.nombre}" title="Nombre" required="true" 
+                         requiredMessage="The Nombre field is required." immediate="true">
+                <f:validateLength minimum="6" maximum="150"/>
+                <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+            </p:inputText>
+            <p:outputLabel value="Direccion:" for="direccion" style="color: #ffffff"/>
+            <p:inputText id="direccion" value="#{cc.attrs.empesa.direccion}" 
+                         title="Direccion" immediate="true" required="true">
+                <f:validateLength minimum="6" maximum="255"/>
+                <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+            </p:inputText>
+            <p:outputLabel value="Teléfonos:" for="telefonos" style="color: #ffffff"/>
+            <p:inputMask id="telefonos" value="#{cc.attrs.empesa.telefonos}" mask="9999-9999"
+                         title="Telefonos" immediate="true" required="true">
+                <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+            </p:inputMask>
+            <p:outputLabel value="Propietario:" for="propietario" style="color: #ffffff"/>
+            <p:selectOneMenu id="propietario" value="#{cc.attrs.empesa.propietario}" 
+                             required="true" requiredMessage="The Propietario field is required." 
+                             immediate="true" converter="omnifaces.SelectItemsConverter">
+                <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
+                <f:selectItem itemLabel="No Seleccionado" itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems value="#{cc.attrs.usuarios}" var="us"
+                               itemLabel="#{auxiliarCtr.getNombreususario(us)}" itemValue="#{us}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="Matriz:" for="matriz" style="color: #ffffff"/>
+            <p:selectOneMenu id="matriz" value="#{cc.attrs.empesa.matriz}" immediate="true"
+                             converter="omnifaces.SelectItemsConverter" required="true">
+                <p:ajax event="itemSelect" listener="#{auxiliarCtr.onBlour}"/>
+                <f:selectItem itemLabel="Ninguna" itemValue="#{null}"
+                              noSelectionOption="#{cc.attrs.isMatriz}"/>
+                <f:selectItems value="#{cc.attrs.matrices}" var="mat"
+                               itemLabel="#{mat.nombre}" itemValue="#{mat}"/>
+            </p:selectOneMenu>
+        </h:panelGrid>
+
+        <h:panelGrid columns="2" rendered="#{!cc.attrs.editable}" >
+            <h:outputText value="Nombre:" style="color: #ffffff"/>
+            <h:outputText value="#{cc.attrs.empesa.nombre}" title="Nombre"/>
+            <h:outputText value="Direccion:" style="color: #ffffff"/>
+            <h:outputText value="#{cc.attrs.empesa.direccion}" title="Direccion"/>
+            <h:outputText value="Telefonos:" style="color: #ffffff"/>
+            <h:outputText value="#{cc.attrs.empesa.telefonos}" title="Telefonos"/>
+            <h:outputText value="Propietario:" style="color: #ffffff"/>
+            <h:outputText value="#{auxiliarCtr.getNombreususario(cc.attrs.empesa.propietario)}" 
+                          title="Propietario" style="color: #ffffff"/>
+            <h:outputText value="Matriz:" style="color: #ffffff"/>
+            <h:outputText value="#{cc.attrs.empesa.matriz.nombre}" title="Matriz"/>
+        </h:panelGrid>
     </cc:implementation>
 </html>

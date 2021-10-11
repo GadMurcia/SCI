@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="default.css" library="css"/>
+        <h:outputStylesheet name="cssLayout.css" library="css"/>
+        <title>#{homeCtr.nombreEmpresa} - #{homeCtr.nombreUs}</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top">
+            <ui:insert name="top">
+                <h:form id="form0"  style="margin: auto">
+                    <p:growl id="msgs" showDetail="true" life="15000"/>
+                    <p:menubar>
+                        <p:submenu label="Operaciones" icon="pi pi-fw pi-th-large">
+                            <p:submenu label="Nueva" icon="pi pi-fw pi-bell">
+                                <p:menuitem value="Compra" icon="pi pi-fw pi-shopping-cart" url="compras.app" 
+                                            disabled="#{!homeCtr.verMenu}"/>
+                                <p:menuitem value="Venta" icon="pi pi-fw pi-money-bill" url="home.app"/>
+                            </p:submenu>
+                            <p:menuitem value="Catálogo de productos" icon="pi pi-fw pi-file" url="productos.app" disabled="#{!homeCtr.verMenu}"/>
+                            <p:divider />
+                            <p:menuitem value="Reportes" icon="pi pi-fw pi-print" url="reportes.app" disabled="#{!homeCtr.verMenu}"/>
+                        </p:submenu>
+
+                        <p:submenu label="Personal" icon="pi pi-fw pi-users">
+                            <p:menuitem value="Tiendas" icon="pi pi-fw pi-home" url="tiendas.app" disabled="#{!homeCtr.verMenu}"/>
+                            <p:menuitem value="Usuarios" icon="pi pi-fw pi-user" url="usuarios.app" disabled="#{!homeCtr.verMenu}"/>
+                        </p:submenu>
+
+                        <f:facet name="options">
+                            <p:avatar id="av" icon="pi pi-user" styleClass="p-mr-2" shape="circle"
+                                      size="large" label="#{homeCtr.nombreUs}" dynamicColor="true"/>
+                            <p:menu overlay="true" trigger="av" my="left top" at="left bottom">
+                                <p:submenu label="Cuenta">
+                                    <p:menuitem value="Cambiar Contraseña" update="h"
+                                                icon="pi pi-lock"
+                                                onclick="PF('contraDialog').show();"/>
+                                    <p:menuitem value="Caja" update="h1"
+                                                icon="pi pi-inbox"
+                                                oncomplete="PF('cajaDialog').show();"/>
+                                </p:submenu>
+                                <p:submenu label="Opciones">
+                                    <p:menuitem value="Cerrar sesión" 
+                                                icon="pi pi-sign-out"
+                                                actionListener="#{homeCtr.CerrarSesion()}"/>
+                                </p:submenu>
+                            </p:menu>
+                        </f:facet>
+                    </p:menubar>                    
+                </h:form>
+
+                <p:dialog   header="Cambio de Contraseña" widgetVar="contraDialog" 
+                            modal="true" showEffect="fade" hideEffect="fade" 
+                            resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h" style="text-align:center;">
+                        <h:panelGrid columns="1">
+                            <h:panelGrid columns="2" style="margin: 0 auto">
+                                <p:outputLabel for="toggle" styleClass="p-col-fixed" 
+                                               style="width:100px; color: #ffffff" value="Contraseña actual:" />
+                                <p:password id="toggle" value="#{homeCtr.p0}" 
+                                            toggleMask="true" redisplay="true"/>
+
+                                <p:outputLabel for="pwd1" styleClass="p-col-fixed" 
+                                               style="width:100px; color: #ffffff" value="Contraseña nueva:"/>
+                                <p:password id="pwd1" value="#{homeCtr.p1}" 
+                                            match="pwd2" label="Password 1" required="true" toggleMask="true">
+                                    <f:validateLength minimum="6"/>
+                                </p:password>
+
+                                <p:outputLabel for="pwd2" styleClass="p-col-fixed" 
+                                               style="width:100px; color: #ffffff" value="Confirme la contraseña:"/>
+                                <p:password id="pwd2" value="#{homeCtr.p1}" 
+                                            label="Password 2" required="true" toggleMask="true"/>
+
+                            </h:panelGrid>
+                            <h:panelGrid style="margin: 5% auto">
+                                <p:commandButton value="Actualizar" update="h"
+                                                 actionListener="#{homeCtr.cambioPass()}" styleClass="ui-button-outlined ui-button-warning" style="height: 50px; width: 130px;" icon="pi pi-fw pi-check-circle"/>
+                            </h:panelGrid>
+                            <p:messages id="messages" showDetail="true" 
+                                        skipDetailIfEqualsSummary="true">
+                                <p:autoUpdate/>
+                            </p:messages>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Opciones de caja" widgetVar="cajaDialog" 
+
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="false">
+                    <h:form id="h1"  style="margin: auto">
+                        <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}">
+                            <p:card style=" background-color: #01011a">
+                                <f:facet name="title">
+                                    Detalle de caja
+                                </f:facet>
+
+                                <h:panelGrid columns="2" style="background-color: #1b162a">
+                                    <p:outputLabel value="Ticket de caja:" style="color: #ffffff"/>
+                                    <p:outputLabel value="#{cajaCtr.giro.idGiroDeCaja}" title="IdGiroDeCaja" style="color: #ece3a5"/>
+
+                                    <p:outputLabel value="Saldo inicial:" style="color: #ffffff" />
+                                    <p:outputLabel value="#{cajaCtr.giro.cajaInicial}" title="CajaInicial" style="color: #ece3a5"/>
+
+                                    <p:outputLabel value="Ventas:"  style="color: #ffffff"/>
+                                    <p:outputLabel value="#{cajaCtr.ventas}" title="Excedentes" style="color: #ece3a5"/>
+
+                                    <p:outputLabel value="Sumatoria de Retiros:"  style="color: #ffffff"/>
+                                    <p:outputLabel value="#{cajaCtr.giro.retiros}" title="Retiros" style="color: #ece3a5"/>
+                                </h:panelGrid>
+                                <f:facet name="footer">
+                                </f:facet>
+                            </p:card>
+                            <p:card style=" background-color: #01011a">
+                                <f:facet name="title">
+                                    Detalle de Retiros
+                                </f:facet>
+                                <p:inputTextarea value="#{cajaCtr.giro.detalleRetiros}" disabled="true"/>
+                                <f:facet name="footer">
+                                    <h:panelGrid columns="1" style="margin: 0 auto">
+                                        <p:commandButton icon="pi pi-money-bill" 
+                                                         styleClass="ui-button-outlined ui-button-warning"
+                                                         value="Hacer un retiro" update="h1 h4" 
+                                                         title="Registrar un nuevo retiro de efectivo de la caja"
+                                                         onclick="PF('retiroDialog').show();"/>  
+                                    </h:panelGrid>
+                                </f:facet>
+                            </p:card>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" style="margin: 0 auto">
+                            <p:commandButton icon="pi pi-money-bill" 
+                                             styleClass="ui-button-outlined ui-button-info"
+                                             value="Abrir Caja" update="h1 h2" 
+                                             rendered="#{!cajaCtr.iniciada}"
+                                             onclick="PF('caja2Dialog').show();"/>
+                            <p:commandButton 
+                                icon="pi pi-wallet" 
+                                styleClass="ui-button-outlined ui-button-info"
+                                value="Cerrar Caja" update="h1 h3"
+                                rendered="#{cajaCtr.iniciada}"
+                                onclick="PF('caja3Dialog').show();"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Apertura de Caja" widgetVar="caja2Dialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h2"  style="margin: auto">
+                        <h:panelGrid columns="1">
+
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Iniciar Caja Con:" style="color: #ffffff "/>
+                                <p:inputNumber value="#{cajaCtr.giro.cajaInicial}" 
+                                               title="Dinero inicial en caja" 
+                                               required="true"
+                                               requiredMessage="Debe ingresar con cuanto dinero inicia sus labores." 
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton  icon="pi pi-save" 
+                                                  styleClass="ui-button-outlined ui-button-info"
+                                                  value="Guardar" update="h1" 
+                                                  actionListener="#{cajaCtr.abrirGiro()}"
+                                                  oncomplete="PF('caja2Dialog').hide();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Cierre de Caja" widgetVar="caja3Dialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h3"  style="margin: auto">
+                        <h:panelGrid columns="1">
+
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Dinero que quedó en caja:" style="color: #ffffff"/>
+                                <p:inputNumber value="#{cajaCtr.giro.cierre}" 
+                                               title="Dinero final en caja" 
+                                               required="true"
+                                               requiredMessage="Debe ingresar con cuanto dinero termina sus labores." 
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+                            </h:panelGrid>
+                            <br></br>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton 
+                                    icon="pi pi-save" 
+                                    styleClass="ui-button-outlined ui-button-primary"
+                                    value="Guardar" update="h1"
+                                    actionListener="#{cajaCtr.cerrarCaja()}"
+                                    oncomplete="PF('caja3Dialog').hide();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog 
+                    header="Retiro de efectivo" widgetVar="retiroDialog" 
+                    modal="true" showEffect="fade" hideEffect="fade" 
+                    resizable="false" closeOnEscape="true" responsive="true">
+                    <h:form id="h4"  style="margin: auto" >
+                        <h:panelGrid columns="1" >
+
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Cantidad a retirar:" style="color: #ffffff"/>
+                                <p:inputNumber value="#{cajaCtr.valor}"
+                                               symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
+                                    <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
+                                </p:inputNumber>
+
+                                <p:outputLabel value="Detalle:" style="color: #ffffff"/>
+                                <p:inputTextarea value="#{cajaCtr.descr}" required="true"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                <p:commandButton  icon="pi pi-save" 
+                                                  styleClass="ui-button-outlined ui-button-primary"
+                                                  value="Guardar" update="h1"
+                                                  actionListener="#{cajaCtr.registrarRetiro()}"
+                                                  oncomplete="PF('retiroDialog').hide();"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:insert>
+        </div>
+        <div>
+            <div id="left">
+                <ui:insert name="left">
+                    
+                </ui:insert>
+            </div>
+            <div id="content" class="center_content">
+                <ui:insert name="content">Content</ui:insert>
+            </div>
+        </div>
+    </h:body>
+
+</html>

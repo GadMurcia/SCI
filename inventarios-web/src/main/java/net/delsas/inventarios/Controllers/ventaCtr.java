@@ -21,6 +21,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
+import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.beans.VentasFacadeLocal;
@@ -43,7 +45,7 @@ import org.primefaces.event.UnselectEvent;
  */
 @ViewScoped
 @Named
-public class ventaCtr extends auxiliarCtr implements Serializable{
+public class ventaCtr extends auxiliarCtr implements Serializable {
 
     private Optional<Usuario> user;
     private Inventario invSel;
@@ -63,6 +65,10 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
     private MiscFacadeLocal mfl;
     @EJB
     private VentasFacadeLocal vfl;
+    @EJB
+    private DetalleCompraFacadeLocal dcfl;
+    @EJB
+    private DetalleVentasFacadeLocal dvfl;
 
     @PostConstruct
     public void init() {
@@ -147,10 +153,10 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
     }
 
     public void onItemSelect(SelectEvent<Inventario> event) {
-            invSel = event.getObject();
-            nuevoDetalleV.setInventario(invSel);
-            nuevoDetalleV.getDetalleVentasPK().setProducto(invSel.getIdInventario());
-            nuevoDetalleV.setPrecioUnitario(invSel.getPrecioUnitario());
+        invSel = event.getObject();
+        nuevoDetalleV.setInventario(invSel);
+        nuevoDetalleV.getDetalleVentasPK().setProducto(invSel.getIdInventario());
+        nuevoDetalleV.setPrecioUnitario(invSel.getPrecioUnitario());
     }
 
     public Inventario getInvSel() {
@@ -232,12 +238,12 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
             //no ha establecido la cantidad
             ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "No ha ingresado una cantidad válida",
                     "Antes de continuar debe indicar una cantidad de producto que se agregarán al inventario.");
-        } else if (disponibilidad(nuevoDetalleV.getInventario()) < nuevoDetalleV.getCantidad()) {
+        } else if (disponibilidad(nuevoDetalleV.getInventario(), dcfl, dvfl)< nuevoDetalleV.getCantidad()) {
             //no hay disponiblidad del producto
             ms = new FacesMessage(FacesMessage.SEVERITY_WARN, "La venta no puede continuar",
                     "Usted intenta vender " + nuevoDetalleV.getCantidad() + " unidades del producto \""
                     + nuevoDetalleV.getInventario().getProducto() + "\"; pero esa cantidad excede el inventario "
-                    + "actual que es de " + disponibilidad(nuevoDetalleV.getInventario()) + " unidades.");
+                    + "actual que es de " + disponibilidad(nuevoDetalleV.getInventario(), dcfl, dvfl) + " unidades.");
         } else if (!nuevaVenta.getDetalleVentasList().stream().filter(dc -> dc.getInventario().equals(nuevoDetalleV.getInventario()))
                 .collect(Collectors.toList()).isEmpty()) {
             //el producto ya se ha agregado a la venta
@@ -291,7 +297,7 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
         FacesMessage ms;
         List<Inventario> noHayExistencias = new ArrayList<>();//agregar ultima validación para las existencias en las ventas
         nuevaVenta.getDetalleVentasList().stream().filter(d -> {
-            return (disponibilidad(ifl.find(d.getInventario().getIdInventario()))) < d.getCantidad();
+            return (disponibilidad(ifl.find(d.getInventario().getIdInventario()), dcfl, dvfl)) < d.getCantidad();
         }).forEach(d -> noHayExistencias.add(d.getInventario()));
         if (!noHayExistencias.isEmpty()) {
             String nhe = "";
@@ -313,5 +319,9 @@ public class ventaCtr extends auxiliarCtr implements Serializable{
         }
         FacesContext.getCurrentInstance().addMessage("form0:msgs", ms);
         PrimeFaces.current().ajax().update("form0:msgs");
+    }
+    
+    public double disp(Inventario i){
+        return disponibilidad(i, dcfl, dvfl);
     }
 }

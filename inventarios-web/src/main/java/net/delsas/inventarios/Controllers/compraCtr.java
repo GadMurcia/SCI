@@ -23,6 +23,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import net.delsas.inventarios.beans.ComprasFacadeLocal;
+import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
+import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.entities.Compras;
@@ -65,6 +67,10 @@ public class compraCtr extends auxiliarCtr implements Serializable {
     private InventarioFacadeLocal ifl;
     @EJB
     private MiscFacadeLocal mfl;
+    @EJB
+    private DetalleCompraFacadeLocal dcfl;
+    @EJB
+    private DetalleVentasFacadeLocal dvfl;
 
     @PostConstruct
     public void init() {
@@ -331,6 +337,10 @@ public class compraCtr extends auxiliarCtr implements Serializable {
     public void quitarFactura() {
         nCompra.setFactura(null);
         nCompra.setExtencion("");
+    }
+    
+    public double disp(Inventario i){
+        return disponibilidad(i, dcfl, dvfl);
     }
 
 }

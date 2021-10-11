@@ -19,14 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Named;
 import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
-import net.delsas.inventarios.beans.InventarioFacadeLocal;
 import net.delsas.inventarios.entities.Inventario;
 import net.delsas.inventarios.entities.Usuario;
 import org.apache.commons.codec.binary.Base64;
@@ -44,11 +42,6 @@ import org.primefaces.util.Constants;
 @Named
 public class auxiliarCtr implements Serializable {
 
-    @EJB
-    private DetalleCompraFacadeLocal dcfl;
-    @EJB
-    private DetalleVentasFacadeLocal dvfl;
-
     public void onBlour(AjaxBehaviorEvent e) {
     }
 
@@ -58,7 +51,7 @@ public class auxiliarCtr implements Serializable {
         System.out.println("R: " + e.getRowIndex());
     }
 
-    public double disponibilidad(Inventario i) {
+    public double disponibilidad(Inventario i, DetalleCompraFacadeLocal dcfl, DetalleVentasFacadeLocal dvfl) {
         if (i != null) {
             return new Existencias(i, dcfl, dvfl).getExistencias();
         }
@@ -165,7 +158,7 @@ public class auxiliarCtr implements Serializable {
             uno = new Date(f.getTime());
         }
         System.out.println(uno + " **** " + dos);
-    }   
+    }
 
     public Date suma1Dia(Date r0) {
         Calendar c = Calendar.getInstance();
@@ -190,4 +183,3 @@ public class auxiliarCtr implements Serializable {
         return c.getTime();
     }
 }
- 

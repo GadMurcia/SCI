@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -22,30 +23,30 @@ import net.delsas.inventarios.beans.MiscFacadeLocal;
 import net.delsas.inventarios.beans.UsuarioFacadeLocal;
 import net.delsas.inventarios.entities.Misc;
 import net.delsas.inventarios.entities.Usuario;
+import net.delsas.inventarios.optional.auxiliarCtr;
 import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
 
 /**
  *
  * @author admin
  */
 @ViewScoped
-@Named("dtTiendaCtr")
-public class tiendaCtr implements Serializable {
+@Named
+public class tiendaCtr extends auxiliarCtr implements Serializable {
 
     private Optional<Usuario> us;
     private Misc nmisc;
-    private List<Usuario> usuarios;
-    @EJB
-    private UsuarioFacadeLocal ufl;
+    private List<Misc> empresas;
+    private boolean nueva;
+
     @EJB
     private MiscFacadeLocal mfl;
+    @EJB
+    private UsuarioFacadeLocal ufl;
 
     @PostConstruct
     public void init() {
-        nmisc = new Misc();
-        usuarios = new ArrayList<>();
+        empresas = new ArrayList<>();
         us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         us.ifPresent(u -> {
             if (u.getTipoUsuario().getIdTipoUsuario() > 2) {
@@ -58,36 +59,60 @@ public class tiendaCtr implements Serializable {
                     Logger.getLogger(homeCtr.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                nmisc = Optional.ofNullable((Misc) mfl.find(1)).orElseGet(() -> new Misc());
-                ufl.findAll().stream().filter(t -> t.getTipoUsuario().getIdTipoUsuario().equals(2)).forEachOrdered(usuarios::add);
             }
 
         });
     }
 
-    public void onRowEdit(RowEditEvent<Misc> event) {
-        mfl.edit(event.getObject());
-        FacesMessage msg = new FacesMessage("Tienda editada", event.getObject().getNombre());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+    public List<Misc> getEmpresas() {
+        empresas = mfl.findAll();
+        if (!us.get().getTipoUsuario().getIdTipoUsuario().equals(1)) {
+            empresas.removeAll(empresas.stream().filter(e -> e.getMatriz() == null)
+                    .filter(e -> !e.getPropietario().equals(us.get()))
+                    .collect(Collectors.toList()));
+        }
+        return empresas;
     }
 
-    public void onRowCancel(RowEditEvent<Misc> event) {
-        nmisc = mfl.find(1);
-        FacesMessage msg = new FacesMessage("Se canceló la operación", event.getObject().getNombre());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+    public List<Usuario> getDueños() {
+        return ufl.findAll().stream()
+                .filter(u -> u.getActivo())
+                .filter(u -> u.getTipoUsuario().getIdTipoUsuario().equals(2)
+                || u.getTipoUsuario().getIdTipoUsuario().equals(3))
+                .collect(Collectors.toList());
     }
 
-    public void onSelect(SelectEvent<Misc> e) {
-        System.out.println(e.getObject().toString());
+    public List<Misc> getMatrices() {
+        return getEmpresas().stream()
+                .filter(e -> e.getMatriz() == null)
+                .collect(Collectors.toList());
     }
 
+    public void nuevaEmpresa() {
+        nmisc = new Misc(null, "");
+        nueva = true;
+    }
+
+    @Override
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
 
         if (newValue != null && !newValue.equals(oldValue)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
+            mfl.edit(empresas.get(event.getRowIndex()));
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificaciones realizadas",
+                            "Aterior: " + oldValue + ", Actual:" + newValue));
+        }
+    }
+
+    public void guardar() {
+        if (mfl.findAll().stream().filter(m -> m.getNombre().toLowerCase().equals(nmisc.getNombre().toLowerCase())).collect(Collectors.toList()).isEmpty()) {
+            System.out.println(nmisc);
+        } else {
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage(FacesMessage.SEVERITY_FATAL, "Nombre repetido",
+                            "El nombre de la tienda ingresada debe ser único y ya se ha registrado con anterioridad."));
         }
     }
 
@@ -99,18 +124,12 @@ public class tiendaCtr implements Serializable {
         this.nmisc = nmisc;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public boolean isAdmin() {
+        return !us.isPresent() ? false : us.get().getTipoUsuario().getIdTipoUsuario().equals(1);
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public List<Misc> getEmpresas() {
-        List<Misc> listaMisc = new ArrayList<>();
-        listaMisc.add(nmisc);
-        return listaMisc;
+    public boolean isNueva() {
+        return nueva;
     }
 
 }
