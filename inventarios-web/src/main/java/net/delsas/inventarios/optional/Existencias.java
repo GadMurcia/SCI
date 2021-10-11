@@ -25,7 +25,7 @@ public class Existencias extends auxiliarCtr implements Serializable {
 
     @Id
     private String nombre;
-    private double existencias;
+    private Integer existencias;
     private double costoAVG;
     private double precioAVG;
     private double costoTotal;
@@ -39,8 +39,8 @@ public class Existencias extends auxiliarCtr implements Serializable {
         prod.setDetalleCompraList(dcfl.findByProducto(prod.getIdInventario()));
         prod.setDetalleVentasList(dvfl.findByProducto(prod.getIdInventario()));
         this.nombre = prod.getProducto();
-        this.existencias = redondeo2decimales(prod.getDetalleCompraList().stream().mapToDouble(DetalleCompra::getCantidad).sum()
-                - prod.getDetalleVentasList().stream().mapToDouble(DetalleVentas::getCantidad).sum());
+        this.existencias = prod.getDetalleCompraList().stream().mapToInt(DetalleCompra::getCantidad).sum()
+                - prod.getDetalleVentasList().stream().mapToInt(DetalleVentas::getCantidad).sum();
         this.costoAVG = redondeo4decimales(getCostoAVGGlobal(prod.getIdInventario(), dcfl)); //redondeo4decimales(prod.getDetalleCompraList().stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum() / prod.getDetalleCompraList().stream().mapToInt(DetalleCompra::getCantidad).sum());
         this.costoTotal = redondeo2decimales(this.existencias * this.costoAVG);
         this.precioAVG = redondeo2decimales(prod.getPrecioUnitario().doubleValue());
@@ -48,7 +48,7 @@ public class Existencias extends auxiliarCtr implements Serializable {
         this.utilidad = redondeo2decimales(this.valorTotal - this.costoTotal);
     }
 
-    public Existencias(String nombre, double existencias, double costoAVG, double precioAVG) {
+    public Existencias(String nombre, int existencias, double costoAVG, double precioAVG) {
         this.nombre = nombre;
         this.existencias = existencias;
         this.costoAVG = costoAVG;
@@ -66,11 +66,11 @@ public class Existencias extends auxiliarCtr implements Serializable {
         this.nombre = nombre;
     }
 
-    public double getExistencias() {
+    public Integer getExistencias() {
         return existencias;
     }
 
-    public void setExistencias(double existencias) {
+    public void setExistencias(int existencias) {
         this.existencias = existencias;
     }
 

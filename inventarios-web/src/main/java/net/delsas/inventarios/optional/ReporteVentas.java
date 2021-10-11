@@ -24,7 +24,7 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
     @Id
     private int id;
     private Inventario inv;
-    private double cantidad;
+    private Integer cantidad;
     private double precioU;
     private double costoU;
     private double subTotal;
@@ -56,7 +56,7 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
         this.utilidad = redondeo3decimales(subTotal - (cantidad * costoU));
     }
 
-    public ReporteVentas(int id, Inventario inv, double cantidad, double precioU, double costoU, double subTotal, double utilidad) {
+    public ReporteVentas(int id, Inventario inv, Integer cantidad, double precioU, double costoU, double subTotal, double utilidad) {
         this.id = id;
         this.inv = inv;
         this.cantidad = cantidad;
@@ -94,11 +94,11 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
         this.inv = inv;
     }
 
-    public double getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(double cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 

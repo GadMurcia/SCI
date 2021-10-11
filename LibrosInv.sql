@@ -90,7 +90,7 @@ CREATE TABLE `DetalleVentas` (
   `idVentas` datetime NOT NULL,
   `giroCaja` int(11) NOT NULL,
   `producto` int(11) NOT NULL,
-  `cantidad` double NOT NULL,
+  `cantidad` int(11) NOT NULL,
   `precioUnitario` decimal(11,2) NOT NULL,
   PRIMARY KEY (`idVentas`,`producto`,`giroCaja`),
   KEY `fk_DetalleVentas_2_idx` (`giroCaja`),

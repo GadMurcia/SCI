@@ -46,7 +46,7 @@ public class DetalleVentas implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(nullable = false)
-    private double cantidad;
+    private Integer cantidad;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -68,7 +68,7 @@ public class DetalleVentas implements Serializable {
         this.detalleVentasPK = detalleVentasPK;
     }
 
-    public DetalleVentas(DetalleVentasPK detalleVentasPK, double cantidad, BigDecimal precioUnitario) {
+    public DetalleVentas(DetalleVentasPK detalleVentasPK, Integer cantidad, BigDecimal precioUnitario) {
         this.detalleVentasPK = detalleVentasPK;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
@@ -86,11 +86,11 @@ public class DetalleVentas implements Serializable {
         this.detalleVentasPK = detalleVentasPK;
     }
 
-    public double getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(double cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 

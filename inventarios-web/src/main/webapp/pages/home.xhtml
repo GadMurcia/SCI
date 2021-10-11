@@ -60,7 +60,7 @@
 
                                 <p:inputNumber id="cant" value="#{ventaCtr.nuevoDetalleV.cantidad}" 
                                                title="Cantidad del producto a vender" 
-                                               decimalSeparator="." thousandSeparator="," 
+                                               thousandSeparator="," decimalPlaces="0"
                                                disabled="#{!ventaCtr.vendiendo}"/>
 
                                 <p:autoComplete id="itemTip" value="#{ventaCtr.nuevoDetalleV.inventario}"
