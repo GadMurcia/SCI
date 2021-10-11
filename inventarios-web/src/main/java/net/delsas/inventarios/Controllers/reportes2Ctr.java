@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -137,10 +138,12 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
     }
 
     public List<ReporteVentas> getDetalleVentas(GiroDeCaja g) {
-        return g == null ? new ArrayList<>()
+        List<ReporteVentas> detalleVentas = g == null ? new ArrayList<>()
                 : detalle.stream().filter(d -> d.getId().equals(g.getIdGiroDeCaja()))
                         .findFirst().orElseGet(() -> new RepDetalleVentas(0, new ArrayList<>()))
                         .getDetalle();
+        Collections.sort(detalleVentas, (ReporteVentas r1, ReporteVentas r2) -> r1.getInv().getProducto().toLowerCase().compareToIgnoreCase(r2.getInv().getProducto().toLowerCase()));
+        return detalleVentas;
     }
 
     public double getCostoVendido(GiroDeCaja g) {
@@ -323,6 +326,8 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                             t.addCell(getTextCell("Costo Unitario", 1, 1, true, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                             t.addCell(getTextCell("Precio Unitario", 1, 1, true, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                             t.addCell(getTextCell("Valor de venta", 1, 1, true, true, 12, Font.NORMAL, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+
+                            Collections.sort(dt.getDetalle(), (ReporteVentas r1, ReporteVentas r2) -> r1.getInv().getProducto().toLowerCase().compareToIgnoreCase(r2.getInv().getProducto().toLowerCase()));
 
                             dt.getDetalle().stream().forEachOrdered(dt0 -> {
                                 t.addCell(getTextCell(dt0.getInv().getProducto(), 2, 1, true, true, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));

@@ -200,6 +200,7 @@ public class reportes3Ctr extends auxiliarCtr implements Serializable {
     }
 
     public List<ReporteDetalleCompra> getDetalle() {
+        Collections.sort(detalle, (ReporteDetalleCompra r1, ReporteDetalleCompra r2) -> r1.getInv().getProducto().toLowerCase().compareToIgnoreCase(r2.getInv().getProducto().toLowerCase()));
         return detalle;
     }
 
