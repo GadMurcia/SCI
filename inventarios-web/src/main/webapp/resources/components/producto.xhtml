@@ -10,7 +10,6 @@
     <cc:interface>
         <cc:attribute name="producto" required="true" type="net.delsas.inventarios.entities.Inventario"/>
         <cc:attribute name="edit" default="#{true}" type="java.lang.Boolean"/>
-        <cc:attribute name="precioUnitario" type="java.lang.String" required="true"/>
     </cc:interface>
 
     <!-- IMPLEMENTATION -->
@@ -25,13 +24,14 @@
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
             </p:inputText>
 
-            <p:outputLabel value="Precio Unitario: $" for="precioUnitario" style="color: #ffffff;margin-left: -45%" />
-            <p:inputMask id="precioUnitario" value="#{cc.attrs.precioUnitario}" 
-                         title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
-                         requiredMessage="El precio unitario no debe quedar vacío." mask="99.99">
+            <p:outputLabel value="Precio Unitario:" for="precioUnitario" style="color: #ffffff;margin-left: -45%" />
+            <p:inputNumber id="precioUnitario" value="#{cc.attrs.producto.precioUnitario}" 
+                           title="Precio Unitario" required="true" disabled="#{!cc.attrs.edit}"
+                           requiredMessage="El precio unitario no debe quedar vacío." maxValue="100.00"
+                           symbol="$ " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                 <f:validateDoubleRange minimum="0"/>
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-            </p:inputMask>
+            </p:inputNumber>
 
             <p:outputLabel value="Descripción:" for="descripcion" style="color: #ffffff; margin-left: -45%"/>
             <p:inputTextarea id="descripcion" value="#{cc.attrs.producto.descripcion}" 
