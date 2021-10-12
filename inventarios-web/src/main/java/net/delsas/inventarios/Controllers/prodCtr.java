@@ -117,6 +117,15 @@ public class prodCtr extends auxiliarCtr implements Serializable {
         return sel;
     }
 
+    public void setPreciounitario(String pu) {
+        sel.setPrecioUnitario(new BigDecimal(pu));
+    }
+
+    public String getPreciounitario() {
+        double v = sel == null ? 0 : sel.getPrecioUnitario().doubleValue();
+        return (v >= 10 ? "" : "0") + v;
+    }
+
     public void setSel(Inventario sel) {
         this.sel = sel;
     }
