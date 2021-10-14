@@ -201,7 +201,7 @@
                                 <p:outputLabel value="Iniciar Caja Con:" style="color: #ffffff "/>
                                 <p:inputNumber value="#{cajaCtr.giro.cajaInicial}" 
                                                title="Dinero inicial en caja" 
-                                               required="true"
+                                               required="true" minValue="0.00"
                                                requiredMessage="Debe ingresar con cuanto dinero inicia sus labores." 
                                                symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                                     <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
@@ -227,7 +227,7 @@
                                 <p:outputLabel value="Dinero que quedó en caja:" style="color: #ffffff"/>
                                 <p:inputNumber value="#{cajaCtr.giro.cierre}" 
                                                title="Dinero final en caja" 
-                                               required="true"
+                                               required="true" minValue="0.00"
                                                requiredMessage="Debe ingresar con cuanto dinero termina sus labores." 
                                                symbol="USD " symbolPosition="p" decimalSeparator="." thousandSeparator="," >
                                     <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
