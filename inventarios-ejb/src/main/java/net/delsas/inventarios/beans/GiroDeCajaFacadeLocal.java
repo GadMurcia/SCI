@@ -31,11 +31,13 @@ public interface GiroDeCajaFacadeLocal {
     List<GiroDeCaja> findRange(int[] range);
 
     int count();
-    
+
     GiroDeCaja findNoTerminadas(String idUsusrio);
-    
+
     List<Ventas> findVentas(Integer id);
-    
+
     public List<GiroDeCaja> findByPeriodoYSucursal(Date inicio, Date fin, Integer idSucursal);
-    
+
+    public List<GiroDeCaja> findTerminadas(String idUsuario, Date inicio, Date fin);
+
 }

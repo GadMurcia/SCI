@@ -93,62 +93,102 @@
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Opciones de caja" widgetVar="cajaDialog" 
-
+                <p:dialog header="Opciones de caja" widgetVar="cajaDialog"
                           modal="true" showEffect="fade" hideEffect="fade" 
-                          resizable="false" closeOnEscape="true" responsive="false">
+                          resizable="false" closeOnEscape="true" width="80%" style="margin: auto">
                     <h:form id="h1"  style="margin: auto">
-                        <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}">
-                            <p:card style=" background-color: #01011a">
-                                <f:facet name="title">
-                                    Detalle de caja
-                                </f:facet>
+                        <p:tabView>
+                            <p:tab title="Caja Actual">
+                                <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}" style="margin: auto">
+                                    <p:card style=" background-color: #01011a">
+                                        <f:facet name="title">
+                                            Detalle de caja
+                                        </f:facet>
 
-                                <h:panelGrid columns="2" style="background-color: #1b162a">
-                                    <p:outputLabel value="Ticket de caja:" style="color: #ffffff"/>
-                                    <p:outputLabel value="#{cajaCtr.giro.idGiroDeCaja}" title="IdGiroDeCaja" style="color: #ece3a5"/>
+                                        <h:panelGrid columns="2" style="background-color: #1b162a">
+                                            <p:outputLabel value="Ticket de caja:" style="color: #ffffff"/>
+                                            <p:outputLabel value="#{cajaCtr.giro.idGiroDeCaja}" title="IdGiroDeCaja" style="color: #ece3a5"/>
 
-                                    <p:outputLabel value="Saldo inicial:" style="color: #ffffff" />
-                                    <p:outputLabel value="#{cajaCtr.giro.cajaInicial}" title="CajaInicial" style="color: #ece3a5"/>
+                                            <p:outputLabel value="Saldo inicial:" style="color: #ffffff" />
+                                            <p:outputLabel value="#{cajaCtr.giro.cajaInicial}" title="CajaInicial" style="color: #ece3a5"/>
 
-                                    <p:outputLabel value="Ventas:"  style="color: #ffffff"/>
-                                    <p:outputLabel value="#{cajaCtr.ventas}" title="Excedentes" style="color: #ece3a5"/>
+                                            <p:outputLabel value="Ventas:"  style="color: #ffffff" rendered="#{cajaCtr.admin}"/>
+                                            <p:outputLabel value="#{cajaCtr.ventas}" title="Excedentes" style="color: #ece3a5" rendered="#{cajaCtr.admin}"/>
 
-                                    <p:outputLabel value="Sumatoria de Retiros:"  style="color: #ffffff"/>
-                                    <p:outputLabel value="#{cajaCtr.giro.retiros}" title="Retiros" style="color: #ece3a5"/>
+                                            <p:outputLabel value="Sumatoria de Retiros:"  style="color: #ffffff"/>
+                                            <p:outputLabel value="#{cajaCtr.giro.retiros}" title="Retiros" style="color: #ece3a5"/>
+                                        </h:panelGrid>
+                                        <f:facet name="footer">
+                                        </f:facet>
+                                    </p:card>
+                                    <p:card style=" background-color: #01011a;">
+                                        <f:facet name="title">
+                                            Detalle de Retiros
+                                        </f:facet>
+                                        <p:inputTextarea value="#{cajaCtr.giro.detalleRetiros}" disabled="true"/>
+                                        <f:facet name="footer">
+                                            <h:panelGrid columns="1" style="margin: 0 auto">
+                                                <p:commandButton icon="pi pi-money-bill" 
+                                                                 styleClass="ui-button-outlined ui-button-warning"
+                                                                 value="Hacer un retiro" update="h1 h4" 
+                                                                 title="Registrar un nuevo retiro de efectivo de la caja"
+                                                                 onclick="PF('retiroDialog').show();"/>  
+                                            </h:panelGrid>
+                                        </f:facet>
+                                    </p:card>
                                 </h:panelGrid>
-                                <f:facet name="footer">
-                                </f:facet>
-                            </p:card>
-                            <p:card style=" background-color: #01011a">
-                                <f:facet name="title">
-                                    Detalle de Retiros
-                                </f:facet>
-                                <p:inputTextarea value="#{cajaCtr.giro.detalleRetiros}" disabled="true"/>
-                                <f:facet name="footer">
-                                    <h:panelGrid columns="1" style="margin: 0 auto">
-                                        <p:commandButton icon="pi pi-money-bill" 
-                                                         styleClass="ui-button-outlined ui-button-warning"
-                                                         value="Hacer un retiro" update="h1 h4" 
-                                                         title="Registrar un nuevo retiro de efectivo de la caja"
-                                                         onclick="PF('retiroDialog').show();"/>  
-                                    </h:panelGrid>
-                                </f:facet>
-                            </p:card>
-                        </h:panelGrid>
-                        <h:panelGrid columns="1" style="margin: 0 auto">
-                            <p:commandButton icon="pi pi-money-bill" 
-                                             styleClass="ui-button-outlined ui-button-info"
-                                             value="Abrir Caja" update="h1 h2" 
-                                             rendered="#{!cajaCtr.iniciada}"
-                                             onclick="PF('caja2Dialog').show();"/>
-                            <p:commandButton 
-                                icon="pi pi-wallet" 
-                                styleClass="ui-button-outlined ui-button-info"
-                                value="Cerrar Caja" update="h1 h3"
-                                rendered="#{cajaCtr.iniciada}"
-                                onclick="PF('caja3Dialog').show();"/>
-                        </h:panelGrid>
+                                <h:panelGrid columns="1" style="margin: 0 auto">
+                                    <p:commandButton icon="pi pi-money-bill" 
+                                                     styleClass="ui-button-outlined ui-button-info"
+                                                     value="Abrir Caja" update="h1 h2" 
+                                                     rendered="#{!cajaCtr.iniciada}"
+                                                     onclick="PF('caja2Dialog').show();"/>
+                                    <p:commandButton 
+                                        icon="pi pi-wallet" 
+                                        styleClass="ui-button-outlined ui-button-info"
+                                        value="Cerrar Caja" update="h1 h3"
+                                        rendered="#{cajaCtr.iniciada}"
+                                        onclick="PF('caja3Dialog').show();"/>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Historial">
+                                <h:panelGrid style="margin:  auto">
+                                    <p:dataTable value="#{cajaCtr.historial}" var="item" rows="4"
+                                                 paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                                        <f:facet name="header">
+                                            <h2 align="center">Detalle de los estados de caja del último mes</h2>
+                                        </f:facet>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Id" style="width: 1%"/>
+                                            </f:facet>
+                                            <h:outputText value="#{item.idGiroDeCaja}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Desdde"/>
+                                            </f:facet>
+                                            <h:outputText value="#{cajaCtr.getDateTimeToString12H(item.inicio)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Hasta"/>
+                                            </f:facet>
+                                            <h:outputText value="#{cajaCtr.getDateTimeToString12H(item.fin)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Estado de caja"/>
+                                            </f:facet>
+                                            <h:outputText value="#{cajaCtr.getEstadoCaja(item.faltantes)}"/>
+                                            <h:outputText value="#{item.faltantes}" rendered="#{cajaCtr.isVerEstadoCjaj(item.faltantes)}">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:tabView>
                     </h:form>
                 </p:dialog>
                 <p:dialog header="Apertura de Caja" widgetVar="caja2Dialog" 
@@ -198,17 +238,16 @@
                                 <p:commandButton 
                                     icon="pi pi-save" 
                                     styleClass="ui-button-outlined ui-button-primary"
-                                    value="Guardar" update="h1"
+                                    value="Guardar" update="h1 h5"
                                     actionListener="#{cajaCtr.cerrarCaja()}"
                                     oncomplete="PF('caja3Dialog').hide();"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog 
-                    header="Retiro de efectivo" widgetVar="retiroDialog" 
-                    modal="true" showEffect="fade" hideEffect="fade" 
-                    resizable="false" closeOnEscape="true" responsive="true">
+                <p:dialog header="Retiro de efectivo" widgetVar="retiroDialog" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true">
                     <h:form id="h4"  style="margin: auto" >
                         <h:panelGrid columns="1" >
 
@@ -229,6 +268,17 @@
                                                   actionListener="#{cajaCtr.registrarRetiro()}"
                                                   oncomplete="PF('retiroDialog').hide();"/>
                             </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <p:dialog header="Información de cierre" widgetVar="infoCD" 
+                          modal="true" showEffect="fade" hideEffect="fade" 
+                          resizable="false" closeOnEscape="true" responsive="true"
+                          onShow="actualizar();">
+                    <p:remoteCommand name="actualizar" update="h5"/>
+                    <h:form id="h5"  style="margin: auto" >
+                        <h:panelGrid columns="1" >
+                            <h2 align="center" style="color: #ffffff; font-size: xx-large">#{cajaCtr.infoCD}</h2>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>

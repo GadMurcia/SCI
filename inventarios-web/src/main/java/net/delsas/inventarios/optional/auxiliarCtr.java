@@ -165,29 +165,24 @@ public class auxiliarCtr implements Serializable {
             uno = new Date(f.getTime());
         }
         System.out.println(uno + " **** " + dos);
-    }   
+    }
+
+    public Date CalcularFecha(Date r, int calculo, int valor) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(r);
+        c.add(calculo, valor);
+        return c.getTime();
+    }
 
     public Date suma1Dia(Date r0) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(r0);
-        c.add(Calendar.DATE, 1);
-        return c.getTime();
+        return CalcularFecha(r0, Calendar.DATE, 1);
     }
 
     public Date suma1Mes(Date r0) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(r0);
-        c.add(Calendar.MONTH, 1);
-        c.add(Calendar.DATE, -1);
-        return c.getTime();
+        return CalcularFecha(CalcularFecha(r0, Calendar.MONTH, 1), Calendar.DATE, -1);
     }
 
     public Date suma1Año(Date r0) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(r0);
-        c.add(Calendar.YEAR, 1);
-        c.add(Calendar.DATE, -1);
-        return c.getTime();
+        return CalcularFecha(CalcularFecha(r0, Calendar.YEAR, 1), Calendar.DATE, -1);
     }
 }
- 

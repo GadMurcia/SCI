@@ -55,4 +55,13 @@ public class GiroDeCajaFacade extends AbstractFacade<GiroDeCaja> implements Giro
                 .getResultList();
     }
 
+    @Override
+    public List<GiroDeCaja> findTerminadas(String idUsuario, Date inicio, Date fin) {
+        return em.createNamedQuery("GiroDeCaja.findTerminadas")
+                .setParameter("idUsuario", idUsuario)
+                .setParameter("inicio", inicio)
+                .setParameter("fin", fin)
+                .getResultList();
+    }
+
 }

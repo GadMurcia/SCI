@@ -34,6 +34,7 @@ import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.beans.GiroDeCajaFacadeLocal;
 import net.delsas.inventarios.beans.MiscFacadeLocal;
+import net.delsas.inventarios.beans.UsuarioFacadeLocal;
 import net.delsas.inventarios.beans.VentasFacadeLocal;
 import net.delsas.inventarios.entities.GiroDeCaja;
 import net.delsas.inventarios.entities.Usuario;
@@ -45,6 +46,7 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.export.ExportConfiguration;
 import org.primefaces.component.export.Exporter;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -61,6 +63,8 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
     private boolean periodo;
     private List<RepDetalleVentas> detalle;
     private Optional<Usuario> user;
+    public static List<Usuario> userList;
+    private Usuario userSelected;
 
     @EJB
     private GiroDeCajaFacadeLocal gcfl;
@@ -72,12 +76,30 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
     private DetalleCompraFacadeLocal dcfl;
     @EJB
     private MiscFacadeLocal mfl;
+    @EJB
+    private UsuarioFacadeLocal ufl;
 
     @PostConstruct
     public void init() {
         giros = new ArrayList<>();
         detalle = new ArrayList<>();
+        userSelected = null;
         user = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
+//        userList = ufl.findAll().stream().filter(u -> {
+//            if (user.isPresent()) {
+//                switch (user.get().getTipoUsuario().getIdTipoUsuario()) {
+//                    case 1:
+//                        return true;
+//                    case 2:
+//                        return u.getTipoUsuario().getIdTipoUsuario() >= 2;
+//                    case 3:
+//                        return u.getTipoUsuario().getIdTipoUsuario() >= 3;
+//                    default:
+//                        return false;
+//                }
+//            }
+//            return false;
+//        }).collect(Collectors.toList());
         if (!user.isPresent()) {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("msg",
@@ -175,6 +197,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
         inicio = null;
         fin = null;
         giros.clear();
+        userSelected = null;
     }
 
     public double getUtilidad(GiroDeCaja g) {
@@ -192,7 +215,9 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             } catch (ParseException ex) {
                 fin = new Date();
             }
-            giros = gcfl.findByPeriodoYSucursal(inicio, fin, 1);
+            giros = userSelected == null
+                    ? gcfl.findByPeriodoYSucursal(inicio, fin, 1)
+                    : gcfl.findTerminadas(userSelected.getIdUsuario(), inicio, fin);
             if (giros.isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage("form0:msgs",
                         new FacesMessage(FacesMessage.SEVERITY_WARN, "Sin Registros",
@@ -228,7 +253,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             giroGlobal.setFaltantes(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getFaltantes).sum()));
             giroGlobal.setFin(fin);
             giroGlobal.setInicio(inicio);
-            giroGlobal.setResponsable(new Usuario("", "Reporte Global", "De Ventas Por Periodo", "", false));
+            giroGlobal.setResponsable(userSelected == null ? new Usuario("", "Reporte Global", "De Ventas Por Periodo", "", false) : new Usuario("", "Reporte De Ventas", "Para " + getNombreususario(userSelected), "", false));
             giroGlobal.setRetiros(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getRetiros).sum()));
             RepDetalleVentas dg = new RepDetalleVentas(giroGlobal.getIdGiroDeCaja(), new ArrayList<>());
             detalle.stream().map(RepDetalleVentas::getDetalle).forEachOrdered(dl -> dl.forEach(d -> {
@@ -269,6 +294,9 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                     t.addCell(getTextCell(mfl.find(1).getNombre(), 6, 1, false, false, 18, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("", 6, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("Reporte de Ventas", 6, 1, false, false, 16, Font.BOLDITALIC, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    if (userSelected != null) {
+                        t.addCell(getTextCell("Vendedor: " + getNombreususario(userSelected), 6, 1, false, false, 14, Font.ITALIC, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
+                    }
                     t.addCell(getTextCell("", 6, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell("Periodo del reporte: ", 2, 1, false, false, 14, Font.BOLD, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE));
                     t.addCell(getTextCell(new SimpleDateFormat("dd/MM/YYYY").format(inicio) + (fin.equals(inicio) ? "" : " al " + new SimpleDateFormat("dd/MM/YYYY").format(fin)), 4, 1, false, false, 14, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
@@ -347,7 +375,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                             t.addCell(getTextCell("$ " + getutilidadVendido(giroGlobal), 1, 1, true, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
 
                         });
-
+                        
                         t.addCell(getTextCell("\n\n\n", 6, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("", 1, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("Resumen Por Caja", 4, 1, false, false, 16, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
@@ -474,5 +502,41 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                 return "pdf";
             }
         };
+    }
+
+    public Usuario getUserSelected() {
+        return userSelected;
+    }
+
+    public void setUserSelected(Usuario userSelected) {
+        this.userSelected = userSelected;
+    }
+
+    public void onUserSelect(SelectEvent<Usuario> event) {
+        userSelected = event.getObject();
+    }
+
+    public List<Usuario> completeUsario(String query) {;//agregar código para el filtrado
+        return userList.stream()
+                .filter(u -> getNombreususario(u).toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Usuario> getUsuarioList() {
+        return ufl.findAll().stream().filter(u -> {
+            if (user.isPresent()) {
+                switch (user.get().getTipoUsuario().getIdTipoUsuario()) {
+                    case 1:
+                        return true;
+                    case 2:
+                        return u.getTipoUsuario().getIdTipoUsuario() >= 2;
+                    case 3:
+                        return u.getTipoUsuario().getIdTipoUsuario() >= 3;
+                    default:
+                        return false;
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
     }
 }

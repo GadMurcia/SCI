@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +37,10 @@ import org.primefaces.PrimeFaces;
 public class cajaCtr extends auxiliarCtr implements Serializable {
 
     private GiroDeCaja giro;
+    private List<GiroDeCaja> historial;
     private Optional<Usuario> us;
     private boolean iniciada;
-    private String Descr;
+    private String Descr, infoCD;
     private BigDecimal valor;
 
     @EJB
@@ -47,6 +49,7 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
     @PostConstruct
     public void init() {
         giro = new GiroDeCaja();
+        historial = new ArrayList<>();
         us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!us.isPresent()) {
             try {
@@ -63,6 +66,7 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
             giro.setResponsable(us.get());
             giro.setDetalleRetiros("");
             iniciada = giro.getIdGiroDeCaja() != null;
+            historial = gdcfl.findTerminadas(us.get().getIdUsuario(), CalcularFecha(new Date(), Calendar.MONTH, -1), new Date());
         }
     }
 
@@ -74,7 +78,8 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage("Apertura de caja",
                         "Se ha creado con exito el registro de la apertura de su caja. "
-                        + "Ticket: " + giro.getIdGiroDeCaja()));
+                        + "Ticket: " + giro.getIdGiroDeCaja()));        
+        infoCD = "";
     }
 
     public void modificarCaja() {
@@ -94,6 +99,11 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
                 new FacesMessage("Cierre de caja",
                         "Su caja ha cerrado. "
                         + "Ticket: " + giro.getIdGiroDeCaja()));
+        if (giro.getFaltantes() != 0) {
+            infoCD = "La caja ha cerrado con un " + (giro.getFaltantes() > 0 ? "excedente" : "faltante") + " de $" + giro.getFaltantes() + " dólares.";
+            PrimeFaces.current().ajax().update("h5");
+            PrimeFaces.current().executeScript("PF('infoCD').show();");
+        }
         init();
     }
 
@@ -156,6 +166,26 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
             }
         }
         return r;
+    }
+
+    public boolean isAdmin() {
+        return !us.isPresent() ? false : us.get().getTipoUsuario().getIdTipoUsuario() < 4;
+    }
+
+    public List<GiroDeCaja> getHistorial() {
+        return historial;
+    }
+
+    public String getInfoCD() {
+        return infoCD;
+    }
+
+    public String getEstadoCaja(double d) {
+        return d < 0 ? "F " : "OK";
+    }
+
+    public boolean isVerEstadoCjaj(double d) {
+        return d < 0;
     }
 
 }

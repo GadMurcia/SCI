@@ -36,7 +36,7 @@ public class InventarioConverter implements Converter<Inventario> {
             } catch (NumberFormatException e) {
                 throw new ConverterException(
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Conversion Error", "Not a valid country."));
+                                "Conversion Error", "Not a valid Inventario."));
             }
         } else {
             return null;

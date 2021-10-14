@@ -33,6 +33,17 @@
                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
+
+                                    <p:outputLabel value="Vendedor: " for="users"/>
+                                    <p:selectOneMenu id="users" value="#{reportes2Ctr.userSelected}"
+                                                     converter="omnifaces.SelectItemsConverter"
+                                                     style="margin-left: 15%">
+                                        <p:ajax event="itemSelect" listener="#{reportes2Ctr.onUserSelect}"/>
+                                        <f:selectItem itemValue="#{null}" itemLabel="Global"/>
+                                        <f:selectItems value="#{reportes2Ctr.usuarioList}" var="u" 
+                                                       itemValue="#{u}" itemLabel="#{reportes2Ctr.getNombreususario(u)}"/>
+                                    </p:selectOneMenu>
+
                                     <p:column/>
                                     <h:panelGrid columns="2">
                                         <p:commandButton type="summit" icon="pi pi-chart-line" title="Generar reporte."
