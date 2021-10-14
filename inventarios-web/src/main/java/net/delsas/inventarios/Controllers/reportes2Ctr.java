@@ -229,7 +229,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                 vfl.findByGiroCaja(rdv.getId()).stream().map(Ventas::getDetalleVentasList).forEachOrdered(dl -> dl.forEach(d -> {
                     ReporteVentas rv = new ReporteVentas(d.getInventario().getIdInventario(), d.getInventario(), 0, 0, 0, 0, 0);
                     if (!rdv.getDetalle().contains(rv)) {
-                        rv = new ReporteVentas(d, dcfl, dvfl, inicio, fin);
+                        rv = new ReporteVentas(d, vfl.findByGiroCaja(rdv.getId()), dcfl, dvfl, inicio, fin);
                         rdv.getDetalle().add(rv);
                     } else {
                         int idx = rdv.getDetalle().indexOf(rv);
@@ -256,18 +256,23 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
             giroGlobal.setResponsable(userSelected == null ? new Usuario("", "Reporte Global", "De Ventas Por Periodo", "", false) : new Usuario("", "Reporte De Ventas", "Para " + getNombreususario(userSelected), "", false));
             giroGlobal.setRetiros(redondeo2decimales(giros.stream().mapToDouble(GiroDeCaja::getRetiros).sum()));
             RepDetalleVentas dg = new RepDetalleVentas(giroGlobal.getIdGiroDeCaja(), new ArrayList<>());
-            detalle.stream().map(RepDetalleVentas::getDetalle).forEachOrdered(dl -> dl.forEach(d -> {
-                if (!dg.getDetalle().contains(d)) {
-                    dg.getDetalle().add(d);
-                } else {
-                    int idx = dg.getDetalle().indexOf(d);
-                    ReporteVentas get = dg.getDetalle().get(idx);
-                    get.setCantidad(get.getCantidad() + d.getCantidad());
-                    get.setSubTotal(redondeo2decimales(get.getCantidad() * get.getPrecioU()));
-                    get.setUtilidad(redondeo2decimales(get.getSubTotal() - (get.getCantidad() * get.getCostoU())));
-                    dg.getDetalle().set(idx, get);
-                }
-            }));
+            giros.stream().forEach(g -> {
+                RepDetalleVentas rdv = new RepDetalleVentas(g.getIdGiroDeCaja(), new ArrayList<>());
+                vfl.findByGiroCaja(rdv.getId()).stream().map(Ventas::getDetalleVentasList).forEachOrdered(dl -> dl.forEach(d -> {
+                    ReporteVentas rv = new ReporteVentas(d.getInventario().getIdInventario(), d.getInventario(), 0, 0, 0, 0, 0);
+                    if (!dg.getDetalle().contains(rv)) {
+                        rv = new ReporteVentas(d, dcfl, dvfl, inicio, fin);
+                        dg.getDetalle().add(rv);
+                    } else {
+                        int idx = dg.getDetalle().indexOf(rv);
+                        ReporteVentas get = dg.getDetalle().get(idx);
+                        get.setCantidad(get.getCantidad() + d.getCantidad());
+                        get.setSubTotal(redondeo2decimales(get.getCantidad() * get.getPrecioU()));
+                        get.setUtilidad(redondeo2decimales(get.getSubTotal() - (get.getCantidad() * get.getCostoU())));
+                        dg.getDetalle().set(idx, get);
+                    }
+                }));
+            });
             if (periodo && !giros.isEmpty()) {
                 detalle.clear();
                 giros.clear();
@@ -375,7 +380,7 @@ public class reportes2Ctr extends auxiliarCtr implements Serializable {
                             t.addCell(getTextCell("$ " + getutilidadVendido(giroGlobal), 1, 1, true, true, 12, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));
 
                         });
-                        
+
                         t.addCell(getTextCell("\n\n\n", 6, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("", 1, 1, false, false, 12, Font.NORMAL, PdfPCell.ALIGN_LEFT, PdfPCell.ALIGN_MIDDLE));
                         t.addCell(getTextCell("Resumen Por Caja", 4, 1, false, false, 16, Font.BOLD, PdfPCell.ALIGN_CENTER, PdfPCell.ALIGN_MIDDLE));

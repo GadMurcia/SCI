@@ -5,6 +5,7 @@
 package net.delsas.inventarios.optional;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import net.delsas.inventarios.beans.DetalleCompraFacadeLocal;
 import net.delsas.inventarios.beans.DetalleVentasFacadeLocal;
 import net.delsas.inventarios.entities.DetalleVentas;
 import net.delsas.inventarios.entities.Inventario;
+import net.delsas.inventarios.entities.Ventas;
 
 /**
  *
@@ -56,6 +58,18 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
         this.utilidad = redondeo3decimales(subTotal - (cantidad * costoU));
     }
 
+    public ReporteVentas(DetalleVentas dt, List<Ventas> lista, DetalleCompraFacadeLocal dcfl, DetalleVentasFacadeLocal dvfl, Date inicio, Date fin) {
+        this.id = dt.getInventario().getIdInventario();
+        this.inv = dt.getInventario();
+        this.cantidad = dt.getCantidad();
+        this.costoU = redondeo4decimales(Existencias.getCostoAVGPeriodo(id, dcfl, inicio, fin));
+        this.costoU = this.costoU > 0 ? this.costoU : redondeo4decimales(Existencias.getCostoAVGGlobal(id, dcfl));
+        this.precioU = redondeo4decimales(getPrecioAVGGiro(id, lista));
+        this.precioU = this.precioU > 0 ? this.precioU : getPrecioAVGGlobal(id, dvfl);
+        this.subTotal = redondeo3decimales(this.cantidad * this.precioU);
+        this.utilidad = redondeo3decimales(subTotal - (cantidad * costoU));
+    }
+
     public ReporteVentas(int id, Inventario inv, Integer cantidad, double precioU, double costoU, double subTotal, double utilidad) {
         this.id = id;
         this.inv = inv;
@@ -76,6 +90,15 @@ public class ReporteVentas extends auxiliarCtr implements Serializable {
         List<DetalleVentas> f = dvfl.findByProductoAndPeriodo(id, inicio, fin);
         return f.stream().mapToDouble(f0 -> f0.getCantidad() * f0.getPrecioUnitario().doubleValue()).sum()
                 / f.stream().mapToDouble(DetalleVentas::getCantidad).sum();
+    }
+
+    public static double getPrecioAVGGiro(int id, List<Ventas> lista) {
+        List<DetalleVentas> l = new ArrayList<>();
+        lista.forEach(ls -> l.addAll(ls.getDetalleVentasList()));
+        return l.stream().filter(dv -> dv.getInventario().getIdInventario().equals(id))
+                .mapToDouble(f0 -> f0.getCantidad() * f0.getPrecioUnitario().doubleValue()).sum()
+                / l.stream().filter(dv -> dv.getInventario().getIdInventario().equals(id))
+                        .mapToDouble(DetalleVentas::getCantidad).sum();
     }
 
     public int getId() {
