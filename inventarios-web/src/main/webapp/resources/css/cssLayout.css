@@ -31,7 +31,7 @@
 
 .center_content {
     position: relative;
-    background-color: #dddddd;
+    /**background-color: #dddddd;**/
     padding: 5px;
 }
 
