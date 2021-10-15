@@ -18,13 +18,13 @@
     <!-- IMPLEMENTATION -->
     <cc:implementation>
         <h:panelGrid columns="2">
-            <p:outputLabel value="DUI:" for="idUsuario" style=" color: #ffffff" />
-            <p:inputMask id="idUsuario" value="#{cc.attrs.us.idUsuario}" 
+            <p:outputLabel value="Usuario:" for="idUsuario" style=" color: #ffffff" />
+            <p:inputText id="idUsuario" value="#{cc.attrs.us.idUsuario}" maxlength="20"
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
-                         requiredMessage="The IdUsuario field is required."
-                         mask="99999999-9">
+                         requiredMessage="The IdUsuario field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-            </p:inputMask>
+                <f:validateLength minimum="8" maximum="20"/>
+            </p:inputText>
 
             <p:outputLabel value="Nombres:" for="nombres" style=" color: #ffffff" />
             <p:inputText id="nombres" value="#{cc.attrs.us.nombres}" 
