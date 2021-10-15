@@ -23,7 +23,7 @@
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
                          requiredMessage="The IdUsuario field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-                <f:validateLength minimum="8" maximum="50"/>
+                <f:validateLength minimum="4" maximum="50"/>
             </p:inputText>
 
             <p:outputLabel value="Nombres:" for="nombres" style=" color: #ffffff" />

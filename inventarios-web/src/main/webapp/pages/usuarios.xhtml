@@ -43,7 +43,7 @@
                             update="h0"/>
                     <p:column >
                         <f:facet name="header">
-                            <h:outputText value="DUI" />
+                            <h:outputText value="Usuario" />
                         </f:facet>
                         <h:outputText value="#{item.idUsuario}"/>
                     </p:column>
@@ -100,7 +100,6 @@
                                          rendered="#{userCtr.editable}"
                                          actionListener="#{userCtr.persist()}"
                                          type="summit"
-                                         onsuccess="PF('userDialog').hide()"
                                          styleClass="ui-button-outlined ui-button-warning" style="height: 50px; width: 130px;" icon="pi pi-fw pi-check-circle"/>
                     </h:panelGrid>
                 </h:panelGrid>
