@@ -17,7 +17,7 @@
                                scrollable="false" touchable="false">
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"
                                 onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
-                        <p:tab title="Ventas"  >
+                        <p:tab title="VENTAS"  >
                             <h:panelGrid columns="1"  style="margin: auto">
                                 <h2 align="center" style="margin: auto; color: #ece3a5"  >Reporte de Ventas</h2>
                                 <h:panelGrid columns="2" style="margin: auto" >
@@ -190,7 +190,7 @@
                                 </p:accordionPanel>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab title="Compras">
+                        <p:tab title="COMPRAS">
                             <h:panelGrid columns="1" style="margin: auto">
                                 <h2 align="center" style="color: #ece3a5; margin: 0 auto">Reporte de Compras</h2>
                                 <h:panelGrid columns="2" style="margin: auto">
@@ -302,7 +302,7 @@
                                 </p:card>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab id="ex" title="Existencias">
+                        <p:tab id="ex" title="EXISTENCIAS">
                             <h:panelGrid columns="1" >
                                 <h:panelGrid columns="2" style="margin: auto; width: 10%">
                                     <p:commandButton icon="pi pi-replay" inline="true" title="Actualizar los datos del reporte."
@@ -377,7 +377,7 @@
                                 </p:dataTable>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab title="Gráficos">
+                        <p:tab title="GRÁFICOS">
                             <p:tabView id="qw" dynamic="true" orientation="top" scrollable="false" touchable="false">
                                 <p:ajax event="tabChange" 
                                         onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>

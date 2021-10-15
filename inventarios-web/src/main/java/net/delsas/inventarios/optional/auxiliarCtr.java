@@ -15,10 +15,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -182,7 +185,34 @@ public class auxiliarCtr implements Serializable {
         return CalcularFecha(CalcularFecha(r0, Calendar.MONTH, 1), Calendar.DATE, -1);
     }
 
+    public Date suma1Mes0(Date r0) {
+        return CalcularFecha(r0, Calendar.MONTH, 1);
+    }
+
     public Date suma1Año(Date r0) {
         return CalcularFecha(CalcularFecha(r0, Calendar.YEAR, 1), Calendar.DATE, -1);
+    }
+
+    public Date suma1Año0(Date r0) {
+        return CalcularFecha(r0, Calendar.YEAR, 1);
+    }
+
+    public Date FechaPrimero(Date r, int v) {
+        try {
+            Date r0;
+            switch (v) {
+                case 1://mes
+                    r0 = new SimpleDateFormat("dd-MM-yyyy").parse("01-" + new SimpleDateFormat("MM-yyyy").format(r));
+                    break;
+                case 2://mes
+                    r0 = new SimpleDateFormat("dd-MM-yyyy").parse("01-01-" + new SimpleDateFormat("yyyy").format(r));
+                    break;
+                default:
+                    r0 = r;
+            }
+            return r0;
+        } catch (ParseException ex) {
+            return r;
+        }
     }
 }

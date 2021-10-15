@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -77,11 +78,13 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             }
             try {
                 gfin = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(gfin) + " 23:59:59");
-            } catch (ParseException ex) {                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
+            } catch (ParseException ex) {
+                System.out.println("Un error ha ocurrido al procesar la fecha de fin. reporte3Crt");
                 gfin = new Date();
             }
             Date r0, r1;
             r0 = new Date(ginicio.getTime());
+            r0 = sel == 1 ? (r0) : sel == 2 ? FechaPrimero(r0, 1) : sel == 3 ? FechaPrimero(r0, 2) : suma1Dia(gfin);
             do {
                 try {
                     r1 = sel == 1 ? new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(r0) + " 23:59:59")
@@ -90,9 +93,12 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                 } catch (ParseException ex) {
                     r1 = new Date();
                 }
-                labels.add(new SimpleDateFormat(sel == 1 ? "dd/MM/YY" : sel == 2 ? "MMM/YY" : "YYYY").format(r0));
-                values.add(redondeo2decimales(vfl.findByPeriodoFechas(r0, r1).stream().mapToDouble(v -> v.getValor().doubleValue()).sum()));
-                r0 = sel == 1 ? suma1Dia(r0) : sel == 2 ? suma1Mes(r0) : sel == 3 ? suma1Año(r0) : suma1Dia(gfin);
+                double v0 = redondeo2decimales(vfl.findByPeriodoFechas(r0, r1).stream().mapToDouble(v -> v.getValor().doubleValue()).sum());
+                if (v0 != 0) {
+                    labels.add(new SimpleDateFormat(sel == 1 ? "dd-MM-YY" : sel == 2 ? "MMM-YY" : "YYYY").format(r0));
+                    values.add(v0);
+                }
+                r0 = sel == 1 ? suma1Dia(r0) : sel == 2 ? suma1Mes0(r0) : sel == 3 ? suma1Año0(r0) : suma1Dia(gfin);
             } while (!r0.after(gfin));
 
             if (lineModel != null) {
@@ -137,6 +143,7 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             }
             Date r0, r1;
             r0 = new Date(ginicio0.getTime());
+            r0 = sel0 == 1 ? (r0) : sel0 == 2 ? FechaPrimero(r0, 1) : sel0 == 3 ? FechaPrimero(r0, 2) : suma1Dia(gfin0);
             do {
                 try {
                     r1 = sel0 == 1 ? new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(r0) + " 23:59:59")
@@ -145,9 +152,12 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                 } catch (ParseException ex) {
                     r1 = new Date();
                 }
-                labels.add(new SimpleDateFormat(sel0 == 1 ? "dd/MM/YY" : sel0 == 2 ? "MMM/YY" : "YYYY").format(r0));
-                values.add(redondeo2decimales(dvfl.findByProductoAndPeriodo(invSel0.getIdInventario(), r0, r1).stream().mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario().doubleValue()).sum()));
-                r0 = sel0 == 1 ? suma1Dia(r0) : sel0 == 2 ? suma1Mes(r0) : sel0 == 3 ? suma1Año(r0) : suma1Dia(gfin0);
+                double v = redondeo2decimales(dvfl.findByProductoAndPeriodo(invSel0.getIdInventario(), r0, r1).stream().mapToDouble(d -> d.getCantidad() * d.getPrecioUnitario().doubleValue()).sum());
+                if (v != 0) {
+                    labels.add(new SimpleDateFormat(sel0 == 1 ? "dd-MM-YY" : sel0 == 2 ? "MMM-YY" : "YYYY").format(r0));
+                    values.add(v);
+                }
+                r0 = sel0 == 1 ? suma1Dia(r0) : sel0 == 2 ? suma1Mes0(r0) : sel0 == 3 ? suma1Año0(r0) : suma1Dia(gfin0);
             } while (!r0.after(gfin0));
 
             if (lineModel != null) {
@@ -192,7 +202,7 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
             }
             Date r0, r1;
             r0 = new Date(ginicio1.getTime());
-            double anterior = 0;
+            r0 = sel1 == 1 ? (r0) : sel1 == 2 ? FechaPrimero(r0, 1) : sel1 == 3 ? FechaPrimero(r0, 2) : suma1Dia(gfin1);
             do {
                 try {
                     r1 = sel1 == 1 ? new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").parse(getDateToString(r0) + " 23:59:59")
@@ -201,11 +211,15 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                 } catch (ParseException ex) {
                     r1 = new Date();
                 }
-                labels.add(new SimpleDateFormat(sel1 == 1 ? "dd/MM/YY" : sel1 == 2 ? "MMM/YY" : "YYYY").format(r0));
                 double v = redondeo2decimales(Existencias.getCostoAVGPeriodo(invSel1.getIdInventario(), dcfl, r0, r1));
-                anterior = v == 0 ? anterior : v;
-                values.add(anterior);
-                r0 = sel1 == 1 ? suma1Dia(r0) : sel1 == 2 ? suma1Mes(r0) : sel1 == 3 ? suma1Año(r0) : suma1Dia(gfin1);
+                if (v != 0) {
+                    labels.add(new SimpleDateFormat(sel1 == 1 ? "dd-MM-YY" : sel1 == 2 ? "MMM-YY" : "YYYY").format(r0));
+                    values.add(v);
+                }
+                r0 = sel1 == 1 ? suma1Dia(r0) : sel1 == 2 ? suma1Mes0(r0) : sel1 == 3 ? suma1Año0(r0) : suma1Dia(gfin1);
+                if (r0.after(new Date())) {
+                    break;
+                }
             } while (!r0.after(gfin1));
 
             if (lineModel != null) {
