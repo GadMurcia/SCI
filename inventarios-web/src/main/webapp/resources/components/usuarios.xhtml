@@ -19,11 +19,11 @@
     <cc:implementation>
         <h:panelGrid columns="2">
             <p:outputLabel value="Usuario:" for="idUsuario" style=" color: #ffffff" />
-            <p:inputText id="idUsuario" value="#{cc.attrs.us.idUsuario}" maxlength="20"
+            <p:inputText id="idUsuario" value="#{cc.attrs.us.idUsuario}" maxlength="50"
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
                          requiredMessage="The IdUsuario field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-                <f:validateLength minimum="8" maximum="20"/>
+                <f:validateLength minimum="8" maximum="50"/>
             </p:inputText>
 
             <p:outputLabel value="Nombres:" for="nombres" style=" color: #ffffff" />
