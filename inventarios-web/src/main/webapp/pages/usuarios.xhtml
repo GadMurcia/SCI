@@ -87,8 +87,11 @@
             </p:contextMenu>            
         </h:form>
 
-        <p:dialog header="Usuario" widgetVar="userDialog" modal="true" showEffect="fade"
+        <p:dialog widgetVar="userDialog" modal="true" showEffect="fade"
                   hideEffect="fade" resizable="false" closeOnEscape="true" responsive="true">
+            <f:facet name="header">
+                <h3 align="center" style="margin: auto;">USUARIO</h3>
+            </f:facet>
             <h:form id="h0" style="text-align:center;">
                 <h:panelGrid columns="1">
                     <t:usuarios tipos="#{userCtr.tiposU}" us="#{userCtr.nus}" 

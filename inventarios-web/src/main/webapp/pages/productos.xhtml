@@ -71,8 +71,11 @@
             </h:panelGrid>
         </h:form>
 
-        <p:dialog header="Administrar Productos" widgetVar="prodDialog" modal="true" showEffect="fade"
+        <p:dialog widgetVar="prodDialog" modal="true" showEffect="fade"
                   hideEffect="fade" resizable="false" closeOnEscape="true" responsive="true">
+            <f:facet name="header">
+                <h3 align="center" style="margin: auto;">aDMINISTRAR  PRODUCTOS</h3>
+            </f:facet>
             <h:form id="h0"  style="width: 80%; margin: auto">
                 <h:panelGrid columns="1">
                     <t:producto producto="#{prodCtr.sel}"/>

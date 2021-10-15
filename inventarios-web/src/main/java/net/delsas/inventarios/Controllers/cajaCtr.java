@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -37,7 +38,6 @@ import org.primefaces.PrimeFaces;
 public class cajaCtr extends auxiliarCtr implements Serializable {
 
     private GiroDeCaja giro;
-    private List<GiroDeCaja> historial;
     private Optional<Usuario> us;
     private boolean iniciada;
     private String Descr, infoCD;
@@ -49,7 +49,6 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
     @PostConstruct
     public void init() {
         giro = new GiroDeCaja();
-        historial = new ArrayList<>();
         us = Optional.ofNullable((Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"));
         if (!us.isPresent()) {
             try {
@@ -66,7 +65,6 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
             giro.setResponsable(us.get());
             giro.setDetalleRetiros("");
             iniciada = giro.getIdGiroDeCaja() != null;
-            historial = gdcfl.findTerminadas(us.get().getIdUsuario(), CalcularFecha(new Date(), Calendar.MONTH, -1), new Date());
         }
     }
 
@@ -78,7 +76,7 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
         FacesContext.getCurrentInstance().addMessage("form0:msgs",
                 new FacesMessage("Apertura de caja",
                         "Se ha creado con exito el registro de la apertura de su caja. "
-                        + "Ticket: " + giro.getIdGiroDeCaja()));        
+                        + "Ticket: " + giro.getIdGiroDeCaja()));
         infoCD = "";
     }
 
@@ -146,15 +144,26 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
     }
 
     public void registrarRetiro() {
-        giro.setRetiros(giro.getRetiros() + this.valor.doubleValue());
-        String t = Optional.ofNullable(giro.getDetalleRetiros()).orElseGet(() -> "");
-        giro.setDetalleRetiros((t.isEmpty() ? "" : t + "\n") + (valor.doubleValue() + "   ->  " + Descr + ""));
-        gdcfl.edit(giro);
-        FacesContext.getCurrentInstance().addMessage("form0:msgs",
-                new FacesMessage("Retiro",
-                        "El retiro para " + Descr + " ha quedado registrado."));
-        Descr = "";
-        valor = BigDecimal.ZERO;
+        if (valor.doubleValue() != 0 && !Descr.isEmpty()) {
+            giro.setRetiros(giro.getRetiros() + this.valor.doubleValue());
+            String t = Optional.ofNullable(giro.getDetalleRetiros()).orElseGet(() -> "");
+            giro.setDetalleRetiros((t.isEmpty() ? "" : t + "\n") + (valor.doubleValue() + "   ->  " + Descr + ""));
+            gdcfl.edit(giro);
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage("Retiro",
+                            "El retiro para " + Descr + " ha quedado registrado."));
+            Descr = "";
+            valor = BigDecimal.ZERO;
+            PrimeFaces.current().executeScript("PF('retiroDialog').hide();");
+        } else if (valor.doubleValue() == 0) {
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage("Retiro",
+                            "No puede hacerse un retiro de cero dólares ($0.00). Rectifique."));
+        } else if (Descr.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage("form0:msgs",
+                    new FacesMessage("Retiro",
+                            "Asegúrese de haber indicado el motivo del retiro antes de procesarlo. Rectifique."));
+        }
     }
 
     public List<String> getRetiros() {
@@ -173,7 +182,9 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
     }
 
     public List<GiroDeCaja> getHistorial() {
-        return historial;
+        List<GiroDeCaja> f = gdcfl.findTerminadas(!us.isPresent() ? "0" : us.get().getIdUsuario(), CalcularFecha(new Date(), Calendar.MONTH, -1), new Date());
+        f.sort((GiroDeCaja u, GiroDeCaja d) -> d.getFin().compareTo(u.getFin()));
+        return f;
     }
 
     public String getInfoCD() {
@@ -181,11 +192,18 @@ public class cajaCtr extends auxiliarCtr implements Serializable {
     }
 
     public String getEstadoCaja(double d) {
-        return d < 0 ? "F " : "OK";
+        return isAdmin() ? (d < 0 ? "F" : d > 0 ? "E" : "OK") : d < 0 ? "F " : "OK";
     }
 
     public boolean isVerEstadoCjaj(double d) {
-        return d < 0;
+        return isAdmin() ? d != 0 : d < 0;
+    }
+
+    public List<GiroDeCaja> getHistorialTienda() {
+        return gdcfl.findTerminadasTienda(1, CalcularFecha(FechaPrimero(new Date(), 0), Calendar.DATE, -1),
+                new Date())
+                .stream().filter(g -> !us.isPresent() ? false : !us.get().getIdUsuario().equals(g.getResponsable().getIdUsuario()))
+                .collect(Collectors.toList());
     }
 
 }

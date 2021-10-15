@@ -58,9 +58,12 @@
                     </p:menubar>                    
                 </h:form>
 
-                <p:dialog   header="Cambio de Contraseña" widgetVar="contraDialog" 
+                <p:dialog widgetVar="contraDialog" 
                             modal="true" showEffect="fade" hideEffect="fade" 
                             resizable="false" closeOnEscape="true" responsive="true">
+                    <f:facet name="title">
+                        <h3 align="center" style="margin: auto;">CAMBIO DE CONTRASEÑA</h3>
+                    </f:facet>
                     <h:form id="h" style="text-align:center;">
                         <h:panelGrid columns="1">
                             <h:panelGrid columns="2" style="margin: 0 auto">
@@ -93,12 +96,18 @@
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Opciones de caja" widgetVar="cajaDialog"
+                <p:dialog widgetVar="cajaDialog"
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" width="80%" style="margin: auto">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">OPCIONES DE CAJA</h3>
+                    </f:facet>
                     <h:form id="h1"  style="margin: auto">
                         <p:tabView>
-                            <p:tab title="Caja Actual">
+                            <p:tab>
+                                <f:facet name="title">
+                                    <h3 align="center" style="margin: auto;">CAJA ACTUAL</h3>
+                                </f:facet>
                                 <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}" style="margin: auto">
                                     <p:card style=" background-color: #01011a">
                                         <f:facet name="title">
@@ -151,22 +160,20 @@
                                         onclick="PF('caja3Dialog').show();"/>
                                 </h:panelGrid>
                             </p:tab>
-                            <p:tab title="Historial">
+                            <p:tab>
+                                <f:facet name="title">
+                                    <h3 align="center" style="margin: auto;">MI HISTORIAL</h3>
+                                </f:facet>
                                 <h:panelGrid style="margin:  auto">
-                                    <p:dataTable value="#{cajaCtr.historial}" var="item" rows="4"
-                                                 paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                                    <p:dataTable value="#{cajaCtr.historial}" var="item" rows="4" reflow="true" size="small"
+                                                 paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                                                 emptyMessage="No hay historial aún">
                                         <f:facet name="header">
                                             <h2 align="center">Detalle de los estados de caja del último mes</h2>
                                         </f:facet>
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="Id" style="width: 1%"/>
-                                            </f:facet>
-                                            <h:outputText value="#{item.idGiroDeCaja}"/>
-                                        </p:column>
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="Desdde"/>
+                                                <h:outputText value="Desde"/>
                                             </f:facet>
                                             <h:outputText value="#{cajaCtr.getDateTimeToString12H(item.inicio)}"/>
                                         </p:column>
@@ -180,7 +187,7 @@
                                             <f:facet name="header">
                                                 <h:outputText value="Estado de caja"/>
                                             </f:facet>
-                                            <h:outputText value="#{cajaCtr.getEstadoCaja(item.faltantes)}"/>
+                                            <h:outputText value="#{cajaCtr.getEstadoCaja(item.faltantes)}   "/>
                                             <h:outputText value="#{item.faltantes}" rendered="#{cajaCtr.isVerEstadoCjaj(item.faltantes)}">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
                                             </h:outputText>
@@ -188,12 +195,76 @@
                                     </p:dataTable>
                                 </h:panelGrid>
                             </p:tab>
+                            <p:tab rendered="#{cajaCtr.admin}">
+                                <f:facet name="title">
+                                    <h3 align="center" style="margin: auto;">RECIENTES</h3>
+                                </f:facet>
+                                <p:dataTable value="#{cajaCtr.historialTienda}" var="uc" rows="4" reflow="true"
+                                             emptyMessage="No hay historial aún" size="small"
+                                             paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
+                                    <f:facet name="header">
+                                        <h2 align="center">Detalle de los estados de las últimas cajas cerradas</h2>
+                                    </f:facet>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Reponsable"/>
+                                        </f:facet>
+                                        <h:outputText value="#{cajaCtr.getNombreususario(uc.responsable)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Desde"/>
+                                        </f:facet>
+                                        <h:outputText value="#{cajaCtr.getDateTimeToString12H(uc.inicio)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Hasta"/>
+                                        </f:facet>
+                                        <h:outputText value="#{cajaCtr.getDateTimeToString12H(uc.fin)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Caja inicial"/>
+                                        </f:facet>
+                                        <h:outputText value="#{uc.cajaInicial}">
+                                            <f:convertNumber currencySymbol="$" type="currency"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Ventas"/>
+                                        </f:facet>
+                                        <h:outputText value="#{uc.excedentes}">
+                                            <f:convertNumber currencySymbol="$" type="currency"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Retiros"/>
+                                        </f:facet>
+                                        <h:outputText value="#{uc.retiros}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Estado de caja"/>
+                                        </f:facet>
+                                        <h:outputText value="#{cajaCtr.getEstadoCaja(uc.faltantes)} "/>
+                                        <h:outputText value="#{uc.faltantes}" rendered="#{cajaCtr.isVerEstadoCjaj(uc.faltantes)}">
+                                            <f:convertNumber currencySymbol="$" type="currency"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
                         </p:tabView>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Apertura de Caja" widgetVar="caja2Dialog" 
+                <p:dialog widgetVar="caja2Dialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">APERTURA DE CAJA</h3>
+                    </f:facet>
                     <h:form id="h2"  style="margin: auto">
                         <h:panelGrid columns="1">
 
@@ -217,9 +288,12 @@
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Cierre de Caja" widgetVar="caja3Dialog" 
+                <p:dialog widgetVar="caja3Dialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">CIERRE DE CAJA</h3>
+                    </f:facet>
                     <h:form id="h3"  style="margin: auto">
                         <h:panelGrid columns="1">
 
@@ -245,9 +319,12 @@
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Retiro de efectivo" widgetVar="retiroDialog" 
+                <p:dialog widgetVar="retiroDialog" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">rETIRO DE EFECTIVO</h3>
+                    </f:facet>
                     <h:form id="h4"  style="margin: auto" >
                         <h:panelGrid columns="1" >
 
@@ -265,16 +342,18 @@
                                 <p:commandButton  icon="pi pi-save" 
                                                   styleClass="ui-button-outlined ui-button-primary"
                                                   value="Guardar" update="h1"
-                                                  actionListener="#{cajaCtr.registrarRetiro()}"
-                                                  oncomplete="PF('retiroDialog').hide();"/>
+                                                  actionListener="#{cajaCtr.registrarRetiro()}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
-                <p:dialog header="Información de cierre" widgetVar="infoCD" 
+                <p:dialog widgetVar="infoCD" 
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true"
                           onShow="actualizar();">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">iNFORMACIÓN DE CIERRE</h3>
+                    </f:facet>
                     <p:remoteCommand name="actualizar" update="h5"/>
                     <h:form id="h5"  style="margin: auto" >
                         <h:panelGrid columns="1" >

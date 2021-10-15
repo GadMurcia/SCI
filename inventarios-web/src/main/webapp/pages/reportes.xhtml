@@ -17,7 +17,10 @@
                                scrollable="false" touchable="false">
                         <p:ajax event="tabChange" listener="#{reportes1Ctr.onTabChange}"
                                 onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
-                        <p:tab title="VENTAS"  >
+                        <p:tab>
+                            <f:facet name="title">
+                                <h4 align="center" style="margin: auto;">VENTAS</h4>
+                            </f:facet>
                             <h:panelGrid columns="1"  style="margin: auto">
                                 <h2 align="center" style="margin: auto; color: #ece3a5"  >Reporte de Ventas</h2>
                                 <h:panelGrid columns="2" style="margin: auto" >
@@ -96,7 +99,7 @@
                                             </h:outputText>
                                         </h:panelGrid>
                                         <br></br>
-                                        <h2 align="center" style="margin: auto; color: #ece3a5" >Detalle de retiros</h2>
+                                        <h2 align="center" style="margin: auto;" >Detalle de retiros</h2>
                                         <h:panelGrid  style="margin: auto">
                                             <p:inputTextarea disabled="true" value="#{reportes2Ctr.giroGlobal.detalleRetiros}"/>
                                         </h:panelGrid>
@@ -110,7 +113,7 @@
                                     <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
                                         <div class="product-list-item">
                                             <div class="product-list-action">
-                                                <h2 align="center" style="margin: auto; color: #ece3a5">Resumen de saldos</h2>
+                                                <h2 align="center" style="margin: auto;">Resumen de saldos</h2>
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Caja inicial:" rendered="#{!reportes2Ctr.periodo}"/>
                                                     <h:outputText value="#{g.cajaInicial}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
@@ -138,7 +141,7 @@
                                                     </h:outputText>
                                                 </h:panelGrid>
                                                 <br></br>
-                                                <h2 align="center" style="margin: auto; color: #ece3a5">Detalle de retiros</h2>
+                                                <h2 align="center" style="margin: auto;">Detalle de retiros</h2>
                                                 <h:panelGrid  style="margin: auto">
                                                     <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
                                                 </h:panelGrid>
@@ -190,7 +193,10 @@
                                 </p:accordionPanel>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab title="COMPRAS">
+                        <p:tab>
+                            <f:facet name="title">
+                                <h4 align="center" style="margin: auto;">COMPRAS</h4>
+                            </f:facet>
                             <h:panelGrid columns="1" style="margin: auto">
                                 <h2 align="center" style="color: #ece3a5; margin: 0 auto">Reporte de Compras</h2>
                                 <h:panelGrid columns="2" style="margin: auto">
@@ -302,7 +308,10 @@
                                 </p:card>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab id="ex" title="EXISTENCIAS">
+                        <p:tab id="ex">
+                            <f:facet name="title">
+                                <h4 align="center" style="margin: auto;">EXISTENCIAS</h4>
+                            </f:facet>
                             <h:panelGrid columns="1" >
                                 <h:panelGrid columns="2" style="margin: auto; width: 10%">
                                     <p:commandButton icon="pi pi-replay" inline="true" title="Actualizar los datos del reporte."
@@ -377,11 +386,17 @@
                                 </p:dataTable>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab title="GRÁFICOS">
+                        <p:tab>
+                            <f:facet name="title">
+                                <h4 align="center" style="margin: auto;">GRÁFICOS</h4>
+                            </f:facet>
                             <p:tabView id="qw" dynamic="true" orientation="top" scrollable="false" touchable="false">
                                 <p:ajax event="tabChange" 
                                         onstart="PF('visualizando').show()" oncomplete="PF('visualizando').hide()"/>
-                                <p:tab title="VENTAS TOTALES">
+                                <p:tab>
+                                    <f:facet name="title">
+                                        <h4 align="center" style="margin: auto; ">VENTAS TOTALES</h4>
+                                    </f:facet>
                                     <p:card>
                                         <f:facet name="header">
                                             <h2 align="center" style="color: burlywood; margin: auto">Visualización de Ventas en el Tiempo</h2>
@@ -427,7 +442,10 @@
                                                      style="width: 80%; height: 400px;"/>
                                     </p:card>
                                 </p:tab>
-                                <p:tab title="VENTAS POR PRODUCTO">
+                                <p:tab>
+                                    <f:facet name="title">
+                                        <h4 align="center" style="margin: auto; ">VENTAS POR PRODUCTO</h4>
+                                    </f:facet>
                                     <p:card>
                                         <f:facet name="header">
                                             <h2 align="center" style="color: burlywood; margin: auto">Visualización de Ventas por Producto en el Tiempo</h2>
@@ -483,7 +501,10 @@
                                                      style="width: 80%; height: 400px;"/>
                                     </p:card>
                                 </p:tab>
-                                <p:tab title="COSTO POR PRODUCTO">
+                                <p:tab>
+                                    <f:facet name="title">
+                                        <h4 align="center" style="margin: auto; ">COSTO POR PRODUCTO</h4>
+                                    </f:facet>
                                     <p:card >
                                         <f:facet name="header">
                                             <h2 align="center" style="color: burlywood; margin: auto">Variación del Costo Unitario por Producto en el Tiempo</h2>
@@ -545,8 +566,10 @@
                 </h:form>
 
                 <p:dialog id="dialog" widgetVar="DConstancia" modal="true" style="width: 60%;"
-                          showHeader="true" header="Factura " 
-                          closeOnEscape="true">
+                          showHeader="true" closeOnEscape="true">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">FACTURA</h3>
+                    </f:facet>
                     <h:form id="h0">
                         <h:panelGrid columns="1" cellspacing="2">
                             <img src="#{reportes3Ctr.docFacrura()}"
@@ -555,7 +578,10 @@
                     </h:form>
                 </p:dialog>
                 <p:dialog id="dialog1" widgetVar="espere" modal="true" style="width: 60%;"
-                          showHeader="true" header="Descarga en curso..." closable="false">
+                          showHeader="true" closable="false">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">DESCARGA EN CURSO...</h3>
+                    </f:facet>
                     <h:form>
                         <h:panelGrid style="margin: auto">
                             Espere mientras se descarga el archivo...
@@ -563,7 +589,10 @@
                     </h:form>
                 </p:dialog>
                 <p:dialog widgetVar="generando" modal="true" style="width: 60%;"
-                          showHeader="true" header="Creando el reporte..." closable="false">
+                          showHeader="true" closable="false">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">CREANDO REPORTE...</h3>
+                    </f:facet>
                     <h:form>
                         <h:panelGrid style="margin: auto">
                             Espere mientras el sistema reune los datos para crear el reporte...
@@ -571,7 +600,10 @@
                     </h:form>
                 </p:dialog>
                 <p:dialog widgetVar="visualizando" modal="true" style="width: 60%;"
-                          showHeader="true" header="Cargando..." closable="false">
+                          showHeader="true" closable="false">
+                    <f:facet name="header">
+                        <h3 align="center" style="margin: auto;">CARGANDO...</h3>
+                    </f:facet>
                     <h:form>
                         <h:panelGrid style="margin: auto">
                             Espere mientras se cargan todos los componentes de la vista...

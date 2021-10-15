@@ -199,18 +199,16 @@ public class auxiliarCtr implements Serializable {
 
     public Date FechaPrimero(Date r, int v) {
         try {
-            Date r0;
             switch (v) {
-                case 1://mes
-                    r0 = new SimpleDateFormat("dd-MM-yyyy").parse("01-" + new SimpleDateFormat("MM-yyyy").format(r));
-                    break;
-                case 2://mes
-                    r0 = new SimpleDateFormat("dd-MM-yyyy").parse("01-01-" + new SimpleDateFormat("yyyy").format(r));
-                    break;
+                case 0://poner a cero la hora (00:00:00 del mismo día)
+                    return new SimpleDateFormat("dd-MM-yyyy").parse(new SimpleDateFormat("dd-MM-yyyy").format(r));
+                case 1://pone la fecha al primero del mismo mes y año
+                    return new SimpleDateFormat("dd-MM-yyyy").parse("01-" + new SimpleDateFormat("MM-yyyy").format(r));
+                case 2://pone la fecha a primero de enero del mismo año
+                    return new SimpleDateFormat("dd-MM-yyyy").parse("01-01-" + new SimpleDateFormat("yyyy").format(r));
                 default:
-                    r0 = r;
+                    return r;
             }
-            return r0;
         } catch (ParseException ex) {
             return r;
         }

@@ -39,5 +39,7 @@ public interface GiroDeCajaFacadeLocal {
     public List<GiroDeCaja> findByPeriodoYSucursal(Date inicio, Date fin, Integer idSucursal);
 
     public List<GiroDeCaja> findTerminadas(String idUsuario, Date inicio, Date fin);
+    
+    public List<GiroDeCaja> findTerminadasTienda(Integer idSucursal, Date inicio, Date fin);
 
 }

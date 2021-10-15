@@ -179,12 +179,15 @@
         </h:form>
 
         <p:dialog id="dialog" widgetVar="DConstancia" modal="true" style="width: 60%;"
-                  showHeader="true" header="Factura" closeOnEscape="true">
+                  showHeader="true" closeOnEscape="true">
+            <f:facet name="header">
+                <h3 align="center" style="margin: auto;">FACTURA</h3>
+            </f:facet>
             <h:form id="h0">
                 <h:panelGrid columns="1" cellspacing="2">
                     <img src="#{compraCtr.docFactura}"
                          width="640" height="480"/>
-                    <p:commandButton value="Eliminar Consancia" update="form:btnV"
+                    <p:commandButton value="Eliminar factura" update="form:btnV"
                                      onsuccess="PF('DConstancia').hide();"
                                      actionListener="#{compraCtr.quitarFactura()}"/>
                 </h:panelGrid>
