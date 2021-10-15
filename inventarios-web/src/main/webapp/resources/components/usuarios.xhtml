@@ -23,7 +23,6 @@
                          title="IdUsuario" required="true" disabled="#{!cc.attrs.ediId}"
                          requiredMessage="The IdUsuario field is required.">
                 <p:ajax event="change" listener="#{auxiliarCtr.onBlour}"/>
-                <f:validateLength minimum="4" maximum="50"/>
             </p:inputText>
 
             <p:outputLabel value="Nombres:" for="nombres" style=" color: #ffffff" />
@@ -56,7 +55,7 @@
                 <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
                 <f:selectItems value="#{cc.attrs.tipos}" var="tp" 
                                itemValue="#{tp}" itemLabel="#{tp.nombre}"/>
-            </p:selectOneMenu>            
+            </p:selectOneMenu> 
         </h:panelGrid>
 
     </cc:implementation>
