@@ -37,7 +37,7 @@
                                         <p:ajax event="dateSelect" listener="#{reportes2Ctr.onBlour}"/>
                                     </p:datePicker>
 
-                                    <p:outputLabel value="Vendedor: " for="users"/>
+                                    <p:outputLabel value="Vendedor " for="users"/>
                                     <p:selectOneMenu id="users" value="#{reportes2Ctr.userSelected}"
                                                      converter="omnifaces.SelectItemsConverter"
                                                      style="margin-left: 15%">
@@ -77,7 +77,7 @@
                                 <p:card style="width: 45rem; margin: auto; background-color: #01011a" 
                                         rendered="#{reportes2Ctr.giros.size()>1}">
                                     <f:facet name="title">
-                                        <h3 align="center" style="color: burlywood">Resumen general</h3>
+                                        <h3 align="center" style="color: burlywood">Resumen General</h3>
                                     </f:facet>
                                     <div class="product-list-action" >
                                         <h:panelGrid columns="2" style="margin: auto">
@@ -99,21 +99,21 @@
                                             </h:outputText>
                                         </h:panelGrid>
                                         <br></br>
-                                        <h2 align="center" style="margin: auto;" >Detalle de retiros</h2>
+                                        <h2 align="center" style="margin: auto;" >Detalle de Retiros</h2>
                                         <h:panelGrid  style="margin: auto">
                                             <p:inputTextarea disabled="true" value="#{reportes2Ctr.giroGlobal.detalleRetiros}"/>
                                         </h:panelGrid>
                                     </div>
                                 </p:card>
                                 <h:panelGrid rendered="#{reportes2Ctr.giros.size()>1}" style="margin: auto">
-                                    <h2 align="center" style="color: burlywood">Resumen por caja</h2>
+                                    <h2 align="center" style="color: burlywood">Resumen por Caja</h2>
                                 </h:panelGrid>
                                 <p:accordionPanel value="#{reportes2Ctr.giros}" var="g" dynamic="true" 
                                                   rendered="#{reportes2Ctr.giros.size()>0}">
                                     <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
                                         <div class="product-list-item">
                                             <div class="product-list-action">
-                                                <h2 align="center" style="margin: auto;">Resumen de saldos</h2>
+                                                <h2 align="center" style="margin: auto;">Resumen de Saldos</h2>
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Caja inicial:" rendered="#{!reportes2Ctr.periodo}"/>
                                                     <h:outputText value="#{g.cajaInicial}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
@@ -141,7 +141,7 @@
                                                     </h:outputText>
                                                 </h:panelGrid>
                                                 <br></br>
-                                                <h2 align="center" style="margin: auto;">Detalle de retiros</h2>
+                                                <h2 align="center" style="margin: auto;">Detalle de Retiros</h2>
                                                 <h:panelGrid  style="margin: auto">
                                                     <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
                                                 </h:panelGrid>
@@ -314,7 +314,11 @@
                             </f:facet>
                             <h:panelGrid columns="1" >
                                 <h:panelGrid columns="2" style="margin: auto; width: 10%">
-                                    <p:commandButton icon="pi pi-replay" inline="true" title="Actualizar los datos del reporte."
+                                    <p:commandButton icon="pi pi-replay" inline="true" 
+                                                      title="Limpiar todos los campos"
+                                         styleClass="ui-button-warning" 
+                                         value="Actualizar"
+                                         style="width: 110px"
                                                      update="existencias" onstart="PF('generando').show()" 
                                                      oncomplete="PF('generando').hide()"/>
 
@@ -453,19 +457,19 @@
                                         <f:facet name="title">
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
-                                                    <p:outputLabel value="Desde la Fecha:" for="gini0"/>
+                                                    <p:outputLabel value="Desde la Fecha" for="gini0"/>
                                                     <p:datePicker id="gini0" value="#{graficoCtr.ginicio0}" 
                                                                   locale="es" pattern="dd/MMMM/yyyy" 
                                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel value="Hasta la Fecha:" for="gfin0"/>
+                                                    <p:outputLabel value="Hasta la Fecha" for="gfin0"/>
                                                     <p:datePicker id="gfin0" value="#{graficoCtr.gfin0}" 
                                                                   locale="es" pattern="dd/MMMM/yyyy" 
                                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel for="p0" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="p0" value="Producto" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p0" value="#{graficoCtr.invSel0}" filter="false" autoWidth="true"
                                                                      converter="omnifaces.SelectItemsConverter" immediate="true">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
@@ -473,7 +477,7 @@
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
                                                         <p:ajax event="itemSelect" listener="#{graficoCtr.onInvSelect}"/>
                                                     </p:selectOneMenu>
-                                                    <p:outputLabel for="in0" value="Visualizar:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="in0" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in0" value="#{graficoCtr.sel0}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>
@@ -512,19 +516,19 @@
                                         <f:facet name="title">
                                             <h:panelGrid columns="1" style="margin: auto">
                                                 <h:panelGrid columns="2" style="margin: auto">
-                                                    <p:outputLabel value="Desde la Fecha:" for="gini1"/>
+                                                    <p:outputLabel value="Desde la Fecha" for="gini1"/>
                                                     <p:datePicker id="gini1" value="#{graficoCtr.ginicio1}"
                                                                   locale="es" pattern="dd/MMMM/yyyy" 
                                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel value="Hasta la Fecha:" for="gfin1"/>
+                                                    <p:outputLabel value="Hasta la Fecha" for="gfin1"/>
                                                     <p:datePicker id="gfin1" value="#{graficoCtr.gfin1}"
                                                                   locale="es" pattern="dd/MMMM/yyyy" 
                                                                   monthNavigator="true" yearNavigator="true" readonlyInput="true">
                                                         <p:ajax event="dateSelect" listener="#{graficoCtr.onBlour}"/>
                                                     </p:datePicker>
-                                                    <p:outputLabel for="p1" value="Producto:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="p1" value="Producto" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="p1" value="#{graficoCtr.invSel1}" filter="false"
                                                                      converter="omnifaces.SelectItemsConverter" immediate="true" autoWidth="ture">
                                                         <f:selectItem itemValue="#{null}" itemLabel="Seleccione"/>
@@ -532,7 +536,7 @@
                                                                        itemValue="#{i}" itemLabel="#{i.producto}"/>
                                                         <p:ajax event="itemSelect" listener="#{graficoCtr.onInvSelect}"/>
                                                     </p:selectOneMenu>
-                                                    <p:outputLabel for="in1" value="Visualizar:" style=" color: #ffffff"/>
+                                                    <p:outputLabel for="in1" value="Visualizar" style=" color: #ffffff"/>
                                                     <p:selectOneMenu id="in1" value="#{graficoCtr.sel1}">
                                                         <f:selectItem itemValue="1" itemLabel="Por Día"/>
                                                         <f:selectItem itemValue="2" itemLabel="Por Mes"/>

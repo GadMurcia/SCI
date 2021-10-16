@@ -61,26 +61,26 @@
                 <p:dialog widgetVar="contraDialog" 
                             modal="true" showEffect="fade" hideEffect="fade" 
                             resizable="false" closeOnEscape="true" responsive="true">
-                    <f:facet name="title">
+                    <f:facet name="header">
                         <h3 align="center" style="margin: auto;">CAMBIO DE CONTRASEÑA</h3>
                     </f:facet>
                     <h:form id="h" style="text-align:center;">
                         <h:panelGrid columns="1">
                             <h:panelGrid columns="2" style="margin: 0 auto">
                                 <p:outputLabel for="toggle" styleClass="p-col-fixed" 
-                                               style="width:100px; color: #ffffff" value="Contraseña actual:" />
+                                               style="width:100px; color: #ffffff" value="Contraseña Actual  " />
                                 <p:password id="toggle" value="#{homeCtr.p0}" 
                                             toggleMask="true" redisplay="true"/>
 
                                 <p:outputLabel for="pwd1" styleClass="p-col-fixed" 
-                                               style="width:100px; color: #ffffff" value="Contraseña nueva:"/>
+                                               style="width:100px; color: #ffffff" value="Contraseña Nueva  "/>
                                 <p:password id="pwd1" value="#{homeCtr.p1}" 
                                             match="pwd2" label="Password 1" required="true" toggleMask="true">
                                     <f:validateLength minimum="6"/>
                                 </p:password>
 
                                 <p:outputLabel for="pwd2" styleClass="p-col-fixed" 
-                                               style="width:100px; color: #ffffff" value="Confirme la contraseña:"/>
+                                               style="width:100px; color: #ffffff" value="Confirme Contraseña"/>
                                 <p:password id="pwd2" value="#{homeCtr.p1}" 
                                             label="Password 2" required="true" toggleMask="true"/>
 
