@@ -99,7 +99,7 @@
                                             </h:outputText>
                                         </h:panelGrid>
                                         <br></br>
-                                        <h2 align="center" style="margin: auto;" >Detalle de Retiros</h2>
+                                        <h2 align="center" style="margin: auto; color: burlywood" >Detalle de Retiros</h2>
                                         <h:panelGrid  style="margin: auto">
                                             <p:inputTextarea disabled="true" value="#{reportes2Ctr.giroGlobal.detalleRetiros}"/>
                                         </h:panelGrid>
@@ -113,7 +113,7 @@
                                     <p:tab title="#{reportes2Ctr.getNombreususario(g.responsable)} (Desde #{reportes2Ctr.getDateTimeToString12H(g.inicio)} hasta #{reportes2Ctr.getDateTimeToString12H(g.fin)})">
                                         <div class="product-list-item">
                                             <div class="product-list-action">
-                                                <h2 align="center" style="margin: auto;">Resumen de Saldos</h2>
+                                                <h2 align="center" style="margin: auto; color: burlywood">Resumen de Saldos</h2>
                                                 <h:panelGrid columns="2" style="margin: auto">
                                                     <p:outputLabel value="Caja inicial:" rendered="#{!reportes2Ctr.periodo}"/>
                                                     <h:outputText value="#{g.cajaInicial}" styleClass="product-price" rendered="#{!reportes2Ctr.periodo}">
@@ -141,7 +141,7 @@
                                                     </h:outputText>
                                                 </h:panelGrid>
                                                 <br></br>
-                                                <h2 align="center" style="margin: auto;">Detalle de Retiros</h2>
+                                                <h2 align="center" style="margin: auto; color: burlywood">Detalle de Retiros</h2>
                                                 <h:panelGrid  style="margin: auto">
                                                     <p:inputTextarea disabled="true" value="#{g.detalleRetiros}"/>
                                                 </h:panelGrid>
@@ -229,7 +229,7 @@
                                 </h:panelGrid>
                                 <p:card  style="width: available; margin: auto; background-color:#01011a " rendered="#{reportes3Ctr.detalle.size()>0}">
                                     <f:facet name="title">
-                                        <h2  align="center" style="margin: auto; color: burlywood">Reporte General De Compras</h2>
+                                        <h2  align="center" style="margin: auto; color: burlywood">Reporte General de Compras</h2>
                                     </f:facet>
                                     <f:facet name="subtitle">
                                         <h:panelGrid columns="1" style="margin: auto" >                                            
