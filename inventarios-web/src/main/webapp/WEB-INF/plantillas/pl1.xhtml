@@ -106,12 +106,12 @@
                         <p:tabView>
                             <p:tab>
                                 <f:facet name="title">
-                                    <h3 align="center" style="margin: auto;">CAJA ACTUAL</h3>
+                                    <h4 align="center" style="margin: auto;">CAJA ACTUAL</h4>
                                 </f:facet>
                                 <h:panelGrid columns="2" rendered="#{cajaCtr.iniciada}" style="margin: auto">
                                     <p:card style=" background-color: #01011a">
                                         <f:facet name="title">
-                                            Detalle de caja
+                                            Detalle de Caja
                                         </f:facet>
 
                                         <h:panelGrid columns="2" style="background-color: #1b162a">
@@ -162,30 +162,30 @@
                             </p:tab>
                             <p:tab>
                                 <f:facet name="title">
-                                    <h3 align="center" style="margin: auto;">MI HISTORIAL</h3>
+                                    <h4 align="center" style="margin: auto;">MI HISTORIAL</h4>
                                 </f:facet>
                                 <h:panelGrid style="margin:  auto">
                                     <p:dataTable value="#{cajaCtr.historial}" var="item" rows="4" reflow="true" size="small"
                                                  paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
                                                  emptyMessage="No hay historial aún">
                                         <f:facet name="header">
-                                            <h2 align="center">Detalle de los estados de caja del último mes</h2>
+                                            <h2 align="center" style="color: burlywood" > Detalle de los Estados de Caja del Último Mes</h2>
                                         </f:facet>
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="Desde"/>
+                                                <h:outputText value="DESDE" style="color: #ece3a5" />
                                             </f:facet>
                                             <h:outputText value="#{cajaCtr.getDateTimeToString12H(item.inicio)}"/>
                                         </p:column>
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="Hasta"/>
+                                                <h:outputText value="HASTA"  style="color: #ece3a5"/>
                                             </f:facet>
                                             <h:outputText value="#{cajaCtr.getDateTimeToString12H(item.fin)}"/>
                                         </p:column>
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="Estado de caja"/>
+                                                <h:outputText value="ESTADO DE CAJA"  style="color: #ece3a5"/>
                                             </f:facet>
                                             <h:outputText value="#{cajaCtr.getEstadoCaja(item.faltantes)}   "/>
                                             <h:outputText value="#{item.faltantes}" rendered="#{cajaCtr.isVerEstadoCjaj(item.faltantes)}">
@@ -197,35 +197,35 @@
                             </p:tab>
                             <p:tab rendered="#{cajaCtr.admin}">
                                 <f:facet name="title">
-                                    <h3 align="center" style="margin: auto;">RECIENTES</h3>
+                                    <h4 align="center" style="margin: auto;">CAJAS RECIENTES</h4>
                                 </f:facet>
                                 <p:dataTable value="#{cajaCtr.historialTienda}" var="uc" rows="4" reflow="true"
                                              emptyMessage="No hay historial aún" size="small"
                                              paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
                                     <f:facet name="header">
-                                        <h2 align="center">Detalle de los estados de las últimas cajas cerradas</h2>
+                                        <h2 align="center" style="color: burlywood ">Detalle de los Estados de las Últimas Cajas Cerradas</h2>
                                     </f:facet>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Reponsable"/>
+                                            <h:outputText value="RESPONSABLE"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{cajaCtr.getNombreususario(uc.responsable)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Desde"/>
+                                            <h:outputText value="DESDE"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{cajaCtr.getDateTimeToString12H(uc.inicio)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Hasta"/>
+                                            <h:outputText value="HASTA"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{cajaCtr.getDateTimeToString12H(uc.fin)}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Caja inicial"/>
+                                            <h:outputText value="CAJA INICIAL"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{uc.cajaInicial}">
                                             <f:convertNumber currencySymbol="$" type="currency"/>
@@ -233,7 +233,7 @@
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Ventas"/>
+                                            <h:outputText value="VENTAS"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{uc.excedentes}">
                                             <f:convertNumber currencySymbol="$" type="currency"/>
@@ -241,13 +241,13 @@
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Retiros"/>
+                                            <h:outputText value="RETIROS"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{uc.retiros}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
-                                            <h:outputText value="Estado de caja"/>
+                                            <h:outputText value="ESTADO DE CAJA"  style="color: #ece3a5"/>
                                         </f:facet>
                                         <h:outputText value="#{cajaCtr.getEstadoCaja(uc.faltantes)} "/>
                                         <h:outputText value="#{uc.faltantes}" rendered="#{cajaCtr.isVerEstadoCjaj(uc.faltantes)}">
@@ -323,7 +323,7 @@
                           modal="true" showEffect="fade" hideEffect="fade" 
                           resizable="false" closeOnEscape="true" responsive="true">
                     <f:facet name="header">
-                        <h3 align="center" style="margin: auto;">rETIRO DE EFECTIVO</h3>
+                        <h3 align="center" style="margin: auto;">RETIRO DE EFECTIVO</h3>
                     </f:facet>
                     <h:form id="h4"  style="margin: auto" >
                         <h:panelGrid columns="1" >
@@ -352,7 +352,7 @@
                           resizable="false" closeOnEscape="true" responsive="true"
                           onShow="actualizar();">
                     <f:facet name="header">
-                        <h3 align="center" style="margin: auto;">iNFORMACIÓN DE CIERRE</h3>
+                        <h3 align="center" style="margin: auto;">INFORMACIÓN DE CIERRE</h3>
                     </f:facet>
                     <p:remoteCommand name="actualizar" update="h5"/>
                     <h:form id="h5"  style="margin: auto" >
