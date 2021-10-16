@@ -57,9 +57,9 @@
                                     <p:outputLabel value="Factura: " style=" color: #ffffff" />
                                     <h:panelGrid columns="3">
                                         <p:fileUpload id="partida" listener="#{compraCtr.factura}" 
-                                                      mode="advanced" invalidSizeMessage="El archivo sobrepasa el límited de 1MB."
+                                                      mode="advanced" invalidSizeMessage="El archivo sobrepasa el límited de 30MB."
                                                       invalidFileMessage="El archivo seleccionado no es válido"
-                                                      update="messagesp"  sizeLimit="1000000" label="Agregar Archivo"
+                                                      update="messagesp"  label="Agregar Archivo"
                                                       allowTypes="/(\.|\/)(jpe?g|png)$/" auto="true"
                                                       oncomplete="update();" disabled="#{!compraCtr.comprando}"/>
                                         <p:remoteCommand name="update" update="btnV"/>
