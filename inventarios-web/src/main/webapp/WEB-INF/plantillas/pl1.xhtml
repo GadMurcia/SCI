@@ -89,10 +89,6 @@
                                 <p:commandButton value="Actualizar" update="h"
                                                  actionListener="#{homeCtr.cambioPass()}" styleClass="ui-button-outlined ui-button-warning" style="height: 50px; width: 130px;" icon="pi pi-fw pi-check-circle"/>
                             </h:panelGrid>
-                            <p:messages id="messages" showDetail="true" 
-                                        skipDetailIfEqualsSummary="true">
-                                <p:autoUpdate/>
-                            </p:messages>
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
@@ -327,7 +323,6 @@
                     </f:facet>
                     <h:form id="h4"  style="margin: auto" >
                         <h:panelGrid columns="1" >
-
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Cantidad a retirar:" style="color: #ffffff"/>
                                 <p:inputNumber value="#{cajaCtr.valor}"
@@ -354,8 +349,8 @@
                     <f:facet name="header">
                         <h3 align="center" style="margin: auto;">INFORMACIÓN DE CIERRE</h3>
                     </f:facet>
+                    <h:form id="h5"  style="margin: auto" >                        
                     <p:remoteCommand name="actualizar" update="h5"/>
-                    <h:form id="h5"  style="margin: auto" >
                         <h:panelGrid columns="1" >
                             <h2 align="center" style="color: #ffffff; font-size: xx-large">#{cajaCtr.infoCD}</h2>
                         </h:panelGrid>
