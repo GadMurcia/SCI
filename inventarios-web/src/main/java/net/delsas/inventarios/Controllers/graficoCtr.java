@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -212,6 +211,7 @@ public class graficoCtr extends auxiliarCtr implements Serializable {
                     r1 = new Date();
                 }
                 double v = redondeo2decimales(Existencias.getCostoAVGPeriodo(invSel1.getIdInventario(), dcfl, r0, r1));
+
                 if (v != 0) {
                     labels.add(new SimpleDateFormat(sel1 == 1 ? "dd-MM-YY" : sel1 == 2 ? "MMM-YY" : "YYYY").format(r0));
                     values.add(v);

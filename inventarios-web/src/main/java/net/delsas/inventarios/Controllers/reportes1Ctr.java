@@ -150,14 +150,25 @@ public class reportes1Ctr extends auxiliarCtr implements Serializable {
     }
 
     public void onTabChange(TabChangeEvent event) {
+        if (event.getTab().getId().equalsIgnoreCase("ex") && existencias.isEmpty()) {
+            buscarExistencias();
+        }
+    }
+
+    public void buscarExistencias() {
+        existencias.clear();
+        ifl.findByTienda(1).stream().forEach(p -> {
+            existencias.add(new Existencias(p, dcfl, dvfl));
+        });
+        Collections.sort(existencias, (Existencias u, Existencias d) -> {
+            if (u.getExistencias().equals(d.getExistencias())) {
+                return String.CASE_INSENSITIVE_ORDER.compare(u.getNombre(), d.getNombre());
+            }
+            return u.getExistencias().compareTo(d.getExistencias());
+        });
     }
 
     public List<Existencias> getExistencias() {
-        existencias.clear();
-        ifl.findByTienda(1).stream().forEachOrdered(p -> {
-            existencias.add(new Existencias(p, dcfl, dvfl));
-        });
-        Collections.sort(existencias, (Existencias u, Existencias d) -> u.getExistencias().compareTo(d.getExistencias()));
         return existencias;
     }
 

@@ -24,6 +24,7 @@ import net.delsas.inventarios.entities.Inventario;
 public class Existencias extends auxiliarCtr implements Serializable {
 
     @Id
+    private Integer id;
     private String nombre;
     private Integer existencias;
     private double costoAVG;
@@ -36,19 +37,22 @@ public class Existencias extends auxiliarCtr implements Serializable {
     }
 
     public Existencias(Inventario prod, DetalleCompraFacadeLocal dcfl, DetalleVentasFacadeLocal dvfl) {
-        prod.setDetalleCompraList(dcfl.findByProducto(prod.getIdInventario()));
-        prod.setDetalleVentasList(dvfl.findByProducto(prod.getIdInventario()));
+        this.id = prod.getIdInventario();
         this.nombre = prod.getProducto();
-        this.existencias = prod.getDetalleCompraList().stream().mapToInt(DetalleCompra::getCantidad).sum()
-                - prod.getDetalleVentasList().stream().mapToInt(DetalleVentas::getCantidad).sum();
+        this.existencias = dcfl.findByProducto(this.id).stream().mapToInt(DetalleCompra::getCantidad).sum()
+                - dvfl.findByProducto(this.id).stream().mapToInt(DetalleVentas::getCantidad).sum();
         this.costoAVG = redondeo4decimales(getCostoAVGGlobal(prod.getIdInventario(), dcfl)); //redondeo4decimales(prod.getDetalleCompraList().stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum() / prod.getDetalleCompraList().stream().mapToInt(DetalleCompra::getCantidad).sum());
         this.costoTotal = redondeo2decimales(this.existencias * this.costoAVG);
         this.precioAVG = redondeo2decimales(prod.getPrecioUnitario().doubleValue());
         this.valorTotal = redondeo2decimales(this.existencias * this.precioAVG);
         this.utilidad = redondeo2decimales(this.valorTotal - this.costoTotal);
+        if (this.id.equals(252)) {
+            System.out.println(this);
+        }
     }
 
-    public Existencias(String nombre, int existencias, double costoAVG, double precioAVG) {
+    public Existencias(String nombre, int existencias, double costoAVG, double precioAVG, int id) {
+        this.id = id;
         this.nombre = nombre;
         this.existencias = existencias;
         this.costoAVG = costoAVG;
@@ -87,7 +91,7 @@ public class Existencias extends auxiliarCtr implements Serializable {
         return (f.stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum()
                 / f.stream().mapToInt(DetalleCompra::getCantidad).sum());
     }
-    
+
     public static double getCostoAVGPeriodo(int id, DetalleCompraFacadeLocal dcfl, Date inicio, Date fin) {
         List<DetalleCompra> f = dcfl.findByProductoAdnPeriodoFechas(id, inicio, fin);
         return (f.stream().mapToDouble(z -> z.getCantidad() * z.getCostoUnitario().doubleValue()).sum()
@@ -126,16 +130,25 @@ public class Existencias extends auxiliarCtr implements Serializable {
         this.utilidad = utilidad;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.nombre);
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.existencias) ^ (Double.doubleToLongBits(this.existencias) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.costoAVG) ^ (Double.doubleToLongBits(this.costoAVG) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.precioAVG) ^ (Double.doubleToLongBits(this.precioAVG) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.costoTotal) ^ (Double.doubleToLongBits(this.costoTotal) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.valorTotal) ^ (Double.doubleToLongBits(this.valorTotal) >>> 32));
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.utilidad) ^ (Double.doubleToLongBits(this.utilidad) >>> 32));
+        int hash = 3;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.nombre);
+        hash = 47 * hash + Objects.hashCode(this.existencias);
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.costoAVG) ^ (Double.doubleToLongBits(this.costoAVG) >>> 32));
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.precioAVG) ^ (Double.doubleToLongBits(this.precioAVG) >>> 32));
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.costoTotal) ^ (Double.doubleToLongBits(this.costoTotal) >>> 32));
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.valorTotal) ^ (Double.doubleToLongBits(this.valorTotal) >>> 32));
+        hash = 47 * hash + (int) (Double.doubleToLongBits(this.utilidad) ^ (Double.doubleToLongBits(this.utilidad) >>> 32));
         return hash;
     }
 
@@ -151,9 +164,6 @@ public class Existencias extends auxiliarCtr implements Serializable {
             return false;
         }
         final Existencias other = (Existencias) obj;
-        if (Double.doubleToLongBits(this.existencias) != Double.doubleToLongBits(other.existencias)) {
-            return false;
-        }
         if (Double.doubleToLongBits(this.costoAVG) != Double.doubleToLongBits(other.costoAVG)) {
             return false;
         }
@@ -169,12 +179,17 @@ public class Existencias extends auxiliarCtr implements Serializable {
         if (Double.doubleToLongBits(this.utilidad) != Double.doubleToLongBits(other.utilidad)) {
             return false;
         }
-        return Objects.equals(this.nombre, other.nombre);
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return Objects.equals(this.existencias, other.existencias);
     }
 
     @Override
     public String toString() {
-        return "Existencias{" + "nombre=" + nombre + ", existencias=" + existencias + ", costoAVG=" + costoAVG + ", precioAVG=" + precioAVG + ", costoTotal=" + costoTotal + ", valorTotal=" + valorTotal + ", utilidad=" + utilidad + '}';
+        return "Existencias{" + "id=" + id + ", nombre=" + nombre + ", existencias=" + existencias + ", costoAVG=" + costoAVG + ", precioAVG=" + precioAVG + ", costoTotal=" + costoTotal + ", valorTotal=" + valorTotal + ", utilidad=" + utilidad + '}';
     }
-
 }

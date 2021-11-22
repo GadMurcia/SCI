@@ -320,7 +320,8 @@
                                                      value="Actualizar"
                                                      style="width: 110px"
                                                      update="existencias" onstart="PF('generando').show()" 
-                                                     oncomplete="PF('generando').hide()"/>
+                                                     oncomplete="PF('generando').hide()"
+                                                     actionListener="#{reportes1Ctr.buscarExistencias()}"/>
 
                                     <p:commandLink title="Descargue como documento PDF." styleClass="p-mr-2 p-mb-2" 
                                                    onstart="PF('espere').show();"
@@ -332,7 +333,7 @@
                                                         exporter="#{reportes1Ctr.pdfExporterExistencias}"/>
                                     </p:commandLink>
                                 </h:panelGrid>
-                                <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="item"
+                                <p:dataTable id="existencias" value="#{reportes1Ctr.existencias}" var="exi"
                                              rows="10" reflow="true" disabledTextSelection="true"  size="small"
                                              paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false">
                                     <f:facet name="header">
@@ -345,47 +346,47 @@
                                             <p:outputLabel value="Utilidad Global: $#{reportes1Ctr.utilidadTotal()}" style="color: #ece3a5"/>
                                         </h:panelGrid>
                                     </f:facet>
-                                    <p:column filterBy="#{item.nombre}" filterStyle="width: 85%; margin-left: 0" width="25%">
+                                    <p:column filterBy="#{exi.nombre}" filterStyle="width: 85%; margin-left: 0" width="25%">
                                         <f:facet name="header">
                                             <h:outputText value="PRODUCTO" style="color: burlywood"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.nombre}" style="text-align: center"/>
+                                        <h:outputText value="#{exi.nombre}" style="text-align: center"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="CANTIDAD" style="color: burlywood; text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.existencias}"/>
+                                        <h:outputText value="#{exi.existencias}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="COSTO UNITARIO" style="color: burlywood;text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.costoAVG}"/>
+                                        <h:outputText value="#{exi.costoAVG}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="COSTO TOTAL" style="color: burlywood;text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.costoTotal}"/>
+                                        <h:outputText value="#{exi.costoTotal}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="PRECIO VENTA" style="color: burlywood;text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.precioAVG}"/>
+                                        <h:outputText value="#{exi.precioAVG}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="VALOR TOTAL " style="color: burlywood;text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.valorTotal}"/>
+                                        <h:outputText value="#{exi.valorTotal}"/>
                                     </p:column>
                                     <p:column>
                                         <f:facet name="header">
                                             <h:outputText value="UTILIDAD" style="color: burlywood; text-align: center"/>
                                         </f:facet>
-                                        <h:outputText value="#{item.utilidad}"/>
+                                        <h:outputText value="#{exi.utilidad}"/>
                                     </p:column>
                                 </p:dataTable>
                             </h:panelGrid>
@@ -554,8 +555,8 @@
                                                     <p:commandButton type="summit" icon="pi pi-replay" title="Limpiar datos."
                                                                      value="Limpiar los Datos"
                                                                      styleClass="ui-button-raised ui-button-secondary "
-                                                                     update="gini1 gfin1 in1  p1"
-                                                                     actionListener="#{reportes3Ctr.limpiarGrafico1()}"/>
+                                                                     update="gini1 gfin1 in1  p1 graf1"
+                                                                     actionListener="#{graficoCtr.limpiarGrafico1()}"/>
                                                 </h:panelGrid>
                                             </h:panelGrid>
                                         </f:facet>
